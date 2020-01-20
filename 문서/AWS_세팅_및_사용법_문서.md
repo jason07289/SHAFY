@@ -4,24 +4,24 @@ AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
 
 >1) 프로젝트 목적외 사적인 활용을 금지합니다. (예 : 블록코인 채굴, Torrent 머신 활용, NAS 서버 활용 등)
-2) 서버를 Shutdown 하는 경우 학생들이 다시 켤 방법은 없습니다..
-   리부팅이  필요한 경우 "sudo shutdown  -r now" 명령을 사용합니다.
-3) 서버의 IP 및 접근 가능 Port는 다음 URL에서 확인  가능합니다.
-   https://s.ssafy.io/aws/servers.html
-   ※ 허용포트: 22, 80, 443, 3000-3999, 8000-8999, 5000
+>2) 서버를 Shutdown 하는 경우 학생들이 다시 켤 방법은 없습니다..
+>리부팅이  필요한 경우 "sudo shutdown  -r now" 명령을 사용합니다.
+>3) 서버의 IP 및 접근 가능 Port는 다음 URL에서 확인  가능합니다.
+>https://s.ssafy.io/aws/servers.html
+>※ 허용포트: 22, 80, 443, 3000-3999, 8000-8999, 5000
 
 > [접속 방법]
 > `ssh -i '팀인증서.pem' ubuntu@공인IP`
 > 예) 서울 1반 1팀의 경우
->      인증서 파일명 : T02A101.pem 
->      접속 IP(Public Ip) : https://s.ssafy.io/aws/servers.html 에서 인증서 파일 "T02A01" 검색
->      접속 명령어 : ssh -i 'T02A101.pem' ubuntu@13.124.67.187
+>   인증서 파일명 : T02A101.pem 
+>   접속 IP(Public Ip) : https://s.ssafy.io/aws/servers.html 에서 인증서 파일 "T02A01" 검색
+>   접속 명령어 : ssh -i 'T02A101.pem' ubuntu@13.124.67.187
 > ※ putty 를 사용하는 경우 ppk파일로 인증서 변환이 필요합니다.(putty 전용 인증서 포맷)
->   변환 및 접속 방법은 다음을 참고하세요. : https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html
+> 변환 및 접속 방법은 다음을 참고하세요. : https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html
 
 
 
-##### 우리 서버 정보
+## 우리 서버 정보
 
 | 컬럼명           | 밸류                               |
 | ---------------- | ---------------------------------- |
@@ -34,9 +34,11 @@ AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
 
 
+
+
 ---
 
-#### [필수 과정] PuTTY를 사용하여 Windows에서 Linux인스턴스에 연결하는법
+## [필수 과정] PuTTY를 사용하여 Windows에서 Linux인스턴스에 연결하는법
 
 [참고자료(aws문서)][https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html]
 
@@ -91,13 +93,102 @@ AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
    > 이렇게 하면 매번 PuTTY 실행할때마다 입력할 필요 없음
 
-4. 하단의 Open 클릭
+4. (선택 사항/추천)PuTTY inactive를 방지하기 위해 5초에 한번씩 패킷을 보내 session이 종료되지 않게 할 수 있다.
+
+   Category의 Connection에서 다음과 같이 설정
+
+   | 박스명                                         | 필드명                                    | 값   |
+   | ---------------------------------------------- | ----------------------------------------- | ---- |
+   | Sending of null packets to keep session active | Seconds between keepalives(0 to turn off) | 5    |
+
+   
+
+5. 하단의 Open 클릭
 
    > 이 인스턴스에 처음 연결한 경우 `PuTTY Security Alert`창이 뜰 수 있는데, '예'를 클릭하면 넘어가고 연결됨
 
-##### 
-
-##### 
 
 
+---
+
+## AWS시작
+
+putty를 통해 ubuntu 서버에 접속한 뒤,
+
+사용할 우분투에서 사용하는 패키지 정보를 업데이트 해줘야 한다
+
+```shell
+$ sudo apt update
+```
+
+```shell
+$ sudo su
+$ apt-get update
+```
+
+
+
+(ubuntu에서는 apt사용)
+
+
+
+---
+
+## MySQL설정
+
+##### AWS에 mysql 설치
+
+1. apt를 통해 mysql 설치
+
+```shell
+$ sudo apt install mysql-server (or apt-get install mysql-server)
+$ y
+```
+
+2. root 비밀번호 설정
+
+   비밀번호 : ssafy
+
+3. 설치 확인/ mysql 실행여부 확인
+
+```shell
+$ dpkg -l | grep mysql-server
+$ sudo netstat -tap | grep mysql
+```
+
+##### AWS에 외부접속 허용 설정(필요한가?)
+
+```shell
+$ sudo su
+$ cd /etc/mysql/mysql.conf.d
+$ vi mysqld.cnf
+여기서 bind-address 값을 0.0.0.0 으로 수정후 저장
+(원래 127.0.0.1)
+
+$ service mysql restart
+$ mysql -u root -p
+mysql > grant all privileges on *.* to root@'%' identified by '[루트계정 비밀번호]';
+```
+
+---
+
+## mysql사용
+
+##### AWS에 mysql 사용
+
+```shell
+$ mysql -u [username or root] [password]
+or
+$ mysql -u root -p ssafy
+```
+
+
+
+#### workbench에서 AWS접속
+
+| 필드명   | 값            |
+| -------- | ------------- |
+| hostname | 13.209.18.252 |
+| port     | 3306          |
+| password | ssafy         |
 
