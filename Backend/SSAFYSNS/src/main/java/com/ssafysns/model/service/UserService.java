@@ -1,6 +1,6 @@
 package com.ssafysns.model.service;
 
-import com.ssafysns.dto.User;
+import com.ssafysns.model.dto.User;
 
 public interface UserService {
 	public boolean Login(String id);

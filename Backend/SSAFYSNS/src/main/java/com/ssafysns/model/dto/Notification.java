@@ -1,4 +1,4 @@
-package com.ssafysns.dto;
+package com.ssafysns.model.dto;
 
 import java.util.Date;
 

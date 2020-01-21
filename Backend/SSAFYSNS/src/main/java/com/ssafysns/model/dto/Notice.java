@@ -1,4 +1,4 @@
-package com.ssafysns.dto;
+package com.ssafysns.model.dto;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -21,8 +20,8 @@ import lombok.ToString;
 @ToString
 @Data
 @Entity
-@Table(name = "faq")
-public class FAQ {
+@Table(name = "notice")
+public class Notice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 30, nullable = false, unique = true)
@@ -41,6 +40,6 @@ public class FAQ {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_faq_id"))
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_notice_id"))
 	private User user;
 }
