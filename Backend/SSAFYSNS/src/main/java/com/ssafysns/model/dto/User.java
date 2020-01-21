@@ -151,7 +151,7 @@ public class User {
 	private String auth;
 
 	@Column()
-	boolean deleted;
+	private boolean deleted;
 
 //	@Builder
 //	public User(String id, String no, String name, String password, String phone, Date birth, String nickname,
