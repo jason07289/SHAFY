@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-@Entity(name="tab_hash_tag")
+@Entity(name="tab_hashtag")
 public class TabHashtag {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
