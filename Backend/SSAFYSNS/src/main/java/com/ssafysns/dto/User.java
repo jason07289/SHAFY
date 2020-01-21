@@ -62,8 +62,7 @@ import lombok.ToString;
 @ToString//(exclude = "banned") 열외가능 
 /* toString method 생성 ->롬복
  *  exclude를 통해 만들기 toString 메서드에서 뺄 수 있음.
- * @Data를 안쓰는 이유 중 하나
- * 
+ * @Data를 안쓰는 이유 중 하
  * 
  * 부가적으로 @EqualsAndHashCode(exclude = "id") 이런식으로 
  * Equal메소드랑 해시코드 메소드도 생성 가능
