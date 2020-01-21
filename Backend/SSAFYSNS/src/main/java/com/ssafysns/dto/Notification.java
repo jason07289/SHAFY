@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,7 +36,7 @@ public class Notification {
 	@Column(nullable = false, unique = true)
 	private int no;
 
-	@Column(length = 30)
+	@Column(length = 30, nullable = false)
 	private String id;
 
 	@Column(nullable = false)
@@ -58,6 +57,11 @@ public class Notification {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "pno", insertable = false, updatable = false)
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_notification_id"))
+	private User user;
+
+	// 외래키 설정
+	@ManyToOne
+	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_notification__pno"))
 	private Post post;
 }

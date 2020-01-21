@@ -2,11 +2,12 @@ package com.ssafysns.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.ColumnDefault;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +33,9 @@ public class TabHashtag {
 	
 	@Column(nullable=false) 
 	private boolean deleted=false;
+	
+	// 외래키 설정
+	@ManyToOne
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_tab_hashtag_id"))
+	private User user;
 }

@@ -6,10 +6,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -58,9 +60,6 @@ public class Post {
 	@Column(length = 30)
 	private String id;
 
-	@Column(length = 20, nullable = false)
-	private String nickname;
-
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date datetime;
@@ -76,9 +75,13 @@ public class Post {
 
 	@Column()
 	private boolean deleted;
-	
+
 	// 외래키 설정
-	@OneToMany(mappedBy="post")
-//	@JoinColumn(name="no")
-    private List<Notification> notifications = new ArrayList<Notification>();
+//	@OneToMany(mappedBy="post")
+//    private List<Notification> notifications = new ArrayList<Notification>();
+
+	// 외래키 설정
+	@ManyToOne
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_board_id"))
+	private User user;
 }
