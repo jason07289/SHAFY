@@ -146,3 +146,13 @@ js 파일에서 변수 선언 후 사용하지 않을 경우 에러가 발생
 [Vue-CLI](https://cli.vuejs.org/guide/creating-a-project.html#vue-create)
 
 [Vue-Router](https://router.vuejs.org/kr/)
+
+
+
+
+
+----
+
+작성자 : 이수진
+
+일자 : 2020-01-21

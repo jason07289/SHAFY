@@ -1,6 +1,6 @@
 # Jira와 gilab 연동하기
 
-
+- gitlab에서의 설정
 
 1. Gitlab 프로젝트 settings > Integrations
 
@@ -11,10 +11,14 @@
 4.  정보 채워넣기 
 
    ```
-   
+   Web URL : https://jira.ssafy.com/
+   Username or Email : 
+   Enter new password or api token : 
    ```
-
    
+5. test settings and save changes 클릭
+
+- JIra 에서 Gitlab Listener add on 설치 
 
 ----
 
