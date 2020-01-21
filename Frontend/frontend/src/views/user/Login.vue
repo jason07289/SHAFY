@@ -35,14 +35,6 @@
             </button>
 
 
-            <div class="sns-login">
-                <div class="text">
-                    <p>SNS 간편 로그인</p>
-                    <div class="bar"></div>
-                </div>
-
-                <!-- <kakaoLogin :component="component"/>
-                <GoogleLogin :component="component"/> -->
 
             </div>
             <div class="add-option">
@@ -52,7 +44,7 @@
                 </div>
                 <div class="wrap">
                     <p>비밀번호를 잊으셨나요?</p>
-                    <router-link v-bind:to="{name:'????'}" class="btn--text">비밀번호 찾기</router-link>
+                    <router-link v-bind:to="{name:'FindPassword'}" class="btn--text">비밀번호 찾기</router-link>
                 </div>
                 <div class="wrap">
                     <p>아직 회원이 아니신가요?</p>
@@ -60,8 +52,6 @@
                 </div>
             </div>
         </div>
-
-    </div>
 </template>
 
 <script>
