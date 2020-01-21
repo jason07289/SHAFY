@@ -1,4 +1,4 @@
-package com.ssafysns.dto;
+package com.ssafysns.model.dto;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.ssafysns.dto.Post.PostBuilder;
+import com.ssafysns.model.dto.Post.PostBuilder;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
