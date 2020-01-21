@@ -19,21 +19,37 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
-	public void create(User user) {
+	public boolean create(User user) {
 		try {
 			AES256Util aes = new AES256Util();
 			user.setPassword(aes.encrypt(user.getPassword()));
 			
-//			Optional<User> find = userRepository.findById(user.getId());
+			Optional<User> find = userRepository.findById(user.getId());
 			
-			
-
-			userRepository.save(user);
-			
+			System.out.println(user.getId());
+			System.out.println(user.getPassword());
+			System.out.println("gggggggggggggggggg");
+			System.out.println(find.isPresent());
+			if(find.isPresent()) {
+			if(find.get()!=null) {
+				if(find.get().getDeleted()==0) {
+					throw new SQLException("이미 등록된 아이디 입니다.");
+					
+				}else {
+					userRepository.save(user);
+					return true;
+				}
+				}
+			}else {
+				System.out.println("저장가능");
+				userRepository.save(user);
+				return true;
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	

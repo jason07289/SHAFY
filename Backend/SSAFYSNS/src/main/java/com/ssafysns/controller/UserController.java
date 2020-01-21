@@ -54,8 +54,12 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		
 
-		userService.create(user);
-		return handleSuccess("회원가입 되었습니다.");
+		if(userService.create(user)) {
+			
+			return handleSuccess("회원가입에 성공하셨습니다.");
+		}else {
+			return handleSuccess("중복된 아이디입니다.");
+		}
 	}
 	
 //	@ApiOperation("signUp")
@@ -77,9 +81,9 @@ public class UserController {
 		
 		if(userService.login(user.getId(), user.getPassword())) {
 		
-			return handleSuccess("true");
+			return handleSuccess("로그인에 성공하셨습니다.");
 		}else {
-			return handleSuccess("false");
+			return handleSuccess("비밀번호나 아이디를 다시 입력해주세요.");
 		}
 	}
 }

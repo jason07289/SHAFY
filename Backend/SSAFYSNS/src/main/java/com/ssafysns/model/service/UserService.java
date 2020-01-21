@@ -4,7 +4,7 @@ import com.ssafysns.model.dto.User;
 
 public interface UserService {
 	public boolean login(String id, String pw);
-	public void create(User user);
+	public boolean create(User user);
 //	public List<User> searchAll();
 //	public void insert(User user);
 //	public void delete(String id);
