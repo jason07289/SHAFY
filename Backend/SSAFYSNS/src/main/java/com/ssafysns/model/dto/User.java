@@ -1,25 +1,28 @@
 package com.ssafysns.model.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 //@Data 어노테이션으로 게터 세터를 알아서 처리 -> 롬복
 /* @Data는 @ToString, @EqualsAndHashCode, @Getter, @Setter, 
  * @RequiredArgsConstructor을 한번에 사용하는 강력한 어노테이션. 
@@ -47,7 +50,7 @@ import lombok.ToString;
  * @NonNull (not null처리된 애들) 빼고 다 파라미터로 필요
  * 
  */
-@RequiredArgsConstructor
+
 /*
  * RequiredArgsContructor(staticName=“of") : static factory 메서드를 생성함 private
  * User(){ // 이렇게 생성자를 은닉하고 } public static User of(){ return new User(); //
@@ -61,8 +64,9 @@ import lombok.ToString;
  * toString method 생성 ->롬복 exclude를 통해 만들기 toString 메서드에서 뺄 수 있음.
  * 
  * @Data를 안쓰는 이유 중 하나
- *    
->>>>>>> branch 'develop' of https://lab.ssafy.com/webmobile2-sub2/s02p12a305.git
+ * 
+ * >>>>>>> branch 'develop' of
+ * https://lab.ssafy.com/webmobile2-sub2/s02p12a305.git
  * 
  * 부가적으로 @EqualsAndHashCode(exclude = "id") 이런식으로 Equal메소드랑 해시코드 메소드도 생성 가능
  */
@@ -147,31 +151,31 @@ public class User {
 	private String auth;
 
 	@Column()
-	boolean deleted;
+	private boolean deleted;
 
-	@Builder
-	public User(String id, String no, String name, String password, String phone, Date birth, String nickname,
-			String loacation, String grade, String class1, String class2, String utype, String img, String state,
-			Integer banned, String auth, boolean deleted) {
-		super();
-		this.id = id;
-		this.no = no;
-		this.name = name;
-		this.password = password;
-		this.phone = phone;
-		this.birth = birth;
-		this.nickname = nickname;
-		this.loacation = loacation;
-		this.grade = grade;
-		this.class1 = class1;
-		this.class2 = class2;
-		this.utype = utype;
-		this.img = img;
-		this.state = state;
-		this.banned = banned;
-		this.auth = auth;
-		this.deleted = deleted;
-	}
+//	@Builder
+//	public User(String id, String no, String name, String password, String phone, Date birth, String nickname,
+//			String loacation, String grade, String class1, String class2, String utype, String img, String state,
+//			Integer banned, String auth, boolean deleted) {
+//		super();
+//		this.id = id;
+//		this.no = no;
+//		this.name = name;
+//		this.password = password;
+//		this.phone = phone;
+//		this.birth = birth;
+//		this.nickname = nickname;
+//		this.loacation = loacation;
+//		this.grade = grade;
+//		this.class1 = class1;
+//		this.class2 = class2;
+//		this.utype = utype;
+//		this.img = img;
+//		this.state = state;
+//		this.banned = banned;
+//		this.auth = auth;
+//		this.deleted = deleted;
+//	}
 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")
