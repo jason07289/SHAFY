@@ -8,4 +8,6 @@ import com.ssafysns.model.dto.FAQ;
 @Repository
 public interface FAQRepository extends JpaRepository<FAQ, Integer> {
 
+	FAQ findById(String id);
+
 }
