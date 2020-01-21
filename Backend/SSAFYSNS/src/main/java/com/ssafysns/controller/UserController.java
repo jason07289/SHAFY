@@ -4,23 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ssafysns.model.dto.User;
+import com.ssafysns.model.service.UserService;
 
 //import com.ssafysns.model.service.UserService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins="{*}", maxAge=6000)
 @RestController
 @Api(value="SSAFY SNS", description="SSAFY SNS")
+@EnableAutoConfiguration
 public class UserController {
 	
-//	@Autowired
-//	private UserService service;
+	@Autowired
+	private UserService userService;
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -41,6 +49,37 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	@ApiOperation("회원가입")
+	@PostMapping("/api/user/signUp/")
+	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
+		
+
+		userService.create(user);
+		return handleSuccess("회원가입 되었습니다.");
+	}
 	
+//	@ApiOperation("signUp")
+//	@PostMapping("/api/userJPA/signUp")
+//	public void signUp2(@RequestBody User user){
+//		userService.create(user);
+//	}
+//	@ApiOperation(value = "signUp")
+//	@PostMapping("/api/userJPA/signUp")
+//	public ResponseEntity<Map<String, Object>> signUp2(@RequestBody User user) throws Exception {
+//		userService.create(user);
+//		return handleSuccess("User 등록 완료");
+//	}	
 	
+	@ApiOperation("로그인")
+	@PostMapping("/api/user/login")
+	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
+//		System.out.println(user.getId()+" ............  "+user.getPassword());
+		
+		if(userService.login(user.getId(), user.getPassword())) {
+		
+			return handleSuccess("true");
+		}else {
+			return handleSuccess("false");
+		}
+	}
 }
