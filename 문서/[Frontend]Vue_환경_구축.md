@@ -55,3 +55,11 @@ yarn -v
 [yarn docs](https://yarnpkg.com/en/docs/)
 
 [npm과yarn](https://happygrammer.tistory.com/154)
+
+
+
+-----
+
+작성자 : 이수진 
+
+일자 : 2020-01-20

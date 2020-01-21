@@ -102,38 +102,38 @@ npm install password-validator
 npm install email-validator
 ```
 
-
-
 #### axios
 
 ```cmd
 npm install axios
 ```
 
+#### mdi
 
+```cmd
+npm install material-design-icons-iconfont
+```
 
-
+```javascript
+// main.js
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+```
 
 ---
 
 ## Error
 
-`[name] is defined but never used`
+#### (no-unused-vars)Eslint error
 
-변수를 간접적으로 사용할 때 `eslint` 가  에러가 나기도 한다. 
+js 파일에서 변수 선언 후 사용하지 않을 경우 에러가 발생
 
-In `eslintrc.js` 에서 `no-console` 옵션을 `off` 로 바꿔준다.
+문제가 되는 파일의 최 상단에 아래 내용을 추가. (임시적으로 사용?)
 
 ```javascript
- rules: {
-    // 'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "no-console":  'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  },
-
+ /* eslint-disable no-unused-vars */
 ```
 
-
+ 
 
 
 
@@ -146,3 +146,13 @@ In `eslintrc.js` 에서 `no-console` 옵션을 `off` 로 바꿔준다.
 [Vue-CLI](https://cli.vuejs.org/guide/creating-a-project.html#vue-create)
 
 [Vue-Router](https://router.vuejs.org/kr/)
+
+
+
+
+
+----
+
+작성자 : 이수진
+
+일자 : 2020-01-21
