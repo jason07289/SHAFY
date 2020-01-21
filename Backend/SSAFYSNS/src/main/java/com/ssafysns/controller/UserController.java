@@ -19,7 +19,7 @@ import io.swagger.annotations.Api;
 @Api(value="SSAFY SNS", description="SSAFY SNS")
 public class UserController {
 	
-	@Autowired
+//	@Autowired
 //	private UserService service;
 	
 	@ExceptionHandler
