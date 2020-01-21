@@ -4,20 +4,20 @@ AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
 
 >1) 프로젝트 목적외 사적인 활용을 금지합니다. (예 : 블록코인 채굴, Torrent 머신 활용, NAS 서버 활용 등)
->2) 서버를 Shutdown 하는 경우 학생들이 다시 켤 방법은 없습니다..
->리부팅이  필요한 경우 "sudo shutdown  -r now" 명령을 사용합니다.
->3) 서버의 IP 및 접근 가능 Port는 다음 URL에서 확인  가능합니다.
->https://s.ssafy.io/aws/servers.html
->※ 허용포트: 22, 80, 443, 3000-3999, 8000-8999, 5000
+2) 서버를 Shutdown 하는 경우 학생들이 다시 켤 방법은 없습니다..
+   리부팅이  필요한 경우 "sudo shutdown  -r now" 명령을 사용합니다.
+3) 서버의 IP 및 접근 가능 Port는 다음 URL에서 확인  가능합니다.
+   https://s.ssafy.io/aws/servers.html
+   ※ 허용포트: 22, 80, 443, 3000-3999, 8000-8999, 5000
 
 > [접속 방법]
 > `ssh -i '팀인증서.pem' ubuntu@공인IP`
 > 예) 서울 1반 1팀의 경우
->   인증서 파일명 : T02A101.pem 
->   접속 IP(Public Ip) : https://s.ssafy.io/aws/servers.html 에서 인증서 파일 "T02A01" 검색
->   접속 명령어 : ssh -i 'T02A101.pem' ubuntu@13.124.67.187
+>      인증서 파일명 : T02A101.pem 
+>      접속 IP(Public Ip) : https://s.ssafy.io/aws/servers.html 에서 인증서 파일 "T02A01" 검색
+>      접속 명령어 : ssh -i 'T02A101.pem' ubuntu@13.124.67.187
 > ※ putty 를 사용하는 경우 ppk파일로 인증서 변환이 필요합니다.(putty 전용 인증서 포맷)
-> 변환 및 접속 방법은 다음을 참고하세요. : https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html
+>   변환 및 접속 방법은 다음을 참고하세요. : https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/putty.html
 
 
 
@@ -44,7 +44,7 @@ AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
 ##### :one: PuTTY설치
 
-[다운로드링크
+[다운로드링크][https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe]
 
 ##### :two:`.pem`을 `.ppk`로 변환 (.ppk가있다면생략가능)
 
@@ -191,4 +191,48 @@ $ mysql -u root -p ssafy
 | hostname | 13.209.18.252 |
 | port     | 3306          |
 | password | ssafy         |
+
+
+
+기타메모
+
+```
+git config --global http.proxy 192.168.0.1:8080
+
+git config --list
+
+[git clone http]
+https://lab.ssafy.com/webmobile2-sub2/s02p12a305.git
+```
+
+
+
+---
+
+## AWS에서 vue관련 설치하기
+
+#### :one: nodejs LTS버전으로 설치하기(npm이용)
+
+```shell
+[1. nvm설치에 필요한 패키지들 설치]
+$ sudo apt-get update
+$ sudo apt-get install build-essential libssl-dev
+
+[2. nvm설치 스크립트를 다운로드해서 설치]
+$ curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh -o install_nvm.sh 
+$ bash install_nvm.sh 
+$ source ~/.profile
+
+[3. 설치확인]
+(home 디렉터리에 ~/.nvm폴더가 생성됨)
+
+[4. 원하는 버전 설치]
+$ nvm ls-remote
+$ nvm install 12.14.1
+
+```
+
+> 여러 버전의 Node.js를 설치했다면 `$ nvm use 12.14.1` 을 이용해서 원하는 버전 사용 가능 ( `$ nvm ls`를 통해 설치된 버전 확인 가능)
+>
+> ※nvm을 이용해서 Node.js를 설치하면 `$ node -v`명령어를 통해 버전을 확인해야 한다.
 
