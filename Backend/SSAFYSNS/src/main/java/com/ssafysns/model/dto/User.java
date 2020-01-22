@@ -107,7 +107,11 @@ public class User {
 	@Column(length = 20, nullable = false)
 	private String name;
 
+<<<<<<< HEAD
 	@Column(length = 200,nullable = false)
+=======
+	@Column(nullable = false)
+>>>>>>> 720e97187a29c7a7f62c21ec27b76c75714e435e
 	private String password;
 
 //	@Getter
@@ -159,6 +163,15 @@ public class User {
 	
 
 
+<<<<<<< HEAD
+=======
+	@Column(columnDefinition = "TINYINT", length=1)
+	private int deleted;
+
+
+	
+
+>>>>>>> 720e97187a29c7a7f62c21ec27b76c75714e435e
 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")

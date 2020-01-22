@@ -30,19 +30,11 @@ import lombok.ToString;
 @Builder
 @Getter
 @Setter
-@ToString // toString method 생성 ->롬복
-//@Data// @Data 어노테이션으로 게터 세터를 알아서 처리 -> 롬복
-@Entity // db의 테이블과 일대일로 매칭되는 객체 단위 @Id 어노테이션으로 pk 지정
-/*
- * application.properties의 "spring.jpa.hibernate.ddl-auto=update" 때문에
- * entityManager가 자동으로 DDL을 수행해준다. 콘솔에서 확인가능.
- *
- * @Entity(name="user")로도 table명 지정가능 CamelCase가 java에서 쓰이고 db는 under_score기 때문에
- * 명시해주는게 좋음
- */
-@Table(name = "post") // name을 통해 테이블 명을 지정가능, 이 어노테이션이 없다면 class명을 default로 table생성
+@ToString
+@Entity
+@Table(name = "post")
 public class Post {
-	@Id // 기본키 (pk)
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
 	private int pno;
@@ -73,8 +65,8 @@ public class Post {
 	@Column(length = 200)
 	private String attachments;
 
-	@Column()
-	private boolean deleted;
+	@Column(columnDefinition = "TINYINT", length = 1)
+	private int deleted;
 
 	// 외래키 설정
 //	@OneToMany(mappedBy="post")
