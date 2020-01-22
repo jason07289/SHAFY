@@ -1,8 +1,6 @@
 package com.ssafysns.model.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,12 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.ssafysns.model.dto.Post.PostBuilder;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,8 +27,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity(name = "comments")
-public class Comments {
+@Entity(name = "comment")
+public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
@@ -44,7 +38,7 @@ public class Comments {
 	private int pno;
 
 	@Column()
-	private int parent;
+	private Integer parent;
 
 	@Column(nullable = false, length = 30)
 	private String id;
@@ -64,7 +58,7 @@ public class Comments {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_pno"))
+	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))
 	private Post post;
 
 	// 외래키 설정
@@ -73,12 +67,12 @@ public class Comments {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_parent"))
-	private Comments comments;
+	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_parent"))
+	private Comment comment;
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_id"))
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_id"))
 	private User user;
 
 }

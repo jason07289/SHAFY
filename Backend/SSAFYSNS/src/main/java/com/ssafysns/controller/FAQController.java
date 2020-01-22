@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.FAQ;
 import com.ssafysns.model.service.FAQService;
 
@@ -54,18 +55,33 @@ public class FAQController {
 		return new ResponseEntity<List<FAQ>>(faqService.searchAll(), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value="번호로 FAQ 정보 검색", response = FAQ.class)
-	@GetMapping("/searchFAQByNo/{id}")
-	public ResponseEntity<FAQ> searchFAQ(@PathVariable String id) throws Exception{
-		return new ResponseEntity<FAQ> (faqService.search(id), HttpStatus.OK);
+	@ApiOperation(value="id로 FAQ 정보 검색", response = FAQ.class)
+	@GetMapping("/search/{id}")
+	public ResponseEntity<List<FAQ>> searchFAQ(@PathVariable String id) throws Exception{
+		return new ResponseEntity<List<FAQ>> (faqService.search(id), HttpStatus.OK);
 	}
 
 	@ApiOperation(value="새로운 FAQ 생성")
-	@PostMapping("/faqInsert")
+	@PostMapping("/faq/new")
 	public ResponseEntity<Map<String, Object>> userInsert(@RequestBody FAQ faq) throws Exception {
 		System.out.println("controller: " + faq.toString());
 		faqService.insert(faq);
 		return handleSuccess("등록 완료");
+	}
+	
+	@ApiOperation(value="no로 FAQ 삭제")
+	@GetMapping("/faq/delete/{no}")
+	public ResponseEntity<Map<String, Object>> DeleteComment(@PathVariable int no) throws Exception {
+		System.out.println("controller... no: "+no);
+		faqService.delete(no);
+		return handleSuccess("faq 삭제 완료");
+	}
+	
+	@ApiOperation(value="FAQ update")
+	@PostMapping("/faq/update")
+	public ResponseEntity<Map<String, Object>> commentUpdate(@RequestBody FAQ faq) throws Exception {
+		faqService.update(faq);
+		return handleSuccess("faq 수정 완료");
 	}
 	
 }
