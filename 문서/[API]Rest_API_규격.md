@@ -136,7 +136,7 @@ DELETE	user/{int}
           state
           banned
           auth
-          deleted
+          deleted		
   	},
   }
   ```
@@ -264,8 +264,10 @@ DELETE	user/{int}
 GET 	post/list
 		post/{int}
 POST	post
+		post/{int}/comment
 PUT		post/{int}
 DELETE	post/{int}
+		post/{int}/comment/{int}
 ```
 
 
@@ -278,7 +280,8 @@ DELETE	post/{int}
   {
   	header : {},
   	params : {
-  		sort_by: [all, like ...]
+  		sort_by: [all, ...]
+          filtered_by: [tag, ...]
   	},	
   }
   ```
@@ -298,12 +301,18 @@ DELETE	post/{int}
   		likes
   		attachments
   		deleted
+          comments : [
+          	...
+          	{},
+      		{},
+      		...
+        ]
   	}
   	{}
   	...
   ]
   ```
-
+  
   
 
 ### GET: /post/{int}
@@ -331,6 +340,12 @@ DELETE	post/{int}
       likes
       attachments
       deleted
+      comments :[
+      	...
+      	{},
+  		{},
+  		...
+      ]
   }
   
   ```
@@ -365,6 +380,36 @@ DELETE	post/{int}
     	state : [ok, fail]
   }
   ```
+
+
+
+### POST : /post/{int}/comment
+
+- request 
+
+  ```json
+  {
+  	header : {},
+  	body :
+      {
+          pno : [required],
+          parent  
+          id :[required]
+          content : [required]
+      	}
+  	},	
+  }
+  ```
+
+- response
+
+  ```json
+  {
+    	state : [ok, fail]
+  }
+  ```
+
+  
 
 
 
@@ -420,6 +465,27 @@ DELETE	post/{int}
   ```
 
 
+
+### DELETE: /post/{int}/comment/{int}
+
+- request
+
+  ```json
+  {
+  	header : {},
+  	body : {},	
+  }
+  ```
+
+- reponse
+
+  ```json
+  {
+      state : [ok, fail]
+  }
+  ```
+
+  
 
 ## Notice
 
