@@ -48,7 +48,9 @@ public class FAQ {
 	private Date datetime;
 	
 	@Column()
-	private boolean deleted;
+	private int deleted;
+//	@Column(columnDefinition = "TINYINT", length=1)
+//	private boolean deleted;
 
 	// 외래키 설정
 	@ManyToOne

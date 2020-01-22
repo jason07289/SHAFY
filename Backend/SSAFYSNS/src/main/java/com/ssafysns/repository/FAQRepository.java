@@ -16,7 +16,7 @@ public interface FAQRepository extends JpaRepository<FAQ, Integer> {
 	List<FAQ> findById(String id);
 	
 	@Modifying
-	@Query("update FAQ f set f.deleted = true where f.no=:no")
+	@Query("update FAQ f set f.deleted = 1 where f.no=:no")
 	void updateDeleted(@Param("no") int no);
 
 }
