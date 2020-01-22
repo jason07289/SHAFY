@@ -10,8 +10,8 @@ public class MailUtil {
  		String charSet ="utf-8";
 		String hostSMTP = "smtp.naver.com";
 		
-		String hostSMTPid = "jason07999";
-		String hostSMTPpwd = "jason07999";
+		String hostSMTPid = "jason07999";//naverid
+		String hostSMTPpwd = "19921992a";
 		
 		//보내는 이 설정
 		String fromEmail = "ssafysns@gmail.com";
