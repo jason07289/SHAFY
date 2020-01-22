@@ -33,21 +33,21 @@ public class PostController {
 
 	// 모든 Post 조회
 	@ApiOperation(value = "모든 Post 목록 조회")
-	@GetMapping("/searchAll")
+	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
 		return handleSuccess(postService.searchAll());
 	}
 
 	// pno에 해당하는 Post 조회
 	@ApiOperation(value = "pno에 해당하는 Post 조회")
-	@GetMapping("/search/{pno}")
+	@GetMapping("/{pno}")
 	public ResponseEntity<Map<String, Object>> search(@PathVariable int pno) throws Exception {
 		return handleSuccess(postService.search(pno));
 	}
 
 	// Post 등록
 	@ApiOperation(value = "Post 등록")
-	@PostMapping("/insert")
+	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		postService.insert(post);
 		return handleSuccess("Post 등록 완료");
@@ -55,7 +55,7 @@ public class PostController {
 
 	// pno에 해당하는 Post 삭제
 	@ApiOperation(value = "pno에 해당하는 Post 삭제")
-	@DeleteMapping("/delete/{pno}")
+	@DeleteMapping("/{pno}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable int pno) throws Exception {
 		postService.delete(pno);
 		return handleSuccess("Post 삭제 완료");
@@ -63,7 +63,7 @@ public class PostController {
 
 	// Post 수정
 	@ApiOperation(value = "Post 수정")
-	@PutMapping("/update")
+	@PutMapping
 	public ResponseEntity<Map<String, Object>> update(@RequestBody Post post) throws Exception {
 		postService.update(post);
 		return handleSuccess("Post 수정 완료");
