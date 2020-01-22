@@ -2,6 +2,8 @@ package com.ssafysns.model.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,25 +27,34 @@ public class FAQServiceImpl implements FAQService {
 
 	@Override
 	public void update(FAQ faq) {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void delete(String id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public FAQ search(String id) {
-		FAQ faq = null;
 		try {
-			faq =  faqRepository.findById(id);
+			faqRepository.save(faq);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	@Transactional
+	public void delete(int no) {
+		try {
+			faqRepository.updateDeleted(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public List<FAQ> search(String id) {
+		List<FAQ> faqs = null;
+		try {
+			faqs =  faqRepository.findById(id);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return faq;
+		return faqs;
 	}
 
 	@Override

@@ -8,15 +8,19 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.ssafysns.model.dto.FAQ;
+import com.ssafysns.model.dto.Comment;
 
 @Repository
-public interface FAQRepository extends JpaRepository<FAQ, Integer> {
-
-	List<FAQ> findById(String id);
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	
+//	@Modifying
+//	@Query("update comments c set c.title = :title where c.id=:id")
+//	void update(@Param("title") String title, @Param("id") String id);
+
+	List<Comment> findById(String id);
+
 	@Modifying
-	@Query("update FAQ f set f.deleted = true where f.no=:no")
+	@Query("update comments c set c.deleted = true where c.no=:no")
 	void updateDeleted(@Param("no") int no);
 
 }
