@@ -1,4 +1,4 @@
-AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
+AWS 서버 사용 관련된 내용을 정리해두는 문서입니다. 200120
 
 ##### 컨설턴트님 공지
 
@@ -235,4 +235,116 @@ $ nvm install 12.14.1
 > 여러 버전의 Node.js를 설치했다면 `$ nvm use 12.14.1` 을 이용해서 원하는 버전 사용 가능 ( `$ nvm ls`를 통해 설치된 버전 확인 가능)
 >
 > ※nvm을 이용해서 Node.js를 설치하면 `$ node -v`명령어를 통해 버전을 확인해야 한다.
+
+#### :two: vue/cli 설치?
+
+```shell
+$ npm i -g @vue/cli
+$ yarn global add @vue/cli
+```
+
+> 이건 햇는지잘기억안남 ㅎ;
+
+#### :three: yarn 설치
+
+1. ##### 확인
+
+```shell
+$ yarn --version
+```
+
+```
+The program 'yarn' is currently not installed. You can install it by typing:
+apt-get install cmdtest
+```
+
+2. ##### 저장소 등록
+
+```shell
+$ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+```
+
+```
+OK
+```
+
+```shell
+$ echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+```
+
+```
+deb http://dl.yarnpkg.com/debian/ stable main
+```
+
+3. ##### apt-get update
+
+```shell
+$ apt-get update
+```
+
+```
+... (생략)
+Fetched 4,974 kB in 21s (233 kB/s)
+Reading package lists... Done
+```
+
+4. ##### 설치
+
+```shell
+$ apt-get install yarn
+```
+
+```
+...(설치)
+어쩌구저쩌구 (Y/n) ->y입력
+...(설치)
+얀설치끝~~
+```
+
+5. ##### 확인하기
+
+```shell
+$ yarn --version
+```
+
+```
+1.21.0(버전은 틀릴수잇음)
+```
+
+
+
+#### :four: 이것저것 설치
+
+vue-router vuex설치
+
+```shell
+$ yarn add vue-router vuex
+```
+
+sass설정
+
+```shell
+$ yarn add node-sass sass-loader
+```
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Vuejs 프로젝트 배포하기
+
+```shell
+(git에서 pull한뒤에)
+$ yarn install
+$ yarn build
+$ yarn serve
+```
 
