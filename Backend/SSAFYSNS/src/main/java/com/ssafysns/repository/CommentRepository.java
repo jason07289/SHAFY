@@ -20,7 +20,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	List<Comment> findById(String id);
 
 	@Modifying
-	@Query("update comments c set c.deleted = true where c.no=:no")
+	@Query("update comment c set c.deleted = true where c.no=:no")
 	void updateDeleted(@Param("no") int no);
 
 }
