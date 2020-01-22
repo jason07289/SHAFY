@@ -53,8 +53,8 @@ public class NoticeController {
 		return handleSuccess("Notice 등록 완료");
 	}
 
-	// Notice 등록
-	@ApiOperation(value = "Notice 삭제")
+	// no에 해당하는 Notice 삭제
+	@ApiOperation(value = "no에 해당하는 Notice 삭제")
 	@DeleteMapping("/delete/{no}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable int no) throws Exception {
 		noticeService.delete(no);
