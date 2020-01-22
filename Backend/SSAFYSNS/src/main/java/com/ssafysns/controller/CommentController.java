@@ -49,7 +49,7 @@ public class CommentController {
 	}
 	
 	@ApiOperation(value="", response=List.class)
-	@GetMapping("/comment/list/all")
+	@PostMapping("/comment/list/{no}")
 	public ResponseEntity<List<Comment>> findAllComments() throws Exception {
 		return new ResponseEntity<List<Comment>>(commentService.searchComment(), HttpStatus.OK);
 	}

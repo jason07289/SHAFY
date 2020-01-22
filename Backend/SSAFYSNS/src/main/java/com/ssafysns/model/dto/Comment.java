@@ -37,7 +37,7 @@ public class Comment {
 	@Column(nullable = false)
 	private int pno;
 
-	@Column()
+	@Column(columnDefinition="default null")
 	private Integer parent;
 
 	@Column(nullable = false, length = 30)
@@ -50,11 +50,11 @@ public class Comment {
 	@Column(nullable = false, length = 300)
 	private String content;
 
-	@Column()
+	@Column(columnDefinition="default 0")
 	private int likes;
 
-	@Column()
-	private boolean deleted;
+	@Column(columnDefinition="default 0")
+	private int deleted;
 
 	// 외래키 설정
 	@ManyToOne
