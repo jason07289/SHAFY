@@ -10,28 +10,28 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafysns.model.dto.Comments;
-import com.ssafysns.repository.CommentsRepository;
+import com.ssafysns.model.dto.Comment;
+import com.ssafysns.repository.CommentRepository;
 
 @Service
-public class CommentsServiceImpl implements CommentsService {
+public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
-	CommentsRepository commentsRepository;
+	CommentRepository commentRepository;
 
 	@Override
-	public void insert(Comments comment) {
+	public void insert(Comment comment) {
 		try {
-			commentsRepository.save(comment);
+			commentRepository.save(comment);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void update(Comments comment) {
+	public void update(Comment comment) {
 		try {
-			commentsRepository.save(comment);
+			commentRepository.save(comment);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,22 +43,22 @@ public class CommentsServiceImpl implements CommentsService {
 		
 		//deleted = true로 활성화
 		try {
-			commentsRepository.updateDeleted(no);
+			commentRepository.updateDeleted(no);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public Comments search(String id) {
+	public Comment search(String id) {
 		return null;
 	}
 
 	@Override
-	public List<Comments> searchComments() {
-		List<Comments> comments = null;
+	public List<Comment> searchComment() {
+		List<Comment> comments = null;
 		try {
-			comments = commentsRepository.findAll();
+			comments = commentRepository.findAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,10 +66,10 @@ public class CommentsServiceImpl implements CommentsService {
 	}
 
 	@Override
-	public List<Comments> searchId(String id) {
-		List<Comments> comments = null;
+	public List<Comment> searchId(String id) {
+		List<Comment> comments = null;
 		try {
-			comments = commentsRepository.findById(id);
+			comments = commentRepository.findById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

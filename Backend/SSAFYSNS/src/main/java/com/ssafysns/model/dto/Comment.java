@@ -27,8 +27,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity(name = "comments")
-public class Comments {
+@Entity(name = "comment")
+public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
@@ -58,7 +58,7 @@ public class Comments {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_pno"))
+	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))
 	private Post post;
 
 	// 외래키 설정
@@ -67,12 +67,12 @@ public class Comments {
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_parent"))
-	private Comments comments;
+	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_parent"))
+	private Comment comment;
 
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comments_id"))
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_id"))
 	private User user;
 
 }

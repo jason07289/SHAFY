@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.model.dto.Comments;
-import com.ssafysns.model.service.CommentsService;
+import com.ssafysns.model.dto.Comment;
+import com.ssafysns.model.service.CommentService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,10 +24,10 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin(origins="{*}", maxAge=6000)
 @RestController
 @Api(value="SSAFY SNS", description="SSAFY SNS")
-public class CommentsController {
+public class CommentController {
 	
 	@Autowired
-	private CommentsService commentService;
+	private CommentService commentService;
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -49,33 +49,33 @@ public class CommentsController {
 	}
 	
 	@ApiOperation(value="", response=List.class)
-	@GetMapping("/comments/list/all")
-	public ResponseEntity<List<Comments>> findAllComments() throws Exception {
-		return new ResponseEntity<List<Comments>>(commentService.searchComments(), HttpStatus.OK);
+	@GetMapping("/comment/list/all")
+	public ResponseEntity<List<Comment>> findAllComments() throws Exception {
+		return new ResponseEntity<List<Comment>>(commentService.searchComment(), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value="id로 Comments 검색", response=Comments.class)
-	@GetMapping("/comments/list/{id}")
-	public ResponseEntity<List<Comments>> findById(@PathVariable String id) throws Exception {
-		return new ResponseEntity<List<Comments>> (commentService.searchId(id), HttpStatus.OK);
+	@ApiOperation(value="id로 Comment 검색", response=Comment.class)
+	@GetMapping("/comment/list/{id}")
+	public ResponseEntity<List<Comment>> findById(@PathVariable String id) throws Exception {
+		return new ResponseEntity<List<Comment>> (commentService.searchId(id), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Comment 작성")
-	@PostMapping("/comments/new")
-	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comments comment) throws Exception {
+	@PostMapping("/comment/new")
+	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
 		commentService.insert(comment);
 		return handleSuccess("댓글 등록 완료");
 	}
 	
 	@ApiOperation(value="Comment update")
-	@PostMapping("/comments/update")
-	public ResponseEntity<Map<String, Object>> commentUpdate(@RequestBody Comments comment) throws Exception {
+	@PostMapping("/comment/update")
+	public ResponseEntity<Map<String, Object>> commentUpdate(@RequestBody Comment comment) throws Exception {
 		commentService.update(comment);
 		return handleSuccess("댓글 수정 완료");
 	}
 	
 	@ApiOperation(value="no로 Comments 삭제")
-	@GetMapping("/comments/delete/{no}")
+	@GetMapping("/comment/delete/{no}")
 	public ResponseEntity<Map<String, Object>> DeleteComment(@PathVariable int no) throws Exception {
 		System.out.println("controller... no: "+no);
 		commentService.delete(no);
