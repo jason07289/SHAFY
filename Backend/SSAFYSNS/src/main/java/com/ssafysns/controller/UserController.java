@@ -83,8 +83,15 @@ public class UserController {
 		}
 	}
 	
-//	@ApiOperation("비밀번호 변경")
-//	public ResponseEntity<Map<String,Object>> 
+	@ApiOperation("비밀번호 변경")
+	public ResponseEntity<Map<String,Object>> changePW(@RequestBody User user,@RequestBody String newPW){
+		if(userService.changePW(user.getId(), user.getPassword(),newPW)) {
+			
+			return handleSuccess("비밀번호 변경에 성공하셨습니다.");
+		}else {
+			return handleSuccess("이전 비밀번호를 다시 입력해주세요.");
+		}
+	}
 	
 	
 }
