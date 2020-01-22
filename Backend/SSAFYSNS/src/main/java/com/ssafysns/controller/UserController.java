@@ -82,4 +82,9 @@ public class UserController {
 			return handleSuccess("비밀번호나 아이디를 다시 입력해주세요.");
 		}
 	}
+	
+//	@ApiOperation("비밀번호 변경")
+	
+	
+	
 }
