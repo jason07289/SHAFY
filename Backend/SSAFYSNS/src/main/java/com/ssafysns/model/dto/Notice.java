@@ -11,14 +11,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ssafysns.model.dto.Post.PostBuilder;
+
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @ToString
-@Data
 @Entity
 @Table(name = "notice")
 public class Notice {
@@ -35,8 +44,8 @@ public class Notice {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	@Column(nullable = false)
 	private Date datetime;
-	@Column(nullable = false)
-	private boolean deleted;
+	@Column(columnDefinition = "TINYINT", length = 1)
+	private int deleted;
 
 	// 외래키 설정
 	@ManyToOne
