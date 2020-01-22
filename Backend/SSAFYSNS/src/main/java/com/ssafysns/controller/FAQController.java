@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.model.dto.Comments;
+import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.FAQ;
 import com.ssafysns.model.service.FAQService;
 

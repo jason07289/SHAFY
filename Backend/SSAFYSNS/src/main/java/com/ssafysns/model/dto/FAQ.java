@@ -42,7 +42,7 @@ public class FAQ {
 	@Column(length = 30, nullable = false)
 	private String id;
 	
-	@CreationTimestamp
+//	@CreationTimestamp
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	@Column(nullable = false)
 	private Date datetime;

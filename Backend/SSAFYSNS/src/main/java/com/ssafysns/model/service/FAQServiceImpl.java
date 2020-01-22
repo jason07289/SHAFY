@@ -27,6 +27,7 @@ public class FAQServiceImpl implements FAQService {
 
 	@Override
 	public void update(FAQ faq) {
+		
 		try {
 			faqRepository.save(faq);
 		} catch (Exception e) {
