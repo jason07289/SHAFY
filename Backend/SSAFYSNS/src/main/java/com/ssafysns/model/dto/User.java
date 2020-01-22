@@ -159,6 +159,12 @@ public class User {
 	
 
 
+	@Column(columnDefinition = "TINYINT", length=1)
+	private int deleted;
+
+
+	
+
 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")
