@@ -12,15 +12,11 @@ import com.ssafysns.model.dto.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-	
-//	@Modifying
-//	@Query("update comments c set c.title = :title where c.id=:id")
-//	void update(@Param("title") String title, @Param("id") String id);
 
 	List<Comment> findById(String id);
 
 	@Modifying
-	@Query("update comment c set c.deleted = true where c.no=:no")
+	@Query("update comment c set c.deleted = 1 where c.no=:no")
 	void updateDeleted(@Param("no") int no);
 
 }

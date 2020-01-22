@@ -55,6 +55,8 @@
 </template>
 
 <script>
+
+ /* eslint-disable no-unused-vars */
     // import '../../assets/css/style.scss'
     // import '../../assets/css/user.scss'
     import PV from 'password-validator'
