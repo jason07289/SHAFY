@@ -62,17 +62,13 @@ public class UserController {
 		}
 	}
 	
-//	@ApiOperation("signUp")
-//	@PostMapping("/api/userJPA/signUp")
-//	public void signUp2(@RequestBody User user){
-//		userService.create(user);
-//	}
-//	@ApiOperation(value = "signUp")
-//	@PostMapping("/api/userJPA/signUp")
-//	public ResponseEntity<Map<String, Object>> signUp2(@RequestBody User user) throws Exception {
-//		userService.create(user);
-//		return handleSuccess("User 등록 완료");
-//	}	
+	@ApiOperation("비밀번호 찾기")
+	@PostMapping("/api/user/findPw")
+	public ResponseEntity<Map<String, Object>> findPw(@RequestBody User user){
+		//비밀번호 찾기 기능. 이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식
+		userService.findPW(user.getId(), user.getName());
+		return handleSuccess("이메일로 임시 비빌번호를 전송하였습니다.");
+	}
 	
 	@ApiOperation("로그인")
 	@PostMapping("/api/user/login")

@@ -107,7 +107,7 @@ public class User {
 	@Column(length = 20, nullable = false)
 	private String name;
 
-	@Column(nullable = false)
+	@Column(length = 200,nullable = false)
 	private String password;
 
 //	@Getter

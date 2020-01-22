@@ -4,14 +4,13 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import org.apache.ibatis.session.SqlSessionException;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
+import com.ssafysns.util.MailUtil;
 @Service
 public class UserServiceImpl implements UserService{
 	@Autowired
@@ -81,4 +80,46 @@ public class UserServiceImpl implements UserService{
 	}
 
 
+	@Override
+	public User findPW(String id, String name)  {
+		MailUtil mu = new MailUtil();
+		System.out.println("findPW 들어왔어요");
+		User find = userRepository.findByIdAndName(id, name);
+		
+		System.out.println("id와 이름으로 user를 찾았습니다.");
+		String userEmail = find.getId();
+		try {
+			
+			if(find==null||find.getDeleted()==1) {
+				throw new SQLException("해당되는 회원정보가 없습니다.");
+			}else {
+				String key = mu.CreateKey();//임시비밀번호 생성부
+				String subject = "[SSAFY SNS] 비밀번호 찾기 ";
+				StringBuffer sbuff = new StringBuffer();
+				sbuff.append("<div align='center' style='border:1px solid black; font-family:verdana'>")
+				.append("<h3 style='font-size: 130%'> SSAFY SNS 임시 비밀번호를 안내해 드리겠습니다.</h3>")
+				.append("<div style='font-size: 130%'> SSAFY SNS 임시 비밀번호는 <strong>")
+				.append(key).append("</strong> 입니다.</div> <br/>");
+			
+				AES256Util aes = new AES256Util();
+			
+				System.out.println(find.toString());
+				find.setPassword(aes.encrypt(key));
+				System.out.println("save 직전");
+				userRepository.save(find);
+				System.out.println("save 직후");
+			
+				String msg = sbuff.toString();
+			
+				mu.sendMail(userEmail, subject, msg);
+			
+				return find;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 }

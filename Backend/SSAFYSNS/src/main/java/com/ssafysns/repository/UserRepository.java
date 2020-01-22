@@ -8,7 +8,7 @@ import com.ssafysns.model.dto.User;
 public interface UserRepository extends JpaRepository<User, String>{//<entity, pk의 타입>
 	
 	
-	
+	public User findByIdAndName(String id, String name );
 	
 	
 	
