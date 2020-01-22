@@ -209,7 +209,7 @@ https://lab.ssafy.com/webmobile2-sub2/s02p12a305.git
 
 ---
 
-## AWS에서 vue관련 설치하기
+## AWS에서 vue관련 설치하기(프론트엔드)
 
 #### :one: nodejs LTS버전으로 설치하기(npm이용)
 
@@ -319,6 +319,8 @@ vue-router vuex설치
 
 ```shell
 $ yarn add vue-router vuex
+or
+$ npm install vue-router vuex
 ```
 
 sass설정
@@ -337,8 +339,6 @@ $ yarn add node-sass sass-loader
 
 
 
----
-
 ## Vuejs 프로젝트 배포하기
 
 ```shell
@@ -348,3 +348,163 @@ $ yarn build
 $ yarn serve
 ```
 
+
+
+
+
+---
+
+## Spring boot 설정 (백엔드)
+
+#### :one: jdk-8 설치 (openjdk-8로 설치했는데 차후 오류나면 확인!)
+
+```shell
+$ apt-get install openjdk-8-jdk (뭐라고하면 y치기)
+$ java -version (버전 확인)
+```
+
+
+
+#### :two: DB설정(mysql 설치 안됏으면 설치하샘~)
+
+- 체크할 것들
+
+  - `Application.properties`?? 인가 여기에서 db연결 주소 바꿔주기(publicIP:3306으로)
+
+  - AWS안에 디비에 스키마 생성하기( 테이블은 JPA가 설정해줌)
+
+    ```mysql
+    CREATE SCHEMA `ssafysns` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;
+    ```
+
+
+
+## 메이븐으로 배포하기
+
+```shell
+$ ./mvnw clean package
+```
+
+> `./mvnw`가 보이는 위치에서 실행하기
+>
+> `./mvnw clean package permission denied`라는 에러가 뜰 경우
+>
+> ​	:arrow_right: `$ chmod +x mvnw ` 실행
+>
+> 
+
+
+
+## Spring boot 배포 스크립트 생성 및 실행(메이븐)
+
+참고 블로그
+
+-  [스프링부트로 웹 서비스 출시하기 - 5.EC2에 배포하기][https://jojoldu.tistory.com/263] <-스크립트 작성 자세함
+- [EC2에 maven으로 배포하기][https://miniminis.github.io/2019/10/13/springboot-deploy/]
+
+
+
+- **배포과정(스크립트)에 포함되어야 하는 내용**
+
+  >1. git clone 혹은 git pull을 통해 새 버전의 프로젝트 받기
+  >
+  >2. Gradle/ Maven을 통해 프로젝트 Test&Build
+  >3. EC2/EC3 서버에서 해당 프로젝트 실행 및 재실행
+
+- 배포 스크립트 작성
+
+```sh
+#!/bin/bash
+#위에 거가 설정인듯? 우리 bash인지 알아보자........
+
+#변수에 현재 build디렉토리 주소 저장
+REPOSITORY=/home/ec2-user/app/git
+
+cd $REPOSITORY/springboot-webservice/
+
+echo "> Git Pull"
+
+git pull
+
+echo "> 프로젝트 Build 시작"
+
+./gradlew build
+
+echo "> Build 파일 복사"
+
+cp ./build/libs/*.jar $REPOSITORY/
+
+echo "> 현재 구동중인 애플리케이션 pid 확인"
+
+CURRENT_PID=$(pgrep -f springboot-webservice)
+
+echo "$CURRENT_PID"
+
+if [ -z $CURRENT_PID ]; then
+    echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+else
+    echo "> kill -2 $CURRENT_PID"
+    kill -9 $CURRENT_PID
+    sleep 5
+fi
+
+echo "> 새 어플리케이션 배포"
+
+JAR_NAME=$(ls $REPOSITORY/ |grep 'springboot-webservice' | tail -n 1)
+
+echo "> JAR Name: $JAR_NAME"
+
+nohup java -jar $REPOSITORY/$JAR_NAME &
+```
+
+
+
+
+
+
+
+---
+
+## 터미널관련(서버)
+
+#### shell 테마적용(zsh-z shell)
+
+- zsh 설치
+
+```shell
+$ apt-get install zsh
+```
+
+- 확인/ 적용
+
+```shell
+$ zsh -version			(설치확인)
+$ chsh -s /usr/bin/zsh	(적용)
+$ echo $SHELL			(zsh이적용되엇는지확인)
+```
+
+- oh my zsh 설치
+
+```shell
+$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+```
+
+- 테마 변경( 테마목록은 [여기][https://github.com/ohmyzsh/ohmyzsh/wiki/External-themes] 에서)
+
+```shell
+$ vi ~/.zshrc			(설정파일.. 숨김되어잇음)
+파일 내의 THEME="[테마명]" 부분 수정 후 저장
+$ source ~/.zshrc		(적용!)
+```
+
+> default : rubbyrussell
+>
+> 에서 agnoster로 바꿔놧음
+
+
+
+---
+
+## Git 관련...(나만 보면 되는듯)
+
+스크립트화 할 내용 정리할것...
