@@ -18,24 +18,24 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-@Entity(name="follow_hashtag")
-public class FollowHashtag {
+@Entity(name="bookmark_hashtag")
+public class BookmarkHashtag {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, unique = true)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(nullable=false,unique=true)
 	private int no;
-
-	@Column(length = 50)
+	
+	@Column(length=50)
 	private String hashtag;
-
-	@Column(length = 30, nullable = false)
+	
+	@Column(length=30,nullable=false)
 	private String id;
-
-//	@Column(nullable = false)
-//	private boolean deleted;
+	
+//	@Column(nullable=false) 
+//	private boolean deleted=false;
 	
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false,  foreignKey = @ForeignKey(name = "fk_followhashtag_id"))
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_bookmark_hashtag_id"))
 	private User user;
 }
