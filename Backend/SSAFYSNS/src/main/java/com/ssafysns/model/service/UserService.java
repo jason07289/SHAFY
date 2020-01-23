@@ -11,4 +11,8 @@ public interface UserService {
 //	public void insert(User user);
 //	public void delete(String id);
 //	public void update(User user);
+	public boolean update(User user);
+	public boolean nickNameCheck(String nickName);
+	public boolean signOut(String id, String pw);
+	public User MyInfo(String id);
 }
