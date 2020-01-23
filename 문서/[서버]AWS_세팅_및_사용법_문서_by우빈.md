@@ -1,5 +1,9 @@
 AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
+[TOC]
+
+joomation.com - FE 포트폴리오 참고 사이트
+
 ##### 컨설턴트님 공지
 
 
@@ -345,7 +349,7 @@ $ yarn add node-sass sass-loader
 (git에서 pull한뒤에)
 $ yarn install
 $ yarn build
-$ yarn serve
+$ yarn serve or $ yarn servee --port 3000
 ```
 
 
@@ -391,7 +395,7 @@ $ ./mvnw clean package
 >
 > ​	:arrow_right: `$ chmod +x mvnw ` 실행
 >
-> 
+> ㄴ
 
 
 
