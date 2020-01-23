@@ -125,6 +125,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean changePW(String id, String pw, String newPW) {
 		try {
+			System.out.println("id "+id);
+			System.out.println("pw "+pw);
+			System.out.println("newpw "+newPW);
 			User find =userRepository.getOne(id);
 			AES256Util aes = new AES256Util();
 			
@@ -144,6 +147,80 @@ public class UserServiceImpl implements UserService{
 		}
 		
 		return false;
+	}
+
+
+	@Override
+	public boolean update(User user) {
+		try {
+			userRepository.save(user);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return false;
+	}
+
+
+	@Override
+	public boolean nickNameCheck(String nickName) {
+		try {
+			System.out.println(nickName);
+			System.out.println(userRepository.findByNickname(nickName));
+			if(userRepository.findByNickname(nickName)==null) {
+				return true;
+			}else {
+				return false;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+
+	@Override
+	public boolean signOut(String id, String pw) {
+		try {
+			User find = userRepository.getOne(id);
+			AES256Util aes = new AES256Util();
+
+			if(pw.equals(aes.decrypt(find.getPassword()))) {
+				find.setBanned(1);
+				userRepository.save(find);
+				return true;
+			}else {
+				throw new SQLException("잘못된 비밀번호입니다.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return false;
+	}
+
+
+	@Override
+	public User MyInfo(String id) {
+		try {
+			User user = userRepository.getOne(id);
+			System.out.println(user);
+		
+			return user;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+		
+		
 	}
 
 	

@@ -1,5 +1,7 @@
 package com.ssafysns.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, String>{//<entity, p
 	
 	public User findByIdAndName(String id, String name );
 	public User findByIdAndPassword(String id, String password );
-	
+	public User findByNickname(String nickName);
 	
 	
 /*	 
