@@ -39,38 +39,15 @@ import io.swagger.annotations.ApiOperation;
 public class PostController {
 	@Autowired
 	PostService postService;
-	
+
 	@Autowired
 	CommentService commentService;
 	
-	class Pair {
-		private Post post;
-		private List<Comment> comments = new ArrayList<Comment>();
-		
-		public Pair() {}
-		public Pair(Post post, List<Comment> comments) {
-			this.post = post;
-			this.comments.addAll(comments);
-		}		
-		
-		public Post getPost() {
-			return post;
-		}
-		public void setPost(Post post) {
-			this.post = post;
-		}
-		public List<Comment> getComments() {
-			return comments;
-		}
-		public void setComments(List<Comment> comments) {
-			this.comments = comments;
-		}
-		
-		@Override
-		public String toString() {
-			return "Pair [post=" + post + ", comments=" + comments.toString() + "]";
-		}
-		
+	// 모든 Post 조회
+	@ApiOperation(value = "모든 Post 목록 조회")
+	@GetMapping("/list")
+	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
+		return handleSuccess(postService.searchAll());
 	}
 
 //	@ApiOperation(value = "모든 Post 목록 조회")
@@ -85,30 +62,31 @@ public class PostController {
 //	}
 
 	
-	public ResponseEntity<List<Pair>> searchAll() throws Exception {
-//	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
-		List<Post> post_list = postService.searchAll();
-		System.out.println("post_list.size() = "+ post_list.size());
-		List<Comment> comment_list = commentService.searchPno(1);
-		System.out.println("comment_list.size() = "+ comment_list.size());
-		
-		List<Pair> lists = new ArrayList<Pair>();
-		lists.add(new Pair(post_list.get(0), comment_list));
-		
-		System.out.println("==========================================");
-		System.out.println(lists.get(0).post.toString());
-		System.out.println(lists.get(0).comments.get(0).getContent());
-		System.out.println(lists.get(0).comments.get(1).getContent());
-		System.out.println(lists.get(0).comments.get(2).getContent());
-		return new ResponseEntity<List<Pair>>(lists, HttpStatus.OK);
-//		return handleSuccess(postService.searchAll());
+//	public ResponseEntity<List<Pair>> searchAll() throws Exception {
+////	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
+//		List<Post> post_list = postService.searchAll();
+//		System.out.println("post_list.size() = "+ post_list.size());
+//		List<Comment> comment_list = commentService.searchPno(1);
+//		System.out.println("comment_list.size() = "+ comment_list.size());
+//		
+//		List<Pair> lists = new ArrayList<Pair>();
+//		lists.add(new Pair(post_list.get(0), comment_list));
+//		
+//		System.out.println("==========================================");
+//		System.out.println(lists.get(0).post.toString());
+//		System.out.println(lists.get(0).comments.get(0).getContent());
+//		System.out.println(lists.get(0).comments.get(1).getContent());
+//		System.out.println(lists.get(0).comments.get(2).getContent());
+//		return new ResponseEntity<List<Pair>>(lists, HttpStatus.OK);
+////		return handleSuccess(postService.searchAll());
+
+	// pno에 해당하는 Post 조회
+	@ApiOperation(value = "pno에 해당하는 Post 조회")
+	@GetMapping("/{pno}")
+	public ResponseEntity<Map<String, Object>> search(@PathVariable int pno) throws Exception {
+		return handleSuccess(postService.search(pno));
 	}
 
-//	@ApiOperation(value = "pno에 해당하는 Post 조회")
-//	@GetMapping("/{pno}")
-//	public ResponseEntity<Map<String, Object>> search(@PathVariable int pno) throws Exception {
-//		return handleSuccess(postService.search(pno));
-//	}
 	@ApiOperation(value = "hashtag에 해당하는 Comment 조회")
 	@GetMapping("/{hashtag}")
 	public ResponseEntity<List<Comment>> searchPno(@PathVariable String hashtag) throws Exception {
@@ -121,7 +99,7 @@ public class PostController {
 	}
 
 	@ApiOperation(value = "Post 등록")
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		postService.insert(post);
 		return handleSuccess("Post 등록 완료");

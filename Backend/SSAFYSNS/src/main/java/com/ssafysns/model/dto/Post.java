@@ -1,8 +1,6 @@
 package com.ssafysns.model.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,10 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -55,18 +54,19 @@ public class Post {
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp // Date를 현재 시간으로 초기화하여 저장함
 	private Date datetime;
 
-	@Column()
+	@Column(columnDefinition = "int default 0")
 	private int views;
 
-	@Column()
+	@Column(columnDefinition = "int default 0")
 	private int likes;
 
 	@Column(length = 200)
 	private String attachments;
 
-	@Column(columnDefinition = "TINYINT", length = 1)
+	@Column(columnDefinition = "int default 0")
 	private int deleted;
 
 //	// 외래키 설정
