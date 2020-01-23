@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.ssafysns.model.dto.Comment;
+import com.ssafysns.model.dto.Post;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
@@ -19,4 +20,10 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Query("update comment c set c.deleted = 1 where c.no=:no")
 	void updateDeleted(@Param("no") int no);
 
+	List<Comment> findByPno(int no);
+	
+	
+	@Query("select c from comment c, Post p where c.pno = p.pno and p.hashtag like concat('%', :hashtag, '%')")
+	List<Comment> joinCustom(@Param("hashtag") String hashtag);
+	
 }
