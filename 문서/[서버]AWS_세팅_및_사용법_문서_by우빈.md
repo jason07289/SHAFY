@@ -1,4 +1,4 @@
-AWS 서버 사용 관련된 내용을 정리해두는 문서입니다. 200120
+AWS 서버 사용 관련된 내용을 정리해두는 문서입니다.
 
 [TOC]
 
@@ -323,11 +323,8 @@ vue-router vuex설치
 
 ```shell
 $ yarn add vue-router vuex
-<<<<<<< HEAD
 or
 $ npm install vue-router vuex
-=======
->>>>>>> develop
 ```
 
 sass설정
@@ -346,18 +343,12 @@ $ yarn add node-sass sass-loader
 
 
 
-<<<<<<< HEAD
-=======
----
-
->>>>>>> develop
 ## Vuejs 프로젝트 배포하기
 
 ```shell
 (git에서 pull한뒤에)
 $ yarn install
 $ yarn build
-<<<<<<< HEAD
 $ yarn serve or $ yarn servee --port 3000
 ```
 
@@ -403,8 +394,18 @@ $ ./mvnw clean package
 > `./mvnw clean package permission denied`라는 에러가 뜰 경우
 >
 > ​	:arrow_right: `$ chmod +x mvnw ` 실행
->
-> ㄴ
+
+Build 처음엔 오래 걸리는데, 실행 이후
+
+```shell
+$ ls -al  // target 폴더가 존재할 것임 
+$ cd target
+$ java -jar [jar파일 이름] &
+```
+
+> &쓰면 서버는 서버대로 돌리고 끗
+
+
 
 
 
@@ -521,8 +522,3 @@ $ source ~/.zshrc		(적용!)
 ## Git 관련...(나만 보면 되는듯)
 
 스크립트화 할 내용 정리할것...
-=======
-$ yarn serve
-```
-
->>>>>>> develop
