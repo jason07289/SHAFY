@@ -121,5 +121,30 @@ public class UserServiceImpl implements UserService{
 		return null;
 	}
 
+
+	@Override
+	public boolean changePW(String id, String pw, String newPW) {
+		try {
+			User find =userRepository.getOne(id);
+			AES256Util aes = new AES256Util();
+			
+			if(pw.equals(aes.decrypt(find.getPassword()))) {
+				find.setPassword(aes.encrypt(newPW));
+				userRepository.save(find);
+				
+				return true;
+			}else {
+				throw new SqlSessionException("비밀번호 오류");
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
 	
 }

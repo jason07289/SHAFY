@@ -136,7 +136,7 @@ public class User {
 	@Column(length = 10)
 	private String class1;
 
-	@Column(length = 10)
+	@Column(length = 10) 
 	private String class2;
 
 	@Column(length = 20)
@@ -154,7 +154,7 @@ public class User {
 	@Column(length = 20)
 	private String auth;
 	
-	@Column(columnDefinition = "TINYINT", length=1)
+	@Column()
 	private int deleted;
 
 	// 외래키 설정
