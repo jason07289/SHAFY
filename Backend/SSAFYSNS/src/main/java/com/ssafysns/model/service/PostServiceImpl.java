@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafysns.model.dto.NoticeException;
 import com.ssafysns.model.dto.Post;
@@ -28,12 +29,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(int pno) {
 		try {
-			Optional<Post> post = postRepository.findById(pno);
-			if (post != null) {
-				// deleted 컬럼의 값을 바꿔준다!
-			}
+			postRepository.updateDeleted(pno);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
@@ -43,6 +42,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public void update(Post post) {
 		try {
+			postRepository.save(post);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PostException("게시물 수정 중 오류가 발생했습니다.");

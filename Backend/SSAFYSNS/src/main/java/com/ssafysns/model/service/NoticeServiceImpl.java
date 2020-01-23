@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafysns.model.dto.Notice;
 import com.ssafysns.model.dto.NoticeException;
@@ -27,12 +28,10 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(int no) {
 		try {
-			Optional<Notice> notice= noticeRepository.findById(no);
-			if(notice!=null) {
-				// deleted 컬럼의 값을 바꿔준다!
-			}
+			noticeRepository.updateDeleted(no);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NoticeException("공지사항 삭제 중 오류가 발생했습니다.");
@@ -43,6 +42,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public void update(Notice notice) {
 		try {
+			noticeRepository.save(notice);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NoticeException("공지사항 수정 중 오류가 발생했습니다.");
