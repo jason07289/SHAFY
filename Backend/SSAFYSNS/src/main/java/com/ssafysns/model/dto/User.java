@@ -11,6 +11,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -80,10 +85,9 @@ import lombok.ToString;
  * @Entity(name="user")로도 table명 지정가능 CamelCase가 java에서 쓰이고 db는 under_score기 때문에
  * 명시해주는게 좋음
  */
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "user") // name을 통해 테이블 명을 지정가능, 이 어노테이션이 없다면 class명을 default로 table생성
 public class User {
-	@Id // 기본키 (pk)
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	/*
 	 * 이거 헷갈림 GenerationType.?? 1. AUTO : 특정 DB에 맞게 자동 선택 jpa에게 생선전략 위임 (개꿀) 2.
 	 * INDENTITY : DB의 identity 컬럼을 이용 -> 숫자값에서만 가능 3. SEQUENCE : DB의 seqeunce 컬럼을
@@ -93,7 +97,8 @@ public class User {
 	 * "https://www.popit.kr/%ED%95%98%EC%9D%B4%EB%B2%84%EB%84%A4%EC%9D%B4%ED%8A%B8%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%90%EB%8F%99-%ED%82%A4-%EC%83%9D%EC%84%B1-%EC%A0%84%EB%9E%B5%EC%9D%84-%EA%B2%B0%EC%A0%95%ED%95%98/"
 	 * 더 알고싶다면 링크 ctrl+클릭
 	 */
-	@Column(length = 30, nullable = false, unique = true)
+	@Id // 기본키 (pk)
+	@Column(length = 50, nullable = false, unique = true)
 	private String id;
 
 //	@NotNull 이걸로도 낫 널 지정 가능 이렇게 하면 자바상에서도 에러를 잡아줘서 더 좋긴함
@@ -104,7 +109,8 @@ public class User {
 	@Column(length = 20, nullable = false)
 	private String name;
 
-	@Column(length = 40, nullable = false)
+
+	@Column(length = 200,nullable = false)
 	private String password;
 
 //	@Getter
@@ -132,7 +138,7 @@ public class User {
 	@Column(length = 10)
 	private String class1;
 
-	@Column(length = 10)
+	@Column(length = 10) 
 	private String class2;
 
 	@Column(length = 20)
@@ -149,33 +155,9 @@ public class User {
 
 	@Column(length = 20)
 	private String auth;
-
+	
 	@Column()
-	private boolean deleted;
-
-//	@Builder
-//	public User(String id, String no, String name, String password, String phone, Date birth, String nickname,
-//			String loacation, String grade, String class1, String class2, String utype, String img, String state,
-//			Integer banned, String auth, boolean deleted) {
-//		super();
-//		this.id = id;
-//		this.no = no;
-//		this.name = name;
-//		this.password = password;
-//		this.phone = phone;
-//		this.birth = birth;
-//		this.nickname = nickname;
-//		this.loacation = loacation;
-//		this.grade = grade;
-//		this.class1 = class1;
-//		this.class2 = class2;
-//		this.utype = utype;
-//		this.img = img;
-//		this.state = state;
-//		this.banned = banned;
-//		this.auth = auth;
-//		this.deleted = deleted;
-//	}
+	private int deleted;
 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")
