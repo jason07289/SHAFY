@@ -51,7 +51,7 @@ public class CommentController {
 	@ApiOperation(value="", response=List.class)
 	@PostMapping("/comment/list/{no}")
 	public ResponseEntity<List<Comment>> findAllComments() throws Exception {
-		return new ResponseEntity<List<Comment>>(commentService.searchComment(), HttpStatus.OK);
+		return new ResponseEntity<List<Comment>>(commentService.searchPno(1), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="id로 Comment 검색", response=Comment.class)

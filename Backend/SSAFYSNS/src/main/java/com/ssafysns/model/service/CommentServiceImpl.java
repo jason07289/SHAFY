@@ -18,6 +18,23 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	@Override
+	@Transactional
+	public List<Comment> joinPost(String hashtag) {
+		List<Comment> comments = null;
+		try {
+			System.out.println("In Service...hashtag is.." + hashtag);
+			comments = commentRepository.joinCustom(hashtag);
+			if(comments.size()==0)
+				System.out.println(hashtag + "번 게시글에 댓글이 존재하지 않습니다.");
+			else
+				System.out.println(comments.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comments;
+	}
 
 	@Override
 	public void insert(Comment comment) {
@@ -55,10 +72,10 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<Comment> searchComment() {
+	public List<Comment> searchPno(int no) {
 		List<Comment> comments = null;
 		try {
-			comments = commentRepository.findAll();
+			comments = commentRepository.findByPno(no);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
