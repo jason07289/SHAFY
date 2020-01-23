@@ -1,85 +1,50 @@
 
-<!--
-    가입하기는 기본적인 폼만 제공됩니다
-    기능명세에 따라 개발을 진행하세요.
-    Sub PJT I에서는 UX, 디자인 등을 포함하여 백엔드를 제외하여 개발합니다.
- -->
 <template>
+
+<<<<<<< HEAD
+    <div >
+  
+        <joinType 
+            router-name="Join_educationStudent"
+            main-title="교육생 가입" 
+            sub-title="삼성 청년 SW 아카데미 교육생으로 입과한 적이 있는 경우"
+        />
+        <joinType 
+            router-name="Join_General"
+            main-title="비 교육생 가입" 
+            sub-title="운영진, 취업지원센터, 수업 강사 등<br>혹은 삼성 청년 SW 아카데미에 관심을 가지고 있는 분" 
+        />
+=======
+    
     <div>
-        <h1>가입하기</h1>
-        <div>
-            <div>
-                <input v-model="nickName"
-                       id="nickname"
-                       placeholder="닉네임을 입력하세요." type="text"/>
-                <label for="nickname">닉네임</label>
-            </div>
-
-            <div>
-                <input v-model="email"
-                       id="email" placeholder="이메일을 입력하세요."
-                       type="text"/>
-                <label for="email">이메일</label>
-
-            </div>
-
-            <div>
-                <input v-model="password"
-                       id="password" :type="passwordType"
-                       placeholder="비밀번호를 입력하세요."/>
-                <label for="password">비밀번호</label>
-            </div>
-
-            <div>
-                <input v-model="passwordConfirm" :type="passwordConfirmType"
-                        id="password-confirm"
-                       placeholder="비밀번호를 다시한번 입력하세요."/>
-                <label for="password-confirm">비밀번호 확인</label>
-            </div>
-        </div>
-
-        <label>
-            <input v-model="isTerm" type="checkbox" id="term"/>
-            <span>약관을 동의합니다.</span>
-        </label>
-
-        <span @click="termPopup=true">약관보기</span>
-
-        <button>
-            가입하기
-        </button>
-
+        <joinType main-title="타이틀입니다" sub-title="서브타이틀 입니다" />
+        <joinType main-title="타이틀2입니다" sub-title="서브타이틀2 입니다" />
+>>>>>>> develop
 
     </div>
+    
 </template>
 
+
 <script>
+<<<<<<< HEAD
+import joinType from '../../components/user/JoinType'
 
-    export default {
-        data: () => {
-            return {
-                email: '',
-                password: '',
-                passwordConfirm: '',
-                nickName: '',
-                isTerm: false,
-                isLoading: false,
-                error: {
-                    email: false,
-                    password: false,
-                    nickName: false,
-                    passwordConfirm: false,
-                    term: false
-                },
-                isSubmit: false,
-                passwordType: "password",
-                passwordConfirmType: "password",
-                termPopup: false,
-            }
-        }
+export default {
+    
+    components: {
+        joinType,
+    },
+    methods: {
+   
+    },
+=======
+import joinType from '../../components/user/JoinType.vue'
 
+export default {
+    components: {
+        joinType,
     }
-
+>>>>>>> develop
+}
 </script>
-
-

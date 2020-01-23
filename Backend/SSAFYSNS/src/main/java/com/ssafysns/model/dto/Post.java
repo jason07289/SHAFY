@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -68,9 +69,10 @@ public class Post {
 	@Column(columnDefinition = "int default 0")
 	private int deleted;
 
-	// 외래키 설정
+//	// 외래키 설정
 //	@OneToMany(mappedBy="post")
-//    private List<Notification> notifications = new ArrayList<Notification>();
+//	@JoinColumn(name="no")
+//	private List<Comment> comments = new ArrayList<Comment>();
 
 	// 외래키 설정
 	@ManyToOne

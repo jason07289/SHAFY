@@ -56,19 +56,19 @@ public class Comment {
 	@Column(columnDefinition="default 0")
 	private int deleted;
 
-	// 외래키 설정
+	 // 외래키 설정
 	@ManyToOne
 	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))
 	private Post post;
-
+ 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "comments")
-//	private List<Comments> commentss = new ArrayList<Comments>();
+//	private List<Comments> comments = new ArrayList<Comments>();
 
 	// 외래키 설정
-	@ManyToOne
-	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_parent"))
-	private Comment comment;
+//	@ManyToOne
+//	@JoinColumn(name = "parent", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_parent"))
+//	private Comment comment;
 
 	// 외래키 설정
 	@ManyToOne
