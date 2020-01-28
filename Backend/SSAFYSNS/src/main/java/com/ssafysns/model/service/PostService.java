@@ -15,6 +15,12 @@ public interface PostService {
 	public Optional<Post> search(int pno);
 
 	public List<Post> searchAll();
+	
+	public List<Post> searchAllHashTags();
+	
+	public List<Post> searchPost(String hashtag);	//hashtag를 가지는 post리스트 불러오기
+	
+	public List<Integer> searchPostNo(String hashtag); //hashtag를 가지는 post의 번호를 리스트로 불러오기
 
 	public int count();
 }

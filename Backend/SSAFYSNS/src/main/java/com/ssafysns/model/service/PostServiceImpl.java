@@ -79,4 +79,35 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	@Override
+	public List<Post> searchAllHashTags() {
+		
+		return null;
+	}
+
+	@Override
+	public List<Post> searchPost(String hashtag) {
+		List<Post> posts = null;
+		
+		try {
+			posts = postRepository.findByHashtag(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return posts;
+	}
+	
+	@Override
+	public List<Integer> searchPostNo(String hashtag) {
+		System.out.println("==============Pno List 출력==============");
+		List<Integer> pno_list = null;		
+		try {
+			pno_list = postRepository.findPnoByHashtag(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
+	}
+
 }
