@@ -10,10 +10,14 @@ public interface BookmarkHashtagService {
 
 	public void delete(int no);
 
+	public void deleteById(String id);
+
+	public void deleteByIdAndHashtag(String id, String hashtag);
+
 	public void update(BookmarkHashtag bookmarkHashtag);
 
 	public Optional<BookmarkHashtag> search(int no);
-	
+
 	public List<BookmarkHashtag> searchById(String id);
 
 	public List<BookmarkHashtag> searchAll();
