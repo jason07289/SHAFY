@@ -10,6 +10,10 @@ public interface FollowHashtagService {
 
 	public void delete(int no);
 
+	public void deleteById(String id);
+
+	public void deleteByIdAndHashtag(String id, String hashtag);
+
 	public void update(FollowHashtag followHashtag);
 
 	public Optional<FollowHashtag> search(int no);

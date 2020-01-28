@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.model.dto.BookmarkHashtag;
+import com.ssafysns.model.dto.BookmarkHashtagException;
 import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.TabHashtagRepository;
@@ -19,7 +21,14 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 	@Override
 	public void insert(TabHashtag tabHashtag) {
 		try {
-			tabHashtagRepository.save(tabHashtag);
+			Optional<TabHashtag> find = tabHashtagRepository.findByUserIdAndHashtag(tabHashtag.getId(),
+					tabHashtag.getHashtag());
+			if (find.isPresent()) {
+				throw new TabHashtagException("TabHashtag 등록 중 오류가 발생했습니다. : 이미 존재하는 hashtag입니다.");
+			} else {
+				tabHashtagRepository.save(tabHashtag);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TabHashtagException("TabHashtag 등록 중 오류가 발생했습니다.");
@@ -30,6 +39,25 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 	public void delete(int no) {
 		try {
 			tabHashtagRepository.deleteById(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("TabHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	@Override
+	public void deleteById(String id) {
+		try {
+			tabHashtagRepository.deleteByUserId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("TabHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	public void deleteByIdAndHashtag(String id, String hashtag) {
+		try {
+			tabHashtagRepository.deleteByUserIdAndHashtag(id, hashtag);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TabHashtagException("TabHashtag 삭제 중 오류가 발생했습니다.");
