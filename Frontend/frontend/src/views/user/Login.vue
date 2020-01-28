@@ -55,8 +55,11 @@
 </template>
 
 <script>
-
+<<<<<<< HEAD
  /* eslint-disable no-unused-vars */
+=======
+    /* eslint-disable no-unused-vars */
+>>>>>>> develop
     // import '../../assets/css/style.scss'
     // import '../../assets/css/user.scss'
     import PV from 'password-validator'
@@ -108,7 +111,7 @@
                 })
                 this.isSubmit = isSubmit;
 
-
+            
             }
             , login(){
                 if (this.isSubmit) {
