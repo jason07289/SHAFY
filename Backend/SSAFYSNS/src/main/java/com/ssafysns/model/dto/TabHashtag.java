@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity(name="tab_hashtag")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TabHashtag {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,8 +34,8 @@ public class TabHashtag {
 	@Column(length=30,nullable=false)
 	private String id;
 	
-	@Column(nullable=false) 
-	private boolean deleted=false;
+//	@Column(nullable=false) 
+//	private boolean deleted=false;
 	
 	// 외래키 설정
 	@ManyToOne
