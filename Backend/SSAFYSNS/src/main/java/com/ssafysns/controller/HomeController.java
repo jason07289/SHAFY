@@ -39,10 +39,11 @@ public class HomeController {
     
     @RequestMapping(value="/KakaoLogin")
     public String login(@RequestParam("code") String code, HttpSession session) {
+    	System.out.println("====================login=====================");
         String access_Token = kakao.getAccessToken(code);
         HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
         System.out.println("login Controller : " + userInfo);
-        
+        System.out.println("====================login=====================");
         //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
         if (userInfo.get("email") != null) {
             session.setAttribute("userId", userInfo.get("email"));
@@ -50,30 +51,16 @@ public class HomeController {
         }
         return "index";
     }
-    public void kakaoLogout(String access_Token) {
-        String reqURL = "https://kapi.kakao.com/v1/user/logout";
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
-            
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-            
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            
-            String result = "";
-            String line = "";
-            
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-            System.out.println(result);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
+    @RequestMapping(value="/logout")
+    public String logout(HttpSession session) {
+    	
+    	System.out.println("====================logout=====================");
+        kakao.kakaoLogout((String)session.getAttribute("access_Token"));
+        session.removeAttribute("access_Token");
+        session.removeAttribute("userId");
+        System.out.println("====================logout=====================");
+        return "index";
     }
 
 
