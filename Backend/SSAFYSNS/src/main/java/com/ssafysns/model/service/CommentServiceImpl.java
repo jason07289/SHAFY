@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafysns.model.dto.Comment;
+import com.ssafysns.model.dto.Post;
 import com.ssafysns.repository.CommentRepository;
 
 @Service
@@ -30,6 +31,18 @@ public class CommentServiceImpl implements CommentService {
 				System.out.println(hashtag + "번 게시글에 댓글이 존재하지 않습니다.");
 			else
 				System.out.println(comments.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comments;
+	}
+	
+	@Override
+	public List<Comment> searchCommentList(String hashtag) {
+		List<Comment> comments = null;
+		try {
+			System.out.println("In Service... hashtag is.." + hashtag);
+			comments = commentRepository.joinCustomComment(hashtag);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,6 +103,20 @@ public class CommentServiceImpl implements CommentService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return comments;
+	}
+
+	@Override
+	public List<Comment> searchAllCommenetList(List<Integer> list) {
+//	public List<Comment> searchAllCommenetList(Post newEntity) {
+		List<Comment> comments = null;
+		
+		try {
+			comments = commentRepository.testNewEntity(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return comments;
 	}
 	

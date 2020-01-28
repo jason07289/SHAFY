@@ -6,8 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.model.dto.BookmarkHashtag;
+import com.ssafysns.model.dto.BookmarkHashtagException;
 import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.FollowHashtagException;
+import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.FollowHashtagRepository;
 
 @Service
@@ -19,7 +22,14 @@ public class FollowHashtagServiceImpl implements FollowHashtagService {
 	@Override
 	public void insert(FollowHashtag followHashtag) {
 		try {
-			followHashtagRepository.save(followHashtag);
+
+			Optional<FollowHashtag> find = followHashtagRepository.findByUserIdAndHashtag(followHashtag.getId(),
+					followHashtag.getHashtag());
+			if (find.isPresent()) {
+				throw new BookmarkHashtagException("FollowHashtag 등록 중 오류가 발생했습니다. : 이미 존재하는 hashtag입니다.");
+			} else {
+				followHashtagRepository.save(followHashtag);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new FollowHashtagException("FollowHashtag 등록 중 오류가 발생했습니다.");
@@ -33,6 +43,25 @@ public class FollowHashtagServiceImpl implements FollowHashtagService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new FollowHashtagException("FollowHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	@Override
+	public void deleteById(String id) {
+		try {
+			followHashtagRepository.deleteByUserId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("FollowHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	public void deleteByIdAndHashtag(String id, String hashtag) {
+		try {
+			followHashtagRepository.deleteByUserIdAndHashtag(id, hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("FollowHashtag 삭제 중 오류가 발생했습니다.");
 		}
 	}
 
