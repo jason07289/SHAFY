@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafysns.model.dto.BookmarkHashtag;
-import com.ssafysns.model.dto.BookmarkHashtagException;
 import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.FollowHashtagException;
 import com.ssafysns.model.dto.TabHashtagException;
@@ -26,7 +24,7 @@ public class FollowHashtagServiceImpl implements FollowHashtagService {
 			Optional<FollowHashtag> find = followHashtagRepository.findByUserIdAndHashtag(followHashtag.getId(),
 					followHashtag.getHashtag());
 			if (find.isPresent()) {
-				throw new BookmarkHashtagException("FollowHashtag 등록 중 오류가 발생했습니다. : 이미 존재하는 hashtag입니다.");
+				throw new FollowHashtagException("FollowHashtag 등록 중 오류가 발생했습니다. : 이미 존재하는 hashtag입니다.");
 			} else {
 				followHashtagRepository.save(followHashtag);
 			}

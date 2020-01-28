@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafysns.model.dto.BookmarkHashtag;
-import com.ssafysns.model.dto.BookmarkHashtagException;
 import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.TabHashtagRepository;
