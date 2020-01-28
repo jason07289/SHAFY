@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafysns.model.dto.BookmarkHashtag;
 import com.ssafysns.model.dto.BookmarkHashtagException;
+import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.BookmarkHashtagRepository;
 
 @Service
@@ -19,7 +20,13 @@ public class BookmarkHashtagServiceImpl implements BookmarkHashtagService {
 	@Override
 	public void insert(BookmarkHashtag bookmarkHashtag) {
 		try {
-			bookmarkHashtagRepository.save(bookmarkHashtag);
+			Optional<BookmarkHashtag> find = bookmarkHashtagRepository.findByUserIdAndHashtag(bookmarkHashtag.getId(),
+					bookmarkHashtag.getHashtag());
+			if (find.isPresent()) {
+				throw new BookmarkHashtagException("BookmarkHashtag 등록 중 오류가 발생했습니다. : 이미 존재하는 hashtag입니다.");
+			} else {
+				bookmarkHashtagRepository.save(bookmarkHashtag);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BookmarkHashtagException("BookmarkHashtag 등록 중 오류가 발생했습니다.");
@@ -33,6 +40,25 @@ public class BookmarkHashtagServiceImpl implements BookmarkHashtagService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BookmarkHashtagException("BookmarkHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	@Override
+	public void deleteById(String id) {
+		try {
+			bookmarkHashtagRepository.deleteByUserId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("BookmarkHashtag 삭제 중 오류가 발생했습니다.");
+		}
+	}
+
+	public void deleteByIdAndHashtag(String id, String hashtag) {
+		try {
+			bookmarkHashtagRepository.deleteByUserIdAndHashtag(id, hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("BookmarkHashtag 삭제 중 오류가 발생했습니다.");
 		}
 	}
 
