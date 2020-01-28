@@ -109,10 +109,10 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -125,7 +125,11 @@
     		<version>2.8.5</version>
 		</dependency>
 		
-		
+		<dependency>
+  			<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient</artifactId>
+  			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
