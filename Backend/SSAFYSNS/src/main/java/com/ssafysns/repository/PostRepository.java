@@ -24,7 +24,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query("select p.pno from Post p where p.hashtag like concat('%', :hashtag, '%')")
 	List<Integer> findPnoByHashtag(String hashtag);	
 	
-	@Query("select c from comment c where p.pno in list")
+	@Query("select c from comment c where c.pno in list")
 	List<Comment> testNewEntity(@Param("list") List<Integer> hashtag_list);
 	
 
