@@ -22,42 +22,23 @@ const getters = {
 // actions
 const actions = {
    
-  /**
-   * UserApi에서 response data 넣어서 호출
-   */
-  login({ commit },{data}){
-    //1. data내용을 바탕으로 mutation커밋 (JWT, userInfo 변이)
-    commit('loginSuccess', data.JWT)
 
-    //2. 모든 HTTP요청 헤더에 인증정보를 추가해준다
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`; //베어러는 JWT에서 쓴다는데 잘모르겟다..
-
-  },
-
-  logout({commit}){
-    //1. HTTP 헤더 디폴트값 제거
-    axios.defaults.headers.common['Authorization'] = undefined
-    
-    //2. mutation에 커밋
-    commit('logoutSuccess')
-  }
-  
-  
-  
 }
 
 // mutations
 const mutations = {
 
 
-  loginSuccess(state, {JWT}){
+  login(state, {data}){
     //1. state의 JWT갱신
-    state.JWT = JWT;
+    state.JWT = data.JWT;
 
     //2. localstoarge에 JWT값 저장해두기
-    localStorage.JWT = JWT;
-
-    //3. 갱신했을때, localstorage에서 토큰값을 가져와서 axios헤더에 붙ㅇ준다
+    localStorage.JWT = data.JWT;
+    
+    //3-1. 모든 HTTP요청 헤더에 인증정보를 추가해준다
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`; //베어러는 JWT에서 쓴다는데 잘모르겟다..
+    //3-2. 갱신했을때, localstorage에서 토큰값을 가져와서 axios헤더에 붙ㅇ준다
     const accessToken = () => {
       const {JWT} = localStorage
       if (!JWT) return
@@ -65,7 +46,10 @@ const mutations = {
     }
     accessToken()
   },
-  logoutSuccess(state){
+  logout(state){
+    //1. HTTP 헤더 디폴트값 제거
+    axios.defaults.headers.common['Authorization'] = undefined
+    //2. mutation에 커밋
     state.JWT = null
     delete localStorage.JWT;
   }
