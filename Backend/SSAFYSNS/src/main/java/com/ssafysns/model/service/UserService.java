@@ -1,9 +1,11 @@
 package com.ssafysns.model.service;
 
+import java.io.UnsupportedEncodingException;
+
 import com.ssafysns.model.dto.User;
 
 public interface UserService {
-	public boolean login(String id, String pw);
+	public String login(String id, String pw);
 	public boolean create(User user);
 	public User findPW(String id, String name);
 	public boolean changePW(String id, String pw, String newPW);
