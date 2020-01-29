@@ -3,10 +3,13 @@ package com.ssafysns.model.service;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.model.dto.MyLoginException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
@@ -15,6 +18,9 @@ import com.ssafysns.util.MailUtil;
 public class UserServiceImpl implements UserService{
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	JwtService jwtService;
+	
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
@@ -53,30 +59,41 @@ public class UserServiceImpl implements UserService{
 
 	
 	@Override
-	public boolean login(String id,String pw) {
+	public String login(String id,String pw) {
 		try {
 			User user =userRepository.getOne(id);
 			AES256Util aes = new AES256Util();
 			
 			if(user==null) {
-				throw new SqlSessionException("등록되지 않은 회원입니다.");
+				throw new MyLoginException("등록되지 않은 회원입니다.");
 			}else {
 				if(user.getDeleted()==1) {
-					throw new SqlSessionException("등록되지 않은 회원입니다.");
+					throw new MyLoginException("등록되지 않은 회원입니다.");
 				}else {
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
-						return true;
+						
+						String jwt =jwtService.create(user.getId(), user.getNickname());
+						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
+						
+						
+						return jwt;
 					}else {
-						throw new SqlSessionException("비밀번호 오류");
+						throw new MyLoginException("비밀번호 오류");
+						
 					}
 				}
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			if(e instanceof EntityNotFoundException) {
+				return "iderr";
+			}else if(e instanceof MyLoginException) {
+				return "pwerr";
+			}
+			return null;
 		}
 		
-		return false;
 	}
 
 
@@ -218,10 +235,5 @@ public class UserServiceImpl implements UserService{
 			e.printStackTrace();
 		}
 		return null;
-		
-		
-		
 	}
-
-	
 }
