@@ -9,12 +9,14 @@ const state = {
 // getters
 const getters = {
   isLogin: function(state){
+    var JWT = state.JWT
     if(JWT==null){
       return false
     }else{
       return true
     }
   }
+  
 
 
 }
