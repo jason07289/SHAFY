@@ -3,7 +3,7 @@
  */
 
 const axios = require('axios').default
-const hosturl = 'http://localhost:8080'
+const hosturl = 'http://13.209.18.252:8080'
 const appname = '/api/user'
 
  /* eslint-disable no-unused-vars */
