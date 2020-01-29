@@ -1,45 +1,59 @@
 // import UserApi from '@/apis/UserApi'
-/**~~체크리스트~~
- * 네브바 클릭할때마다 로그인되어있는지 토큰 확인하기(세션에가서 만료되었는지)
- * 그리고 state.JWT가 ''인지만 확인하면되는 경우도 있음
- * 또한,
- * 로그인 함수를 쪼개서 기능별로 나누기( 코드 재사용 )
- * 
- */
+
 // initial state
 const state = {
-  JWT : '', // '' : 비로그인, '[value]' : 로그인 된 상태
+  JWT : localStorage.getItem('JWT'), // 새로고침해도 토큰값유지하기위함
   userInfo : {}, // user 프로필 사진, 이름, 닉네임 등 
 }
 
 // getters
-const getters = {}
+const getters = {
+  isLogin: function(state){
+    if(JWT==null){
+      return false
+    }else{
+      return true
+    }
+  }
+
+
+}
 
 // actions
 const actions = {
    
-  login({ commit }){
-  /**
-   * 프론트에서 로그인 버튼을 누름
-   * userAPI의 requestLogin을 호출( id와 pw로 확인 )
-   * -> response를 확인 ( 로그인 실패하면 다시 로그인 페이지로 )
-   * 성공한 경우
-   * response의 헤더에서 token값을 가져와서
-   * session에 저장
-   * mutation의 setJWT에 commit
-   */  
-  },
-  
+
 }
 
 // mutations
 const mutations = {
 
-  setJWT (state) {
-    /**
-     * Session에서 token값을 가져와 state.JWT에 값을 저장  
-     */  
+
+  login(state, {data}){
+    //1. state의 JWT갱신
+    state.JWT = data.JWT;
+
+    //2. localstoarge에 JWT값 저장해두기
+    localStorage.JWT = data.JWT;
+    
+    //3-1. 모든 HTTP요청 헤더에 인증정보를 추가해준다
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`; //베어러는 JWT에서 쓴다는데 잘모르겟다..
+    //3-2. 갱신했을때, localstorage에서 토큰값을 가져와서 axios헤더에 붙ㅇ준다
+    const accessToken = () => {
+      const {JWT} = localStorage
+      if (!JWT) return
+      axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;
+    }
+    accessToken()
   },
+  logout(state){
+    //1. HTTP 헤더 디폴트값 제거
+    axios.defaults.headers.common['Authorization'] = undefined
+    //2. mutation에 커밋
+    state.JWT = null
+    delete localStorage.JWT;
+  }
+  
 }
 
 export default {
