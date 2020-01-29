@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.model.dto.BookmarkHashtag;
+import com.ssafysns.model.dto.FavoritesHashtag;
 import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.TabHashtag;
-import com.ssafysns.model.service.BookmarkHashtagService;
+import com.ssafysns.model.service.FavoritesHashtagService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.TabHashtagService;
 
@@ -36,8 +36,9 @@ public class HashtagController {
 	@Autowired
 	FollowHashtagService followHashtagService;
 	@Autowired
-	BookmarkHashtagService bookmarkHashtagService;
+	FavoritesHashtagService favoritesHashtagService;
 
+	// ***********************************************************************************************************
 	// TabHashtag
 	// 모든 TabHashtag 조회
 	@ApiOperation(value = "모든 TabHashtag 목록 조회")
@@ -60,10 +61,23 @@ public class HashtagController {
 		return handleSuccess(tabHashtagService.searchById(id));
 	}
 
-	// TabHashtag 등록
-	@ApiOperation(value = "TabHashtag 등록")
+//	// TabHashtag 등록
+//	@ApiOperation(value = "TabHashtag 등록")
+//	@PostMapping("/tabtag")
+//	public ResponseEntity<Map<String, Object>> insertTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
+//		tabHashtagService.insert(tabHashtag);
+//		return handleSuccess("TabHashtag 등록 완료");
+//	}
+
+	// TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)
+	@ApiOperation(value = "TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
 	@PostMapping("/tabtag")
 	public ResponseEntity<Map<String, Object>> insertTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
+		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// tabHashtag.setId("로그인한사용자의 id");
+
 		tabHashtagService.insert(tabHashtag);
 		return handleSuccess("TabHashtag 등록 완료");
 	}
@@ -76,14 +90,37 @@ public class HashtagController {
 		return handleSuccess("TabHashtag 삭제 완료");
 	}
 
+	// id에 해당하는 TabHashtag 모두 삭제
+	@ApiOperation(value = "id에 해당하는 TabHashtag 모두 삭제")
+	@DeleteMapping("/tabtag/user/{id}")
+	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String id) throws Exception {
+		tabHashtagService.deleteById(id);
+		return handleSuccess("TabHashtag 삭제 완료");
+	}
+
+	// id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제
+	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제")
+	@DeleteMapping("/tabtag/user/{id}/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String id, @PathVariable String hashtag)
+			throws Exception {
+		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// String id = "로그인한사용자의 id";
+
+		tabHashtagService.deleteByIdAndHashtag(id, hashtag);
+		return handleSuccess("TabHashtag 삭제 완료");
+	}
+
 	// TabHashtag 수정
-	@ApiOperation(value = "TabHashtag 수정")
+	@ApiOperation(value = "TabHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
 	@PutMapping("/tabtag")
 	public ResponseEntity<Map<String, Object>> updateTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
 		tabHashtagService.update(tabHashtag);
 		return handleSuccess("TabHashtag 수정 완료");
 	}
 
+	// ***********************************************************************************************************
 	// FollowHashtag
 	// 모든 FollowHashtag 조회
 	@ApiOperation(value = "모든 FollowHashtag 목록 조회")
@@ -106,11 +143,25 @@ public class HashtagController {
 		return handleSuccess(followHashtagService.searchById(id));
 	}
 
-	// FollowHashtag 등록
-	@ApiOperation(value = "FollowHashtag 등록")
+//	// FollowHashtag 등록
+//	@ApiOperation(value = "FollowHashtag 등록")
+//	@PostMapping("/followtag")
+//	public ResponseEntity<Map<String, Object>> insertFollowHashtag(@RequestBody FollowHashtag followHashtag)
+//			throws Exception {
+//		followHashtagService.insert(followHashtag);
+//		return handleSuccess("FollowHashtag 등록 완료");
+//	}
+
+	// FollowHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
+	@ApiOperation(value = "FollowHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
 	@PostMapping("/followtag")
 	public ResponseEntity<Map<String, Object>> insertFollowHashtag(@RequestBody FollowHashtag followHashtag)
 			throws Exception {
+		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// tabHashtag.setId("로그인한사용자의 id");
+
 		followHashtagService.insert(followHashtag);
 		return handleSuccess("FollowHashtag 등록 완료");
 	}
@@ -123,8 +174,30 @@ public class HashtagController {
 		return handleSuccess("FollowHashtag 삭제 완료");
 	}
 
+	// id에 해당하는 FollowHashtag 모두 삭제
+	@ApiOperation(value = "id에 해당하는 FollowHashtag 모두 삭제")
+	@DeleteMapping("/followtag/user/{id}")
+	public ResponseEntity<Map<String, Object>> deleteFollowHashtag(@PathVariable String id) throws Exception {
+		followHashtagService.deleteById(id);
+		return handleSuccess("FollowHashtag 삭제 완료");
+	}
+
+	// id에 해당하는 사용자의 hashtag에 해당하는 FollowHashtag 삭제
+	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 FollowHashtag 삭제")
+	@DeleteMapping("/followtag/user/{id}/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteFollowHashtag(@PathVariable String id,
+			@PathVariable String hashtag) throws Exception {
+		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// String id = "로그인한사용자의 id";
+
+		followHashtagService.deleteByIdAndHashtag(id, hashtag);
+		return handleSuccess("FollowHashtag 삭제 완료");
+	}
+
 	// FollowHashtag 수정
-	@ApiOperation(value = "FollowHashtag 수정")
+	@ApiOperation(value = "FollowHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
 	@PutMapping("/followtag")
 	public ResponseEntity<Map<String, Object>> updateFollowHashtag(@RequestBody FollowHashtag followHashtag)
 			throws Exception {
@@ -132,52 +205,89 @@ public class HashtagController {
 		return handleSuccess("FollowHashtag 수정 완료");
 	}
 
-	// BookmarkHashtag
-	// 모든 BookmarkHashtag 조회
-	@ApiOperation(value = "모든 BookmarkHashtag 목록 조회")
-	@GetMapping("/bookmarktag/list")
-	public ResponseEntity<Map<String, Object>> searchAllBookmarkHashtag() throws Exception {
-		return handleSuccess(bookmarkHashtagService.searchAll());
+	// ***********************************************************************************************************
+	// FavoritesHashtag
+	// 모든 FavoritesHashtag 조회
+	@ApiOperation(value = "모든 FavoritesHashtag 목록 조회")
+	@GetMapping("/favoritestag/list")
+	public ResponseEntity<Map<String, Object>> searchAllFavoritesHashtag() throws Exception {
+		return handleSuccess(favoritesHashtagService.searchAll());
 	}
 
-	// no에 해당하는 BookmarkHashtag 조회
-	@ApiOperation(value = "no에 해당하는 BookmarkHashtag 조회")
-	@GetMapping("/bookmarktag/{no}")
-	public ResponseEntity<Map<String, Object>> searchBookmarkHashtag(@PathVariable int no) throws Exception {
-		return handleSuccess(bookmarkHashtagService.search(no));
+	// no에 해당하는 FavoritesHashtag 조회
+	@ApiOperation(value = "no에 해당하는 FavoritesHashtag 조회")
+	@GetMapping("/favoritestag/{no}")
+	public ResponseEntity<Map<String, Object>> searchFavoritesHashtag(@PathVariable int no) throws Exception {
+		return handleSuccess(favoritesHashtagService.search(no));
 	}
 
-	// id에 해당하는 BookmarkHashtag 조회
-	@ApiOperation(value = "id에 해당하는 BookmarkHashtag 조회")
-	@GetMapping("/bookmarktag/user/{id}")
-	public ResponseEntity<Map<String, Object>> searchBookmarkHashtag(@PathVariable String id) throws Exception {
-		return handleSuccess(bookmarkHashtagService.searchById(id));
+	// id에 해당하는 FavoritesHashtag 조회
+	@ApiOperation(value = "id에 해당하는 FavoritesHashtag 조회")
+	@GetMapping("/favoritestag/user/{id}")
+	public ResponseEntity<Map<String, Object>> searchFavoritesHashtag(@PathVariable String id) throws Exception {
+		return handleSuccess(favoritesHashtagService.searchById(id));
 	}
 
-	// BookmarkHashtag 등록
-	@ApiOperation(value = "BookmarkHashtag 등록")
-	@PostMapping("/bookmarktag")
-	public ResponseEntity<Map<String, Object>> insertBookmarkHashtag(@RequestBody BookmarkHashtag bookmarkHashtag)
+//	// FavoritesHashtag 등록
+//	@ApiOperation(value = "FavoritesHashtag 등록")
+//	@PostMapping("/favoritestag")
+//	public ResponseEntity<Map<String, Object>> insertFavoritesHashtag(@RequestBody FavoritesHashtag favoritesHashtag)
+//			throws Exception {
+//		favoritesHashtagService.insert(favoritesHashtag);
+//		return handleSuccess("FavoritesHashtag 등록 완료");
+//	}
+
+	// FavoritesHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)
+	@ApiOperation(value = "FavoritesHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
+	@PostMapping("/favoritestag")
+	public ResponseEntity<Map<String, Object>> insertFavoritesHashtag(@RequestBody FavoritesHashtag favoritesHashtag)
 			throws Exception {
-		bookmarkHashtagService.insert(bookmarkHashtag);
-		return handleSuccess("BookmarkHashtag 등록 완료");
+		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// tabHashtag.setId("로그인한사용자의 id");
+
+		favoritesHashtagService.insert(favoritesHashtag);
+		return handleSuccess("FavoritesHashtag 등록 완료");
 	}
 
-	// no에 해당하는 BookmarkHashtag 삭제
-	@ApiOperation(value = "no에 해당하는 BookmarkHashtag 삭제")
-	@DeleteMapping("/bookmarktag/{no}")
-	public ResponseEntity<Map<String, Object>> deleteBookmarkHashtag(@PathVariable int no) throws Exception {
-		bookmarkHashtagService.delete(no);
-		return handleSuccess("BookmarkHashtag 삭제 완료");
+	// no에 해당하는 FavoritesHashtag 삭제
+	@ApiOperation(value = "no에 해당하는 FavoritesHashtag 삭제")
+	@DeleteMapping("/favoritestag/{no}")
+	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable int no) throws Exception {
+		favoritesHashtagService.delete(no);
+		return handleSuccess("FavoritesHashtag 삭제 완료");
 	}
 
-	// BookmarkHashtag 수정
-	@ApiOperation(value = "BookmarkHashtag 수정")
-	@PutMapping("/bookmarktag")
-	public ResponseEntity<Map<String, Object>> updateBookmarkHashtag(@RequestBody BookmarkHashtag bookmarkHashtag)
+	// id에 해당하는 FavoritesHashtag 모두 삭제
+	@ApiOperation(value = "id에 해당하는 FavoritesHashtag 모두 삭제")
+	@DeleteMapping("/favoritestag/user/{id}")
+	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable String id) throws Exception {
+		favoritesHashtagService.deleteById(id);
+		return handleSuccess("FavoritesHashtag 삭제 완료");
+	}
+
+	// id에 해당하는 사용자의 hashtag에 해당하는 FavoritesHashtag 삭제
+	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 FavoritesHashtag 삭제")
+	@DeleteMapping("/favoritestag/user/{id}/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable String id,
+			@PathVariable String hashtag) throws Exception {
+		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
+
+		// 1. id를 로그인한 유저의 id로 설정
+		// String id = "로그인한사용자의 id";
+
+		favoritesHashtagService.deleteByIdAndHashtag(id, hashtag);
+		return handleSuccess("FavoritesHashtag 삭제 완료");
+	}
+
+	// FavoritesHashtag 수정
+	@ApiOperation(value = "FavoritesHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
+	@PutMapping("/favoritestag")
+	public ResponseEntity<Map<String, Object>> updateFavoritesHashtag(@RequestBody FavoritesHashtag favoritesHashtag)
 			throws Exception {
-		bookmarkHashtagService.update(bookmarkHashtag);
-		return handleSuccess("BookmarkHashtag 수정 완료");
+		favoritesHashtagService.update(favoritesHashtag);
+		return handleSuccess("FavoritesHashtag 수정 완료");
 	}
 
 	@ExceptionHandler

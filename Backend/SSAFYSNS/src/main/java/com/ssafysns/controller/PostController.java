@@ -49,6 +49,8 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
 		return handleSuccess(postService.searchAll());
 	}
+	
+	
 
 //	@ApiOperation(value = "모든 Post 목록 조회")
 //	@ResponseBody
@@ -97,6 +99,43 @@ public class PostController {
 		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 //		return handleSuccess(postService.search(pno));
 	}
+	
+	
+	/**
+	 * 하나의 Hashtag에 해당하는 Post와 그에 해당하는 Comment 조회
+	 */
+	@ApiOperation(value="하나의 Hashtag에 해당하는 Post와 Comment")
+	@GetMapping("/post/{hashtag}")
+	public ResponseEntity<List<Comment>> searchHashtagComment(@PathVariable String hashtag) throws Exception {
+		List<Comment> comments = commentService.searchCommentList(hashtag);
+		System.out.println("InController...");
+		System.out.println(comments.toString());
+		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * 여러 Hashtag에 해당하는 Post와 그에 해당하는 Comment 조회
+	 */
+	@ApiOperation(value="여러 Hashtag에 해당하는 Post와 그에 해당하는 Comment 조회")
+	@PostMapping("/post/newsfeed")
+	public ResponseEntity<List<Comment>> searchAllHashtagComment(@PathVariable String hashtag) throws Exception {
+		/**
+		 * 원래는 hashtags를 PathVariable로 받는게 아니고 id를 이용해서 조회해야 한다.
+		 */
+		List<Integer> list = postService.searchPostNo(hashtag);
+		System.out.println("=======================================");
+		System.out.println(list.toString());
+		System.out.println("=======================================");
+		
+		List<Comment> comments = commentService.searchAllCommenetList(list);
+		System.out.println("모든 해시태그 받는 리스트");
+		
+		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
+	}
+	
+	
+	
 
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
@@ -108,6 +147,9 @@ public class PostController {
 	@ApiOperation(value = "pno에 해당하는 Post 삭제")
 	@DeleteMapping("/{pno}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable int pno) throws Exception {
+		/**
+		 * 작성자만 가능
+		 */
 		postService.delete(pno);
 		return handleSuccess("Post 삭제 완료");
 	}
@@ -115,6 +157,9 @@ public class PostController {
 	@ApiOperation(value = "Post 수정")
 	@PutMapping("")
 	public ResponseEntity<Map<String, Object>> update(@RequestBody Post post) throws Exception {
+		/**
+		 * 작성자만 가능
+		 */
 		postService.update(post);
 		return handleSuccess("Post 수정 완료");
 	}
@@ -126,11 +171,11 @@ public class PostController {
 		return new ResponseEntity<List<Comment>>(commentService.searchPno(1), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value="id로 Comment 검색", response=Comment.class)
-	@GetMapping("/comment/list/{id}")
-	public ResponseEntity<List<Comment>> findById(@PathVariable String id) throws Exception {
-		return new ResponseEntity<List<Comment>> (commentService.searchId(id), HttpStatus.OK);
-	}
+//	@ApiOperation(value="id로 Comment 검색", response=Comment.class)
+//	@GetMapping("/comment/list/{id}")
+//	public ResponseEntity<List<Comment>> findById(@PathVariable String id) throws Exception {
+//		return new ResponseEntity<List<Comment>> (commentService.searchId(id), HttpStatus.OK);
+//	}
 	
 	@ApiOperation(value="Comment 작성")
 	@PostMapping("/comment/new")
@@ -142,6 +187,9 @@ public class PostController {
 	@ApiOperation(value="Comment update")
 	@PostMapping("/comment/update")
 	public ResponseEntity<Map<String, Object>> commentUpdate(@RequestBody Comment comment) throws Exception {
+		/**
+		 * 작성자만 가능
+		 */		
 		commentService.update(comment);
 		return handleSuccess("댓글 수정 완료");
 	}
@@ -149,7 +197,9 @@ public class PostController {
 	@ApiOperation(value="no로 Comments 삭제")
 	@GetMapping("/comment/delete/{no}")
 	public ResponseEntity<Map<String, Object>> DeleteComment(@PathVariable int no) throws Exception {
-		System.out.println("controller... no: "+no);
+		/**
+		 * 작성자만 가능
+		 */		
 		commentService.delete(no);
 		return handleSuccess("댓글 삭제 완료");
 	}

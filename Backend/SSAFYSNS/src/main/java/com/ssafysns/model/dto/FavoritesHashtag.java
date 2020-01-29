@@ -18,8 +18,8 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-@Entity(name="bookmark_hashtag")
-public class BookmarkHashtag {
+@Entity(name="favorites_hashtag")
+public class FavoritesHashtag {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(nullable=false,unique=true)
@@ -36,6 +36,6 @@ public class BookmarkHashtag {
 	
 	// 외래키 설정
 	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_bookmark_hashtag_id"))
+	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_favorites_hashtag_id"))
 	private User user;
 }
