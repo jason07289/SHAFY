@@ -1,7 +1,6 @@
 import Login from './views/user/Login.vue'
 import Join from './views/user/Join.vue'
-import Join_educationStudent from './views/user/Join_educationStudent'
-import Join_general from './views/user/Join_general'
+import Join_detail from './views/user/Join_detail'
 import FindPassword from './views/user/FindPassword.vue'
 import BookMark from './views/home/BookMark.vue'
 import Home from './views/home/Home.vue'
@@ -35,14 +34,9 @@ export default [
         component : Join
     },
     {
-        path : '/user/join/Join_educationStudent',
-        name : 'Join_educationStudent',
-        component : Join_educationStudent
-    },
-    {
-        path : '/user/join/Join_general',
-        name : 'Join_general',
-        component : Join_general
+        path : '/user/join/:type',
+        name : 'Join_detail',
+        component : Join_detail,
     },
     {
         path : '/user/findpw',

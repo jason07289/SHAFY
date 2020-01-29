@@ -16,9 +16,6 @@ const getters = {
       return true
     }
   }
-  
-
-
 }
 
 // actions
