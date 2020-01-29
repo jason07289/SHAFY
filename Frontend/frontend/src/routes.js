@@ -15,7 +15,8 @@ export default [
     {
         path : '/',
         name : 'Login',
-        component : Login
+        component : Login,
+        
     },
     {
         path : '/user/join',
@@ -63,3 +64,11 @@ export default [
         component : SetTags
     },
 ]
+
+//라우터가드(인증정보 체크해서 로그인페이지로 보내기)
+const checkAuth = () => (from, to, next) => {
+    
+    if (localStorage.JWT==null) next('/')
+    return next()
+    
+  }
