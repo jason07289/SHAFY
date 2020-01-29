@@ -107,12 +107,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<Comment> searchAllCommenetList(List<Integer> list) {
-//	public List<Comment> searchAllCommenetList(Post newEntity) {
+	public List<Comment> searchAllCommenetList(List<Integer> pno_list) {
 		List<Comment> comments = null;
 		
 		try {
-			comments = commentRepository.testNewEntity(list);
+			comments = commentRepository.customAllPno(pno_list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
