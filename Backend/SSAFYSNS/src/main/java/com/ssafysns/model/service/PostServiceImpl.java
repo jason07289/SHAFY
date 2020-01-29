@@ -49,16 +49,7 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	@Override
-	public Optional<Post> search(int pno) {
-		try {
-			return postRepository.findById(pno);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new PostException("게시물 검색 중 오류가 발생했습니다.");
-		}
-	}
-
+	// 모든 Post 조회
 	@Override
 	public List<Post> searchAll() {
 		try {
@@ -69,6 +60,18 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	// pno로 Post 조회
+	@Override
+	public Optional<Post> search(int pno) {
+		try {
+			return postRepository.findById(pno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("게시물 검색 중 오류가 발생했습니다.");
+		}
+	}
+	
+	
 	@Override
 	public int count() {
 		try {
@@ -85,8 +88,9 @@ public class PostServiceImpl implements PostService {
 		return null;
 	}
 
+	// Hashtag로 Post 조회
 	@Override
-	public List<Post> searchPost(String hashtag) {
+	public List<Post> search(String hashtag) {
 		List<Post> posts = null;
 		
 		try {
@@ -108,6 +112,20 @@ public class PostServiceImpl implements PostService {
 			e.printStackTrace();
 		}
 		return pno_list;
+	}
+
+	/**
+	 * ID 체크***
+	 */
+	@Override
+	public List<Integer> testAllHash(String id) {
+		List<Integer> all_hash_pno_list = null;
+		try {
+			all_hash_pno_list  = postRepository.testAllHash(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return all_hash_pno_list;
 	}
 
 }

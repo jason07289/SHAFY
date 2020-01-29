@@ -18,9 +18,11 @@ public interface PostService {
 	
 	public List<Post> searchAllHashTags();
 	
-	public List<Post> searchPost(String hashtag);	//hashtag를 가지는 post리스트 불러오기
+	public List<Post> search(String hashtag);	//hashtag를 가지는 post리스트 불러오기
 	
 	public List<Integer> searchPostNo(String hashtag); //hashtag를 가지는 post의 번호를 리스트로 불러오기
 
+	public List<Integer> testAllHash(String id);
+	
 	public int count();
 }
