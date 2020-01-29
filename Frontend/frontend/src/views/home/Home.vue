@@ -4,6 +4,7 @@
     <h1>홈 화면(뉴스피드)</h1>
     <Post></Post>
     <Post></Post>
+    <Post></Post>
 
   </div>
 </template>
