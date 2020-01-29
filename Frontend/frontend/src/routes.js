@@ -9,7 +9,7 @@ import MyPage from './views/home/MyPage.vue'
 import Post from './views/home/Post.vue'
 import SetTags from './views/home/SetTags.vue'
 
-
+ /* eslint-disable no-unused-vars */
 export default [
 
     {

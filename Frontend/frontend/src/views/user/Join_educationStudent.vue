@@ -8,7 +8,7 @@
                 부가 정보
             </label>
         </div>
-
+<!-- required 표시 해주기 id, name, password, phone, birth, location-->
         <!--*지역-->
        <select name="location" id="location">
                 <option value="0">지역</option>
@@ -25,9 +25,6 @@
                 <option value="2">2 기</option>
                 <option value="3">3 기</option>
         </select>
-
-        <!--학번-->
-        <input type="text"     placeholder="학번" >
 
         <!--1학기반,2학기반-->
         <div id="class">
@@ -66,11 +63,46 @@
 <script>
 import basicInfo from '../../components/user/BasicInfo'
 import terms from '../../components/user/Terms'
+// import UserApi from '../../apis/UserApi'
 
 export default {
      components:{
-         basicInfo,terms,
+         basicInfo,
+         terms,
      },
+     data: ()=>{
+         return {
+             signUpForm:{
+                birth: '',
+                class1: '',
+                class2: '',
+                grade: '',
+                id: '',
+                img: '',
+                loacation: '',
+                name: '',
+                nickname: '',
+                password: '',
+                phone: '',
+                // 재학, 수료
+                state: '',
+                token: '',
+                utype: ''
+            },
+            ssafydata:{
+                class1 : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                class2 : [1, 2, 3, 4],
+                grade: [1, 2, 3],
+                location :['서울', '대전', '구미', '광주'],
+                state: ['수료','졸업','재학'],
+                // utype: ['컨설턴트','프로','관리자'],
+            }
+            
+         }
+     },
+     methods:{
+         
+     }
 
 }
 </script>
