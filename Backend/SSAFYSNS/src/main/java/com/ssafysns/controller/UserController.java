@@ -34,6 +34,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+//	@Autowired
+//	private jwtse
+	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
 		return handleFail(e.getMessage(), HttpStatus.OK);
@@ -42,18 +45,26 @@ public class UserController {
 	private ResponseEntity<Map<String, Object>> handleSuccess(Object data){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state", "ok");
-		resultMap.put("data", data);
+		resultMap.put("message", data);
+		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+	}
+	
+	private ResponseEntity<Map<String, Object>> handleSuccess(Object data,String token){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("state", "ok");
+		resultMap.put("message", data);
+		resultMap.put("JWT",token);
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
 
 	private ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state",  "fail");
-		resultMap.put("data",  data);
+		resultMap.put("message",  data);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), no 중복불가 - session 토큰이 들어갈 자리")
+	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), token 중복불가 - session 토큰이 들어갈 자리")
 	@PostMapping("/api/user/signUp/")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		
@@ -62,7 +73,7 @@ public class UserController {
 			
 			return handleSuccess("회원가입에 성공하셨습니다.");
 		}else {
-			return handleSuccess("중복된 아이디입니다.");
+			return handleFail("다시 확인해주세요", HttpStatus.OK);
 		}
 	}
 	
@@ -79,11 +90,13 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
 //		System.out.println(user.getId()+" ............  "+user.getPassword());
 		
-		if(userService.login(user.getId(), user.getPassword())) {
-		
-			return handleSuccess("로그인에 성공하셨습니다.");
+		String jwt=userService.login(user.getId(), user.getPassword());
+		if(jwt.equals("iderr")) {
+			return handleFail("아이디를 찾을 수 없습니다.", HttpStatus.OK);
+		}else if(jwt.equals("pwerr")){
+			return handleFail("잘못된 비밀번호 입니다.", HttpStatus.OK);
 		}else {
-			return handleSuccess("비밀번호나 아이디를 다시 입력해주세요.");
+			return handleSuccess("로그인 성공",jwt);
 		}
 	}
 	
@@ -96,7 +109,7 @@ public class UserController {
 			System.out.println(param.getNewPassword());
 			return handleSuccess("비밀번호 변경에 성공하셨습니다.");
 		}else {
-			return handleSuccess("이전 비밀번호를 다시 입력해주세요.");
+			return handleFail("이전 비밀번호를 다시 입력해주세요.",HttpStatus.OK);
 		}
 	}
 	
@@ -106,7 +119,7 @@ public class UserController {
 		if(userService.update(user) ){
 			return handleSuccess("회원정보 변경에 성공하셨습니다.");
 		}else {
-			return handleSuccess("회원정보 변경 실패");
+			return handleFail("회원정보 변경 실패",HttpStatus.OK);
 		}
 	}
 	
@@ -116,7 +129,7 @@ public class UserController {
 		if(userService.nickNameCheck(nickName) ){
 			return handleSuccess("사용가능한 닉네임입니다.");
 		}else {
-			return handleSuccess("이미 사용중인 닉네임 입니다.");
+			return handleFail("이미 사용중인 닉네임 입니다.",HttpStatus.OK);
 		}
 	}
 	
@@ -126,7 +139,7 @@ public class UserController {
 		if(userService.signOut(user.getId(),user.getPassword()) ){
 			return handleSuccess("회원 탈퇴 성공");
 		}else {
-			return handleSuccess("비밀번호가 맞지 않습니다.");
+			return handleFail("비밀번호가 맞지 않습니다.",HttpStatus.OK);
 		}
 	}
 	
