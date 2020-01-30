@@ -1,6 +1,7 @@
 package com.ssafysns.model.service;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -9,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafysns.model.dto.MyLoginException;
+import com.ssafysns.exception.MyLoginException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
@@ -73,7 +74,13 @@ public class UserServiceImpl implements UserService{
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
 						
 						String jwt =jwtService.create(user.getId(), user.getNickname());
+						
 						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
+//						
+//						Map<String, Object> uid = jwtService.get("userid");
+//						Map<String, Object> nickname = jwtService.get("nickname");
+//						System.out.println(uid.get("userid"));
+//						
 						
 						
 						return jwt;
