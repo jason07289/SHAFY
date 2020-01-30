@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Search;
+import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.SearchService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,8 @@ import io.swagger.annotations.ApiOperation;
 public class SearchController {
 	@Autowired
 	SearchService searchService;
+	@Autowired
+	JwtService jwtService;
 
 	// 모든 search 조회
 	@ApiOperation(value = "모든 search 목록 조회")
@@ -46,13 +49,14 @@ public class SearchController {
 	}
 
 	// Search 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 검색한 해시태그 입력 필수!!!)
-	@ApiOperation(value = "Search 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 검색한 해시태그 입력 필수!!!)")
+	@ApiOperation(value = "검색 버튼 클릭시, Search 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 검색한 해시태그 입력 필수!!!)")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Search search) throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// search.setId("로그인한사용자의 id");
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		search.setId(uid.get("userid").toString());
 
 		searchService.insert(search);
 		return handleSuccess("search 등록 완료");
