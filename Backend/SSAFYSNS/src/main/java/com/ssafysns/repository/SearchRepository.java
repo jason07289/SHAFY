@@ -17,7 +17,7 @@ public interface SearchRepository extends JpaRepository<Search, Integer> {
 	@Query(value = "delete from search s where s.datetime <= :datetime")
 	void deleteBySearchtime(@Param("datetime") Date datetime);
 
-//	@Query(value = "select s from search s where datetime <= now()")
-	@Query(value = "select s.hashtag, count(distinct s.id) as cnt, s.id, s.no from search s where s.datetime >= date_add(now(), interval -7 day) group by s.hashtag order by s.cnt desc")
+	// datetime이 현재 날짜 기준 일주일 이내인 것만 조회) -> 최근 7주일간 인기 검색어 조회
+	@Query(value = "select s.hashtag, count(distinct s.id) as cnt, s.id, s.no from search s where s.datetime >= date_add(now(), interval -7 day) group by s.hashtag order by cnt desc", nativeQuery = true)
 	List<Search> findBySearchtime();
 }

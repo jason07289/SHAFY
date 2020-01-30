@@ -66,8 +66,8 @@ public class SearchController {
 		return handleSuccess("Search 삭제 완료");
 	}
 
-	// datetime 이전에 해당하는 Search 삭제
-	@ApiOperation(value = "datetime에 해당하는 Search 삭제")
+	// 기준날짜 datetime 이전에 해당하는 Search 삭제
+	@ApiOperation(value = "기준날짜 datetime 이전에 해당하는 Search 삭제")
 	@DeleteMapping("/{datetime}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable Date datetime) throws Exception {
 		searchService.deleteBySearchtime(datetime);

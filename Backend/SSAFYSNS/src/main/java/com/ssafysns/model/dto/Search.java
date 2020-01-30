@@ -48,9 +48,11 @@ public class Search {
 	@CreationTimestamp
 	private Date datetime;
 
-	
+	// Transient : DB에서 Column으로 매핑되지 않음
+	// findBySearchtime()에서 count()의 결과값 cnt를 받기 위해 생성함
+	// JPA에서 count()는 long 타임을 반환함.
 	@Transient
-	private long cnt;
+	private long cnt; 
 	
 	// 외래키 설정
 	@ManyToOne
