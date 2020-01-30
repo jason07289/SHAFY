@@ -51,9 +51,12 @@ public class BookmarkController {
 	@ApiOperation(value = "id에 해당하는 Bookmark 목록 조회")
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> search() throws Exception {
-		// 1. id를 로그인한 유저의 id로 설정
-		Map<String, Object> uid = jwtService.get("userid");
-		String id = uid.get("userid").toString();
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+		
+		// test시 직접 입력
+		String id = "";
 
 		return handleSuccess(bookmarkService.searchById(id));
 	}
@@ -85,9 +88,12 @@ public class BookmarkController {
 	@DeleteMapping
 	public ResponseEntity<Map<String, Object>> delete() throws Exception {
 		// 1. id를 로그인한 유저의 id로 설정
-		Map<String, Object> uid = jwtService.get("userid");
-		String id = uid.get("userid").toString();
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
 
+		// test시 직접 입력
+		String id = "";
+		
 		bookmarkService.deleteById(id);
 		return handleSuccess("Bookmark 삭제 완료");
 	}
@@ -98,10 +104,13 @@ public class BookmarkController {
 	public ResponseEntity<Map<String, Object>> deleteByIdAndPno(@PathVariable int pno) throws Exception {
 		// id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		Map<String, Object> uid = jwtService.get("userid");
-		String id = uid.get("userid").toString();
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
 
+		// test시 직접 입력
+		String id = "";
+		
 		bookmarkService.deleteByIdAndPno(id, pno);
 		return handleSuccess("Bookmark 삭제 완료");
 	}
