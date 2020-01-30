@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.ssafysns.model.dto.Comment;
-import com.ssafysns.model.dto.Post;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
@@ -17,8 +16,8 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	List<Comment> findById(String id);
 
 	@Modifying
-	@Query("update comment c set c.deleted = 1 where c.no=:no")
-	void updateDeleted(@Param("no") int no);
+	@Query("update comment c set c.deleted = 1 where c.cno=:cno")
+	void updateDeleted(@Param("cno") int cno);
 
 	List<Comment> findByPno(int no);
 	
@@ -38,7 +37,18 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	
 	
 	@Query("select c from comment c where c.pno in :plist")
-	List<Comment> customAllPno(@Param("plist") List<Integer> plist); 
+	List<Comment> customAllPno(@Param("plist") List<Integer> plist);
+
+	@Query("select c from comment c where c.pno = :pno and c.cno = :cno")
+	Comment searchByPnoCno(@Param("pno") int pno, @Param("cno") int cno);
+
+	@Modifying
+	@Query("update comment c set like_count = like_count where c.cno = :cno")// c.like_count = c.like_count+1 where c.cno = :cno")
+	void likesUp(@Param("cno") int cno);
 	
+	@Modifying
+	@Query("update comment c set c.pno = c.pno where c.cno = :cno")// c.like_count = c.like_count-1 where c.cno = :cno")
+	void likesDown(@Param("cno") int cno);
+
 	
 }

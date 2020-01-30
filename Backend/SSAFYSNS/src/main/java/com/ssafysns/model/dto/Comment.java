@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
-	private int no;
+	private int cno;
 
 	@Column(nullable = false)
 	private int pno;
@@ -51,10 +52,13 @@ public class Comment {
 	private String content;
 
 	@Column(columnDefinition="default 0")
-	private int likes;
-
-	@Column(columnDefinition="default 0")
 	private int deleted;
+	
+	@Transient
+	private int like_count;
+	
+	@Transient
+	private boolean like_check;
 
 	 // 외래키 설정
 	@ManyToOne
