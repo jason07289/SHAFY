@@ -110,9 +110,11 @@ public class User {
 	private String name;
 
 
-	@Column(length = 200,nullable = false)
+	@Column(length = 200)
 	private String password;
-
+	
+	@Column(length = 100)
+	private String provider;
 //	@Getter
 //	@Setter(AccessLevel.PROTECTED) 이런식으로 속성별 제한을 걸수도 있는듯...
 	@Column(length = 20, nullable = false)
@@ -161,6 +163,9 @@ public class User {
 	
 	@Column(length=10)
 	private Integer approval;
+	
+	@Column(length=10)
+	private Integer alarm;
 
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")

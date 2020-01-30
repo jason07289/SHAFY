@@ -1,10 +1,9 @@
 package com.ssafysns.model.service;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
-	public boolean create(User user) {
-		try {
+	public boolean create(User user) throws Exception {
 			AES256Util aes = new AES256Util();
 			user.setPassword(aes.encrypt(user.getPassword()));
 			
@@ -52,19 +50,21 @@ public class UserServiceImpl implements UserService{
 				return true;
 			}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return false;
 	}
 
 	
+	
+	
+	
+	
+	
+	
+	
 	@Override
-	public String login(String id,String pw) {
-		try {
+	public String login(String id,String pw) throws Exception {
 			User user =userRepository.getOne(id);
 			AES256Util aes = new AES256Util();
-			
 			if(user==null) {
 				throw new MyLoginException("등록되지 않은 회원입니다.");
 			}else {
@@ -72,47 +72,30 @@ public class UserServiceImpl implements UserService{
 					throw new MyLoginException("등록되지 않은 회원입니다.");
 				}else {
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
-						
 						String jwt =jwtService.create(user.getId(), user.getNickname());
-						
 						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
-//						
 //						Map<String, Object> uid = jwtService.get("userid");
 //						Map<String, Object> nickname = jwtService.get("nickname");
 //						System.out.println(uid.get("userid"));
-//						
-						
-						
 						return jwt;
 					}else {
 						throw new MyLoginException("비밀번호 오류");
-						
 					}
 				}
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			if(e instanceof EntityNotFoundException) {
-				return "iderr";
-			}else if(e instanceof MyLoginException) {
-				return "pwerr";
-			}
-			return null;
-		}
-		
 	}
+	       
+
 
 
 	@Override
-	public User findPW(String id, String name)  {
+	public User findPW(String id, String name) throws Exception{
 		MailUtil mu = new MailUtil();
 		System.out.println("findPW 들어왔어요");
 		User find = userRepository.findByIdAndName(id, name);
 		
 		System.out.println("id와 이름으로 user를 찾았습니다.");
 		String userEmail = find.getId();
-		try {
 			
 			if(find==null||find.getDeleted()==1) {
 				throw new SQLException("해당되는 회원정보가 없습니다.");
@@ -139,10 +122,6 @@ public class UserServiceImpl implements UserService{
 			
 				return find;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 
@@ -232,9 +211,10 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public User MyInfo(String id) {
+	public User MyInfo() {
 		try {
-			User user = userRepository.getOne(id);
+			Map<String,String> map =jwtService.get("id");
+			User user = userRepository.getOne(map.get("id"));
 			System.out.println(user);
 		
 			return user;
@@ -243,4 +223,26 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public List<User> list() throws Exception{
+		
+		return userRepository.findByDeletedIs(0);
+	}
+
+
+
+
+
+
+
+
 }

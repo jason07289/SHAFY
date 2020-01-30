@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, String>{//<entity, p
 	public User findByIdAndName(String id, String name );
 	public User findByIdAndPassword(String id, String password );
 	public User findByNickname(String nickName);
-	
+	public List<User> findByDeletedIs(int deleted);
 	
 /*	 
  * ......................... 
