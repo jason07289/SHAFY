@@ -83,17 +83,17 @@ public class SearchController {
 		return handleFail(e.getMessage(), HttpStatus.OK);
 	}
 
-	private ResponseEntity<Map<String, Object>> handleSuccess(Object data) {
+	private ResponseEntity<Map<String, Object>> handleSuccess(Object message) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state", "ok");
-		resultMap.put("data", data);
+		resultMap.put("message", message);
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
 
-	private ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus status) {
+	private ResponseEntity<Map<String, Object>> handleFail(Object message, HttpStatus status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state", "fail");
-		resultMap.put("data", data);
+		resultMap.put("message", message);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }
