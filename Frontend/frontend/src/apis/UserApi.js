@@ -32,6 +32,5 @@ const UserApi = {
     requestfindPw:(data,callback,errorCallback)=>requestfindPw(data,callback,errorCallback)
 }
 
-
 export default UserApi
 
