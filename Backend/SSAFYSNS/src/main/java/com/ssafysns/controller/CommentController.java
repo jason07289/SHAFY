@@ -81,13 +81,5 @@ public class CommentController {
 		commentService.delete(no);
 		return handleSuccess("댓글 삭제 완료");
 	}
-//
-//	@ApiOperation(value="새로운 FAQ 생성")
-//	@PostMapping("/faqInsert")
-//	public ResponseEntity<Map<String, Object>> userInsert(@RequestBody FAQ faq) throws Exception {
-//		System.out.println("controller: " + faq.toString());
-//		faqService.insert(faq);
-//		return handleSuccess("등록 완료");
-//	}
 	
 }

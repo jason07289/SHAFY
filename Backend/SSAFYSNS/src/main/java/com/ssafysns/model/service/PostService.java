@@ -8,9 +8,9 @@ import com.ssafysns.model.dto.Post;
 public interface PostService {
 	public void insert(Post post);
 
-	public void delete(int pno);
+	public String delete(String id, int pno);
 
-	public void update(Post post);
+	public String update(String id, Post post);
 
 	public Optional<Post> search(int pno);
 
@@ -18,9 +18,11 @@ public interface PostService {
 	
 	public List<Post> searchAllHashTags();
 	
-	public List<Post> searchPost(String hashtag);	//hashtag를 가지는 post리스트 불러오기
+	public List<Post> search(String hashtag);	//hashtag를 가지는 post리스트 불러오기
 	
 	public List<Integer> searchPostNo(String hashtag); //hashtag를 가지는 post의 번호를 리스트로 불러오기
 
+	public List<Integer> testAllHash(String id);
+	
 	public int count();
 }
