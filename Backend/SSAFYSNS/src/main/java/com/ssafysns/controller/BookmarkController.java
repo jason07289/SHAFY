@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Bookmark;
 import com.ssafysns.model.service.BookmarkService;
+import com.ssafysns.model.service.JwtService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -29,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 public class BookmarkController {
 	@Autowired
 	BookmarkService bookmarkService;
+	@Autowired
+	JwtService jwtService;
 
 	// 모든 Bookmark 조회
 	@ApiOperation(value = "모든 Bookmark 목록 조회")
@@ -46,8 +49,15 @@ public class BookmarkController {
 
 	// id에 해당하는 Bookmark 목록 조회
 	@ApiOperation(value = "id에 해당하는 Bookmark 목록 조회")
-	@GetMapping("/user/{id}")
-	public ResponseEntity<Map<String, Object>> search(@PathVariable String id) throws Exception {
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> search() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+		
+		// test시 직접 입력
+		String id = "";
+
 		return handleSuccess(bookmarkService.searchById(id));
 	}
 
@@ -57,8 +67,9 @@ public class BookmarkController {
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Bookmark bookmark) throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, pno만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// bookmark.setId("로그인한사용자의 id");
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		bookmark.setId(uid.get("userid").toString());
 
 		bookmarkService.insert(bookmark);
 		return handleSuccess("Bookmark 등록 완료");
@@ -74,21 +85,32 @@ public class BookmarkController {
 
 	// id에 해당하는 Bookmark 삭제
 	@ApiOperation(value = "id에 해당하는 Bookmark 삭제")
-	@DeleteMapping("/user/{id}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable String id) throws Exception {
+	@DeleteMapping
+	public ResponseEntity<Map<String, Object>> delete() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+		
 		bookmarkService.deleteById(id);
 		return handleSuccess("Bookmark 삭제 완료");
 	}
 
 	// id에 해당하는 사용자의 pno를 Bookmark에서 삭제
 	@ApiOperation(value = "id에 해당하는 사용자의 pno를 Bookmark에서 삭제")
-	@DeleteMapping("/user/{id}/post/{pno}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable String id, @PathVariable int pno) throws Exception {
-		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
+	@DeleteMapping("/post/{pno}")
+	public ResponseEntity<Map<String, Object>> deleteByIdAndPno(@PathVariable int pno) throws Exception {
+		// id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// String id = "로그인한사용자의 id";
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
 
+		// test시 직접 입력
+		String id = "";
+		
 		bookmarkService.deleteByIdAndPno(id, pno);
 		return handleSuccess("Bookmark 삭제 완료");
 	}
