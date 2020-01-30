@@ -30,23 +30,46 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional
-	public void delete(int pno) {
+	public String delete(String id, int pno) {
+		Post post = null;
+		
 		try {
-			postRepository.updateDeleted(pno);
+			post = postRepository.findById(pno).get();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
+			throw new PostException("pno에 해당하는 게시글 정보를 불러올 수 없습니다.");
 		}
+		
+		if(post.getId() == id) {
+			try {
+				postRepository.updateDeleted(pno);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
+			}
+		} else { // 작성자와 로그인 유저정보가 다를 경우
+			throw new PostException("게시글 수정 권한이 없습니다.");
+		}
+		
+		return null;
 	}
 
+	//게시글 수정버튼	
 	@Override
-	public void update(Post post) {
-		try {
-			postRepository.save(post);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new PostException("게시물 수정 중 오류가 발생했습니다.");
+	public String update(String id, Post post) {
+		
+		if(post.getId() == id) {
+			try {
+				postRepository.save(post);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new PostException("게시물 수정 중 오류가 발생했습니다.");
+			}
+		} else {
+			throw new PostException("게시글 수정 권한이 없습니다.");
 		}
+		
+		return null;
 	}
 
 	// 모든 Post 조회

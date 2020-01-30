@@ -59,7 +59,15 @@ public class PostController {
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
-		postService.insert(post);
+		String id = post.getId();
+		String hashtag = post.getHashtag();
+		
+		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
+		if(!id.equals("admin") && hashtag.startsWith("__공지사항__")) {
+			return handleFail("fail", HttpStatus.BAD_REQUEST);
+		} else {
+			postService.insert(post);
+		}
 		return handleSuccess("Post 등록 완료");
 	}
 	
@@ -70,7 +78,8 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		postService.delete(pno);
+		String jwtID = "";
+		postService.delete(jwtID, pno);
 		return handleSuccess("Post 삭제 완료");
 	}
 	
@@ -81,7 +90,8 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		postService.update(post);
+		String jwtID = "";
+		postService.update(jwtID, post);
 		return handleSuccess("Post 수정 완료");
 	}
 	
@@ -233,9 +243,6 @@ public class PostController {
 //	}
 	
 	
-	
-
-
 	//수정 - no넣어주셈
 	@ApiOperation(value="", response=List.class)
 	@PostMapping("/comment/list/{no}")
@@ -249,9 +256,6 @@ public class PostController {
 //		return new ResponseEntity<List<Comment>> (commentService.searchId(id), HttpStatus.OK);
 //	}
 	
-
-	
-
 	
 //	public ResponseEntity<List<Pair>> searchAll() throws Exception {
 ////	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
@@ -270,7 +274,6 @@ public class PostController {
 //		System.out.println(lists.get(0).comments.get(2).getContent());
 //		return new ResponseEntity<List<Pair>>(lists, HttpStatus.OK);
 ////		return handleSuccess(postService.searchAll());
-	
 	
 	
 
