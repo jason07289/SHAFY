@@ -15,7 +15,8 @@ const checkAuth = () => (from, to, next) => {
     var token = localStorage.JWT
     console.log("token:"+token)
     // if (token==null || token==undefined || token=='') {
-    //     alert("로그인 해주시기 바랍니다.")
+    //     //alert("로그인 해주시기 바랍니다.")
+    //      alert("로그인 후 이용해주세요")
     //     return next('/')
     // }
     return next()
