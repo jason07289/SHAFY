@@ -7,9 +7,19 @@
                     기본 정보
                 </label>
             </div>
-            <input v-model="signUpForm.id" type="email" placeholder="이메일" ><label>*</label><br>
-            <input v-model="password" type="password" placeholder="비밀번호" ><label>*</label><br>
-            <input v-model="passwordcheck" type="password" placeholder="비밀번호 확인" ><label>*</label><br>
+            
+            <input v-model="email" type="email" placeholder="이메일" v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}">
+            <label>*</label><br>
+            <div class="error-text" v-if="error.email">{{error.email}}</div>
+            
+            <input v-model="password" type="password" placeholder="비밀번호" 
+            v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}">
+            <label>*</label><br>
+            <div class="error-text" v-if="error.password">{{error.password}}</div>
+            <input v-model="passwordcheck" type="password" placeholder="비밀번호 확인" 
+            v-bind:class="{error : error.passwordcheck, complete:!error.passwordcheck&&passwordcheck.length!==0}">
+            <label>*</label><br>
+            <div class="error-text" v-if="error.passwordcheck">{{error.passwordcheck}}</div>
             <input v-model="signUpForm.name" type="text" placeholder="이름" ><label>*</label><br>
             <input v-model="signUpForm.nickname" type="text" placeholder="닉네임" ><br>
             <label for="location">지역 | </label><label>*</label><br>
@@ -54,10 +64,33 @@
 </template>
 
 <script>
+ /* eslint-disable no-unused-vars */
+import PV from 'password-validator'
+import * as EmailValidator from 'email-validator'
 import UserApi from '../../apis/UserApi'
-// import UserApi from '../../apis/UserApi'
 
-export default {    
+export default {
+    created(){
+    this.component = this;
+    this.passwordSchema
+        .is().min(8)
+        .is().max(100)
+        .has().digits()
+        .has().letters();
+    },    
+    watch: {
+            password: function () {
+                this.checkForm();
+            },
+            passwordcheck: function(){
+                this.checkForm();
+            },
+            email: function (){
+                this.checkForm();
+            },
+            
+    },
+    
     data: ()=>{
         return {
            signUpForm:{
@@ -67,7 +100,7 @@ export default {
                 grade: '',
                 id: '',
                 img: '',
-                loacation: '',
+                location: '',
                 name: '',
                 nickname: '',
                 password: '',
@@ -76,8 +109,6 @@ export default {
                 token: '',
                 utype: ''
             },
-            password:'',
-            passwordcheck:'',
             Info:{
                 class1 : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 class2 : [1, 2, 3, 4],
@@ -85,20 +116,84 @@ export default {
                 location :['서울', '대전', '구미', '광주'],
                 state: ['수료','졸업','재학'],
                 utype: ['컨설턴트','프로','관리자'],
-            }
+            },
+            password:'',
+            passwordcheck:'',
+
+            email:'',
+            passwordSchema: new PV(),
+            error: {
+            email: false,
+            passowrd: false,
+            passwordcheck: false,
+            },
+            component: this
         }
         
     },
     methods:{
         Join(){
             // require이 다 들어왔는지 확인하고, 채워지지 않았으면 경고 메시지를 띄워줌
-            UserApi.requestsignUp(this.signUpForm, 
-            res => {
-                console.log(res)
+            this.signUpForm.id = this.email
+            this.signUpForm.password = this.password
+            var required = ['id', 'password', 'name', 'location', 'phone', 'birth']
+            var isrequired = true
+            for (var i in required){
+                if (required[i] === 'id'){
+                    if (EmailValidator.validate(this.email) === false){
+                    alert(`올바른 이메일을 입력해주세요.`)
+                    isrequired = false
+                    break
+                    }
                 }
-            ),error =>{
-                console.log(error)
+                if (required[i] === 'password'){
+                    if (this.passwordSchema.validate(this.password) === false){
+                        alert(`비밀번호는 영문,숫자 포함 8 자리이상이어야 합니다.`)
+                        isrequired = false
+                        break
+                    }
+                    if (this.signUpForm.password != this.passwordcheck){
+                        alert('동일한 비밀번호를 입력해 주세요.')
+                        isrequired = false
+                        break
+                    }
+                }
+                if (this.signUpForm[required[i]] === ''){
+                    alert(`${required[i]}를 입력해주세요.`)
+                    isrequired = false
+                    break
+                }
             }
+            if (isrequired === true){
+                    UserApi.requestsignUp(this.signUpForm, 
+                        res => {
+                            if (res.state === "ok"){
+                                this.$router.push({name: 'Login'})
+                            }else{
+                                alert(res.data)
+                                }
+                            }
+                        ),error =>{
+                            console.log(error)
+                        }
+            }  
+        },
+
+        checkForm(){
+                if (this.email.length >= 0 && !EmailValidator.validate(this.email))
+                    this.error.email = "이메일 형식이 아닙니다."
+                else this.error.email = false;
+
+                if (this.password.length >= 0 && !this.passwordSchema.validate(this.password))
+                    this.error.password = '영문,숫자 포함 8 자리이상이어야 합니다.'
+                else
+                    this.error.password = false
+                if (this.passwordcheck != this.password)
+                    this.error.passwordcheck = '동일한 비밀번호를 입력해 주세요.'
+                else
+                    this.error.passwordcheck = false        
+
+            
         }
     }
   
