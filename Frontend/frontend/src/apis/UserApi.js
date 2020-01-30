@@ -15,7 +15,7 @@ const requestLogin = (data,callback,errorCallback) => {
 }
 
 const requestsignup = (data, callback, errorCallback) => {
-    axios.post(hosturl+appname+'/signUp', data)
+    axios.post(hosturl+appname+'/signUp/', data)
     .then(callback)
     .catch(errorCallback)
 }
