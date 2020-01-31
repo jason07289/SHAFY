@@ -46,8 +46,11 @@ public class Post {
 	@Column(length = 500)
 	private String hashtag;
 
-	@Column(length = 30)
+	@Column(nullable=false, length = 30)
 	private String id;
+	
+	@Column(nullable=false, length = 20)	//게시글 등록 시 직접 입력
+	private String nickname;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)

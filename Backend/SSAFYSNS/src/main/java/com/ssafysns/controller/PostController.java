@@ -66,7 +66,7 @@ public class PostController {
 		if(!id.equals("admin") && hashtag.startsWith("__공지사항__")) {
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
-			postService.insert(post);
+			postService.insert(id, post);
 		}
 		return handleSuccess("Post 등록 완료");
 	}
@@ -185,7 +185,9 @@ public class PostController {
 	@ApiOperation(value="Comment 작성")
 	@PostMapping("/comment/new")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
-		commentService.insert(comment);
+		String id = "JWTToken";
+		
+		commentService.insert(id, comment);
 		return handleSuccess("댓글 등록 완료");
 	}
 	
