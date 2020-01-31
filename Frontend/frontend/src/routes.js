@@ -10,24 +10,35 @@ import SetTags from './views/home/SetTags.vue'
 
  /* eslint-disable no-unused-vars */
  //라우터가드(인증정보 체크해서 로그인페이지로 보내기)
-const checkAuth = () => (from, to, next) => {
+ const checkToken = function(token){
+     return token===null || token===undefined || token==='';
+ }
+const checkAuth = () => (to, from, next) => {
     var token = localStorage.JWT
     console.log("token:"+token)
-    // if (token==null || token==undefined || token=='') {
-    //     //alert("로그인 해주시기 바랍니다.")
-    //      alert("로그인 후 이용해주세요")
-    //     return next('/')
-    // }
+    if (checkToken(token)) {
+        //alert("로그인 해주시기 바랍니다.")
+         alert("로그인 후 이용해주세요")
+        return next('/')
+    }
     return next()
-    
   }
+
+  const blockLogin = ()=> (to, from, next) =>{
+      var token = localStorage.JWT
+      if(!checkToken(token)){
+        console.log(from)
+      }
+      
+  } 
+
 export default [
 
     {
         path : '/',
         name : 'Login',
         component : Login,
-        
+        beforeEnter: blockLogin()
     },
     {
         path : '/user/join',
