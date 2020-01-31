@@ -14,12 +14,15 @@
     "email-validator": "^2.0.4",
     "password-validator": "^5.0.3",
     "vue": "^2.6.10",
-    "vue-router": "^3.1.5"
+    "vue-infinite-loading": "^2.4.4",
+    "vue-router": "^3.1.5",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-e2e-cypress": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
+    "@vue/cli-plugin-vuex": "^4.1.2",
     "@vue/cli-service": "^4.1.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
