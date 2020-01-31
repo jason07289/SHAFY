@@ -11,15 +11,21 @@ import com.ssafysns.model.dto.NoticeException;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostException;
 import com.ssafysns.repository.PostRepository;
+import com.ssafysns.repository.UserRepository;
 
 @Service
 public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
-	public void insert(Post post) {
+	public void insert(String id, Post post) {
+		String nickname = userRepository.findById(id).get().getNickname();
+		post.setNickname(nickname);
 		try {
 			postRepository.save(post);
 		} catch (Exception e) {

@@ -43,6 +43,9 @@ public class Comment {
 
 	@Column(nullable = false, length = 30)
 	private String id;
+	
+	@Column(nullable = false, length = 20)	//게시글 등록 시 직접 입력
+	private String nickname;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)

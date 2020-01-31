@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.ssafysns.model.dto.Post;
 
 public interface PostService {
-	public void insert(Post post);
+	public void insert(String id, Post post);
 
 	public String delete(String id, int pno);
 

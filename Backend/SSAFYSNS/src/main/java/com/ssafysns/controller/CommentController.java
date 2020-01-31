@@ -63,7 +63,10 @@ public class CommentController {
 	@ApiOperation(value="Comment 작성")
 	@PostMapping("/comment/new")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
-		commentService.insert(comment);
+		
+		String id = "JWTTokenID";
+		
+		commentService.insert(id, comment);
 		return handleSuccess("댓글 등록 완료");
 	}
 	
