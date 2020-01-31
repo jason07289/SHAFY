@@ -22,6 +22,7 @@ import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.service.FavoritesHashtagService;
 import com.ssafysns.model.service.FollowHashtagService;
+import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.TabHashtagService;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,6 +38,8 @@ public class HashtagController {
 	FollowHashtagService followHashtagService;
 	@Autowired
 	FavoritesHashtagService favoritesHashtagService;
+	@Autowired
+	JwtService jwtService;
 
 	// ***********************************************************************************************************
 	// TabHashtag
@@ -56,8 +59,15 @@ public class HashtagController {
 
 	// id에 해당하는 TabHashtag 조회
 	@ApiOperation(value = "id에 해당하는 TabHashtag 조회")
-	@GetMapping("/tabtag/user/{id}")
-	public ResponseEntity<Map<String, Object>> searchTabHashtag(@PathVariable String id) throws Exception {
+	@GetMapping("/tabtag")
+	public ResponseEntity<Map<String, Object>> searchTabHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+
 		return handleSuccess(tabHashtagService.searchById(id));
 	}
 
@@ -75,8 +85,9 @@ public class HashtagController {
 	public ResponseEntity<Map<String, Object>> insertTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// tabHashtag.setId("로그인한사용자의 id");
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		tabHashtag.setId(uid.get("userid").toString());
 
 		tabHashtagService.insert(tabHashtag);
 		return handleSuccess("TabHashtag 등록 완료");
@@ -92,21 +103,29 @@ public class HashtagController {
 
 	// id에 해당하는 TabHashtag 모두 삭제
 	@ApiOperation(value = "id에 해당하는 TabHashtag 모두 삭제")
-	@DeleteMapping("/tabtag/user/{id}")
-	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String id) throws Exception {
+	@DeleteMapping("/tabtag")
+	public ResponseEntity<Map<String, Object>> deleteTabHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+
 		tabHashtagService.deleteById(id);
 		return handleSuccess("TabHashtag 삭제 완료");
 	}
 
 	// id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제
 	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제")
-	@DeleteMapping("/tabtag/user/{id}/hashtag/{hashtag}")
-	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String id, @PathVariable String hashtag)
-			throws Exception {
-		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
+	@DeleteMapping("/tabtag/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String hashtag) throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// String id = "로그인한사용자의 id";
+		// test시 직접 입력
+		String id = "";
 
 		tabHashtagService.deleteByIdAndHashtag(id, hashtag);
 		return handleSuccess("TabHashtag 삭제 완료");
@@ -138,8 +157,15 @@ public class HashtagController {
 
 	// id에 해당하는 FollowHashtag 조회
 	@ApiOperation(value = "id에 해당하는 FollowHashtag 조회")
-	@GetMapping("/followtag/user/{id}")
-	public ResponseEntity<Map<String, Object>> searchFollowHashtag(@PathVariable String id) throws Exception {
+	@GetMapping("/followtag")
+	public ResponseEntity<Map<String, Object>> searchFollowHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+
 		return handleSuccess(followHashtagService.searchById(id));
 	}
 
@@ -159,8 +185,9 @@ public class HashtagController {
 			throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// tabHashtag.setId("로그인한사용자의 id");
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		followHashtag.setId(uid.get("userid").toString());
 
 		followHashtagService.insert(followHashtag);
 		return handleSuccess("FollowHashtag 등록 완료");
@@ -176,34 +203,44 @@ public class HashtagController {
 
 	// id에 해당하는 FollowHashtag 모두 삭제
 	@ApiOperation(value = "id에 해당하는 FollowHashtag 모두 삭제")
-	@DeleteMapping("/followtag/user/{id}")
-	public ResponseEntity<Map<String, Object>> deleteFollowHashtag(@PathVariable String id) throws Exception {
+	@DeleteMapping("/followtag")
+	public ResponseEntity<Map<String, Object>> deleteFollowHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+
 		followHashtagService.deleteById(id);
 		return handleSuccess("FollowHashtag 삭제 완료");
 	}
 
 	// id에 해당하는 사용자의 hashtag에 해당하는 FollowHashtag 삭제
 	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 FollowHashtag 삭제")
-	@DeleteMapping("/followtag/user/{id}/hashtag/{hashtag}")
-	public ResponseEntity<Map<String, Object>> deleteFollowHashtag(@PathVariable String id,
-			@PathVariable String hashtag) throws Exception {
+	@DeleteMapping("/followtag/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteFollowHashtag(@PathVariable String hashtag) throws Exception {
 		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
 
 		// 1. id를 로그인한 유저의 id로 설정
-		// String id = "로그인한사용자의 id";
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
 
 		followHashtagService.deleteByIdAndHashtag(id, hashtag);
 		return handleSuccess("FollowHashtag 삭제 완료");
 	}
 
 	// FollowHashtag 수정
-	@ApiOperation(value = "FollowHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
-	@PutMapping("/followtag")
-	public ResponseEntity<Map<String, Object>> updateFollowHashtag(@RequestBody FollowHashtag followHashtag)
-			throws Exception {
-		followHashtagService.update(followHashtag);
-		return handleSuccess("FollowHashtag 수정 완료");
-	}
+//	@ApiOperation(value = "FollowHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
+//	@PutMapping("/followtag")
+//	public ResponseEntity<Map<String, Object>> updateFollowHashtag(@RequestBody FollowHashtag followHashtag)
+//			throws Exception {
+//		followHashtagService.update(followHashtag);
+//		return handleSuccess("FollowHashtag 수정 완료");
+//	}
 
 	// ***********************************************************************************************************
 	// FavoritesHashtag
@@ -223,8 +260,15 @@ public class HashtagController {
 
 	// id에 해당하는 FavoritesHashtag 조회
 	@ApiOperation(value = "id에 해당하는 FavoritesHashtag 조회")
-	@GetMapping("/favoritestag/user/{id}")
-	public ResponseEntity<Map<String, Object>> searchFavoritesHashtag(@PathVariable String id) throws Exception {
+	@GetMapping("/favoritestag")
+	public ResponseEntity<Map<String, Object>> searchFavoritesHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+		
 		return handleSuccess(favoritesHashtagService.searchById(id));
 	}
 
@@ -244,8 +288,9 @@ public class HashtagController {
 			throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정
-		// tabHashtag.setId("로그인한사용자의 id");
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+//		Map<String, Object> uid = jwtService.get("userid");
+//		favoritesHashtag.setId(uid.get("userid").toString());
 
 		favoritesHashtagService.insert(favoritesHashtag);
 		return handleSuccess("FavoritesHashtag 등록 완료");
@@ -261,51 +306,61 @@ public class HashtagController {
 
 	// id에 해당하는 FavoritesHashtag 모두 삭제
 	@ApiOperation(value = "id에 해당하는 FavoritesHashtag 모두 삭제")
-	@DeleteMapping("/favoritestag/user/{id}")
-	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable String id) throws Exception {
+	@DeleteMapping("/favoritestag")
+	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+		
 		favoritesHashtagService.deleteById(id);
 		return handleSuccess("FavoritesHashtag 삭제 완료");
 	}
 
 	// id에 해당하는 사용자의 hashtag에 해당하는 FavoritesHashtag 삭제
 	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 FavoritesHashtag 삭제")
-	@DeleteMapping("/favoritestag/user/{id}/hashtag/{hashtag}")
-	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable String id,
-			@PathVariable String hashtag) throws Exception {
+	@DeleteMapping("/favoritestag/hashtag/{hashtag}")
+	public ResponseEntity<Map<String, Object>> deleteFavoritesHashtag(@PathVariable String hashtag) throws Exception {
 		// id는 로그인한 유저의 id, hashtag만 param으로 받음 => 수정 예정!!!
-
+		
 		// 1. id를 로그인한 유저의 id로 설정
-		// String id = "로그인한사용자의 id";
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
 
 		favoritesHashtagService.deleteByIdAndHashtag(id, hashtag);
 		return handleSuccess("FavoritesHashtag 삭제 완료");
 	}
 
-	// FavoritesHashtag 수정
-	@ApiOperation(value = "FavoritesHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
-	@PutMapping("/favoritestag")
-	public ResponseEntity<Map<String, Object>> updateFavoritesHashtag(@RequestBody FavoritesHashtag favoritesHashtag)
-			throws Exception {
-		favoritesHashtagService.update(favoritesHashtag);
-		return handleSuccess("FavoritesHashtag 수정 완료");
-	}
+//	// FavoritesHashtag 수정
+//	@ApiOperation(value = "FavoritesHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
+//	@PutMapping("/favoritestag")
+//	public ResponseEntity<Map<String, Object>> updateFavoritesHashtag(@RequestBody FavoritesHashtag favoritesHashtag)
+//			throws Exception {
+//		favoritesHashtagService.update(favoritesHashtag);
+//		return handleSuccess("FavoritesHashtag 수정 완료");
+//	}
 
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e) {
 		return handleFail(e.getMessage(), HttpStatus.OK);
 	}
 
-	private ResponseEntity<Map<String, Object>> handleSuccess(Object data) {
+	private ResponseEntity<Map<String, Object>> handleSuccess(Object message) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state", "ok");
-		resultMap.put("data", data);
+		resultMap.put("message", message);
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
 
-	private ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus status) {
+	private ResponseEntity<Map<String, Object>> handleFail(Object message, HttpStatus status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("state", "fail");
-		resultMap.put("data", data);
+		resultMap.put("message", message);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }

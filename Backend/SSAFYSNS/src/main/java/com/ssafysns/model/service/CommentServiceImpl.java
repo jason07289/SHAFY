@@ -13,12 +13,16 @@ import org.springframework.stereotype.Service;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.repository.CommentRepository;
+import com.ssafysns.repository.UserRepository;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	@Transactional
@@ -50,7 +54,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void insert(Comment comment) {
+	public void insert(String id, Comment comment) {
+		
+		String nickname = userRepository.findById(id).get().getNickname();
+		comment.setNickname(nickname);
+		
 		try {
 			commentRepository.save(comment);
 		} catch (Exception e) {
@@ -107,12 +115,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<Comment> searchAllCommenetList(List<Integer> list) {
-//	public List<Comment> searchAllCommenetList(Post newEntity) {
+	public List<Comment> searchAllCommenetList(List<Integer> pno_list) {
 		List<Comment> comments = null;
 		
 		try {
-			comments = commentRepository.testNewEntity(list);
+			comments = commentRepository.customAllPno(pno_list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

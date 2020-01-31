@@ -57,7 +57,7 @@
 <script>
  /* eslint-disable no-unused-vars */
     import PV from 'password-validator'
-    import * as EmailValidator from 'email-validator';
+    import * as EmailValidator from 'email-validator'
     import UserApi from '../../apis/UserApi'
     import { mapGetters, mapState } from 'vuex'
 
@@ -71,8 +71,6 @@
                 .is().max(100)
                 .has().digits()
                 .has().letters();
-
-
         },
         watch: {
             password: function (v) {

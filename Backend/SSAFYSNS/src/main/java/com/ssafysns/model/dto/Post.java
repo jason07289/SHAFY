@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,40 +40,34 @@ public class Post {
 	@Column(nullable = false, unique = true)
 	private int pno;
 
-//	@NotNull 이걸로도 낫 널 지정 가능 이렇게 하면 자바상에서도 에러를 잡아줘서 더 좋긴함
-	@Column(length = 30, nullable = false)
-	private String title;
-
 	@Column(length = 1000, nullable = false)
 	private String content;
 
 	@Column(length = 500)
 	private String hashtag;
 
-	@Column(length = 30)
+	@Column(nullable=false, length = 30)
 	private String id;
+	
+	@Column(nullable=false, length = 20)	//게시글 등록 시 직접 입력
+	private String nickname;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp // Date를 현재 시간으로 초기화하여 저장함
 	private Date datetime;
 
-	@Column(columnDefinition = "int default 0")
-	private int views;
-
-	@Column(columnDefinition = "int default 0")
-	private int likes;
-
 	@Column(length = 200)
 	private String attachments;
 
 	@Column(columnDefinition = "int default 0")
 	private int deleted;
-
-//	// 외래키 설정
-//	@OneToMany(mappedBy="post")
-//	@JoinColumn(name="no")
-//	private List<Comment> comments = new ArrayList<Comment>();
+	
+	@Transient
+	private int like_count;
+	
+	@Transient
+	private boolean like_check;
 
 	// 외래키 설정
 	@ManyToOne
