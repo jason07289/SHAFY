@@ -29,12 +29,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 //	List<Comment> joinCustomComment(@Param("hashtag") String hashtag);
 	
 	@Query("select c from comment c where c.pno in (select post.pno from Post post where post.hashtag like concat('%', :hashtag, '%'))")
-	List<Comment> joinCustomComment(@Param("hashtag") String hashtag);
-	
-//	@Query("select c from comment c where c.pno in (select post.pno from Post post where post.hashtag like concat('%'")
-//	@Query("select c from :#{#newEntity} c")
-//	List<Comment> testNewEntity(@Param("newEntity") Post newEntity); 
-	
+	List<Comment> joinCustomComment(@Param("hashtag") String hashtag);	
 	
 	@Query("select c from comment c where c.pno in :plist")
 	List<Comment> customAllPno(@Param("plist") List<Integer> plist);
