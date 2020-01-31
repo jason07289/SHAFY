@@ -59,6 +59,7 @@
     import PV from 'password-validator'
     import * as EmailValidator from 'email-validator';
     import UserApi from '../../apis/UserApi'
+    import { mapGetters, mapState } from 'vuex'
 
     export default {
         created(){
@@ -115,9 +116,10 @@
 
                        // 로그인 성공시
                        if (res.state !== "ok"){
+                           this.$store.dispath('login', {res})
                            this.$router.replace({name: 'Home'})
-                       }
-                       else{
+                        }
+                         else{
                            //실패 한 이유 알람으로 주기
                            alert(res.data)
                        }
