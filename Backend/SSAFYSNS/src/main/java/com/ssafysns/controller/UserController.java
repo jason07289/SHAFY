@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.exception.MyLoginException;
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserForChangePW;
 import com.ssafysns.model.service.UserService;
@@ -37,9 +38,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	
-//	@Autowired
-//	private jwtse
+
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -83,7 +82,7 @@ public class UserController {
 
 	
 	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), token 중복불가 - session 토큰이 들어갈 자리")
-	@PostMapping("/user/signUp/")
+	@PostMapping("/user/signup/")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
 			if(userService.create(user)) {
@@ -97,8 +96,8 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("비밀번호 찾기")
-	@PutMapping("/user/findPw")
+	@ApiOperation("비밀번호 찾기 비밀번호 찾기 기능. id,이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식 부가적인 인증 부분이 더 있으면 좋긴할듯")
+	@PutMapping("/user/findpw")
 	public ResponseEntity<Map<String, Object>> findPw(@RequestBody User user){
 		//비밀번호 찾기 기능. 이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식
 		try {
@@ -136,8 +135,8 @@ public class UserController {
 //	
 	
 	
-	@ApiOperation("비밀번호 변경")
-	@PutMapping("/user/changePW")
+	@ApiOperation("비밀번호 변경, 현재비밀번호와 바꿀 비번이 달라야함")
+	@PutMapping("/user/changepw")
 	public ResponseEntity<Map<String,Object>> changePW( 	
 			@RequestBody UserForChangePW param){
 		System.out.println("!!"+param);
@@ -154,7 +153,7 @@ public class UserController {
 	}
 	
 	@ApiOperation("user 업데이트. 상황에 맞게 파라미터를 넘겨주면 편하게 사용가능 *비밀번호는 이 URI로 절대 접근하지 말것*")
-	@PutMapping("/user/update")
+	@PutMapping("/user")
 	public ResponseEntity<Map<String,Object>> update(@RequestBody User user){
 		if(userService.update(user) ){
 			return handleSuccess("회원정보 변경에 성공하셨습니다.");
@@ -164,7 +163,7 @@ public class UserController {
 	}
 	
 	@ApiOperation("닉네임 중복확인")
-	@GetMapping("/user/nickName/{nickName}")
+	@GetMapping("/user/nickname/{nickname}")
 	public ResponseEntity<Map<String,Object>> nickNameCheck(@PathVariable String nickName){
 		if(userService.nickNameCheck(nickName) ){
 			return handleSuccess("사용가능한 닉네임입니다.");
@@ -173,8 +172,8 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("회원 탈퇴. 비밀번호 확인 후 탈퇴로직 동작")
-	@PutMapping("/user/signOut")
+	@ApiOperation("회원 탈퇴. 비밀번호 확인 후 탈퇴로직 동작 회원탈퇴의 경우 DB에서 데이터만 수정이기 때문에 그냥 user/delete로 했습니다.")
+	@PutMapping("/user/delete")
 	public ResponseEntity<Map<String,Object>> signOut(@RequestBody User user){
 		if(userService.signOut(user.getId(),user.getPassword()) ){
 			return handleSuccess("회원 탈퇴 성공");
@@ -184,18 +183,26 @@ public class UserController {
 	}
 	
 	@ApiOperation("회원 정보 조회. 비밀번호 등은 복호화 하지 않고 제공할 것임, front에서 필요한 정보만 표기하도록 해야함, param에 id가 아니라 token에서 id를 가져오는 방식으로 바꿀예정")
-	@GetMapping("/user/MyInfo/{id}")
+	@GetMapping("/user")
 	public ResponseEntity<Map<String,Object>> MyInfo(){
 		
 		
-		User user = userService.MyInfo();
+		User user=null;
+		try {
+			user = userService.MyInfo();
+		}catch(UnauthorizedException ue) {
+			ue.printStackTrace();
+			return handleFail("토큰 오류 발생", HttpStatus.OK);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(user==null) return handleFail("오류발생", HttpStatus.OK);
 		
 		return handleSuccess(user);
 	}
 	
 	@ApiOperation("deleted가 되지 않은 사용자의 리스트")
-	@GetMapping
+	@GetMapping("/user/list")
 	public ResponseEntity<Map<String, Object>> UserList(){
 		List<User> userList;
 		try {

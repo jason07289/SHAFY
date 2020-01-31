@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafysns.exception.MyLoginException;
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
@@ -211,17 +212,13 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public User MyInfo() {
-		try {
-			Map<String,String> map =jwtService.get("id");
-			User user = userRepository.getOne(map.get("id"));
-			System.out.println(user);
+	public User MyInfo() throws Exception {
+		Map<String,String> map =jwtService.get("id");
+		User user = userRepository.getOne(map.get("id"));
+		System.out.println(user);
+	
+		return user;
 		
-			return user;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 
