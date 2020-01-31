@@ -35,6 +35,7 @@ public class JwtServiceImpl implements JwtService{
 						 .claim("nickname", nickName)
 						 .signWith(SignatureAlgorithm.HS256, this.generateKey())
 						 .compact();
+			System.out.println("jwt 생성: "+jwt);
 		return jwt;
 	}	
 

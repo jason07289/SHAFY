@@ -2,24 +2,26 @@ package com.ssafysns.controller;
  
 import java.util.HashMap;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.model.service.JwtService;
 import com.ssafysns.util.KakaoAPI;
  
-@Controller
+@RestController
 public class HomeController {
 	
 	@Autowired
 	private KakaoAPI kakao;
 	
+	@Autowired
+	private JwtService jwtService;
 		
-    @RequestMapping(value="/")
+    @RequestMapping(value="/kakao/")
     public String index() {
         
         return "index";
@@ -46,6 +48,12 @@ public class HomeController {
             session.setAttribute("userId", userInfo.get("email"));
             session.setAttribute("access_Token", access_Token);
         }
+        
+        System.out.println(userInfo.get("email").toString());
+        System.out.println(userInfo.get("nickname").toString());
+        
+//        jwtService.create(userInfo.get("email").toString(), userInfo.get("nickname").toString());
+      
         
         return "index";
     }

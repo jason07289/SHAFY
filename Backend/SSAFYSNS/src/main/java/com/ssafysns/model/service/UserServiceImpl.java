@@ -1,6 +1,7 @@
 package com.ssafysns.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
+import com.ssafysns.util.KakaoAPI;
 import com.ssafysns.util.MailUtil;
 @Service
 public class UserServiceImpl implements UserService{
@@ -21,7 +23,8 @@ public class UserServiceImpl implements UserService{
 	UserRepository userRepository;
 	@Autowired
 	JwtService jwtService;
-	
+	@Autowired
+	KakaoAPI kakaoApi;
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
@@ -233,6 +236,22 @@ public class UserServiceImpl implements UserService{
 	public List<User> list() throws Exception{
 		
 		return userRepository.findByDeletedIs(0);
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public String kakaotoken(String code) throws Exception {
+		HashMap<String, Object> userInfo=kakaoApi.getUserInfo(code);
+		String id = userInfo.get("email").toString();
+		String nickname = userInfo.get("nickname").toString();
+		return jwtService.create(id, nickname);
 	}
 
 

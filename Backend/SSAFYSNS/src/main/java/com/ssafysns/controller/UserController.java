@@ -38,7 +38,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-
+	
+	
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -212,7 +213,23 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@ApiOperation("카카오에서 생성한 토큰을 서비스용 jwt 토큰으로 변경")
+	@GetMapping("/user/kakaotoken")
+	public ResponseEntity<Map<String, Object>> kakaotoken(String code){
+		try {
+			
+			return handleSuccess("토큰 발급 성공", userService.kakaotoken(code));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return handleFail("토큰 발급 실패", HttpStatus.OK);
+		}
+		
+		
 		
 		
 	}
+	
 }
