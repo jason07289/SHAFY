@@ -12,10 +12,21 @@
         <a href="https://kauth.kakao.com/oauth/authorize?client_id=61371210ed3f2e84bea6f3de4869f97f&redirect_uri=http://localhost:8080/KakaoLogin&response_type=code">
             <img src="/img/kakao_account_login_btn_medium_narrow.png">
         </a>
+        <br>
+        <a href="${url}">
+			<img width="223" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/>
+		</a>
     </c:if>
     <c:if test="${userId ne null}">
         <h1>로그인 성공입니다</h1>
         <input type="button" value="로그아웃" onclick="location.href='/logout'">
     </c:if>
+    
+ 
+
+
+
+
+    
 </body>
 </html>

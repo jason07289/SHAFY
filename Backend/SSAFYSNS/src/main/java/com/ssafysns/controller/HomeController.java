@@ -1,12 +1,8 @@
 package com.ssafysns.controller;
  
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +18,7 @@ public class HomeController {
 	@Autowired
 	private KakaoAPI kakao;
 	
+		
     @RequestMapping(value="/")
     public String index() {
         
@@ -49,6 +46,7 @@ public class HomeController {
             session.setAttribute("userId", userInfo.get("email"));
             session.setAttribute("access_Token", access_Token);
         }
+        
         return "index";
     }
 

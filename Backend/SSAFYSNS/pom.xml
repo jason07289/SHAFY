@@ -137,6 +137,27 @@
     		<version>0.7.0</version>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.github.scribejava/scribejava-core -->
+		<dependency>
+		    <groupId>com.github.scribejava</groupId>
+		    <artifactId>scribejava-core</artifactId>
+		    <version>6.9.0</version>
+		</dependency>
+		
+		
+		<!-- https://mvnrepository.com/artifact/com.github.cliftonlabs/json-simple -->
+		<dependency>
+		    <groupId>com.github.cliftonlabs</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>3.1.0</version>
+		</dependency>
+				
 		
 	</dependencies>
 
