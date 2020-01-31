@@ -2,22 +2,18 @@
   <div id="home">
     <Navbar></Navbar>
     <h1>홈 화면(뉴스피드)</h1>
-    <Post></Post>
-    <Post></Post>
-    <Post></Post>
-
-
+    <PostList/>
   </div>
 </template>
 
 <script>
 import Navbar from '../../components/Navbar'
-import Post from '../../components/Posts/Post'
+import PostList from '../../components/Posts/PostList'
 
 export default {
   components:{
     Navbar,
-    Post,
+    PostList
   }
 }
 </script>

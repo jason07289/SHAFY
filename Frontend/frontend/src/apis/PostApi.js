@@ -45,7 +45,7 @@ const deleteComment = (data, callback, errorCallback) => {
   .catch(errorCallback)
 }
 
-const 
+
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
   requestPosting:(params,callback,errorCallback)=>requestPosting(params,callback,errorCallback),

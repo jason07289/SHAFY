@@ -1,4 +1,5 @@
 // import UserApi from '@/apis/UserApi'
+const axios = require('axios').default
 
 // initial state
 const state = {

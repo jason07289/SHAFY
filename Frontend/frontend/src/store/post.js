@@ -1,4 +1,4 @@
-import UserApi from '@/apis/PostApi'
+import PostApi from '../apis/PostApi'
 
 // initial state
 const state = {
@@ -12,13 +12,26 @@ const getters = {
 
 // actions
 const actions = {
-// 포스트 crud
-
+  getAllPosts ({ commit }, params){
+    PostApi.getPostlist(params,res=>{
+      if (res.state === 'ok'){
+        commit('setProducts', res.data)
+      }else{
+        // error 메시지를 브라우저 알림으로
+        alert(res.message)
+      }
+    },err =>{
+      console.log(err)
+    })
+  }
 }
 
 // mutations
 const mutations = {
-// posts 업데이트 
+// postslist 업데이트 
+  setProducts(state, posts){
+    state.posts = posts
+  }
 }
 
 export default {

@@ -39,8 +39,8 @@
 
 <script>
 export default {
+  name: 'Post',
 
- 
 }
 </script>
 
