@@ -115,7 +115,7 @@
                        if (res.state !== "ok"){
                            
                            this.$router.replace({name: 'Home'})
-                       }
+                        }
                        else{
                            //실패 한 이유 알람으로 주기
                            alert(res.data)

@@ -333,7 +333,11 @@ sass설정
 $ yarn add node-sass sass-loader
 ```
 
+ **VueInfiniteLoading** 설치 (무한로딩)
 
+```shell
+$ npm install vue-infinite-loading -S
+```
 
 
 
