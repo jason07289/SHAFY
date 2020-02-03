@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserForSNS;
 import com.ssafysns.model.service.JwtService;
+import com.ssafysns.model.service.UserSNSService;
 import com.ssafysns.util.KakaoAPI;
 import com.ssafysns.util.NaverAPI;
 
@@ -32,6 +33,9 @@ import io.swagger.annotations.ApiOperation;
 @EnableAutoConfiguration
 public class userSNSController {
 
+	@Autowired
+	private UserSNSService userSNSService;
+	
 	@Autowired
 	private KakaoAPI kakao;
 	
@@ -78,9 +82,16 @@ public class userSNSController {
 	@PostMapping("/user/signUpWithSeq/")
 	public ResponseEntity<Map<String, Object>> signUpWithSeq(@RequestBody UserForSNS userForSNS){
 		
+		try {
+			userSNSService.signUpWithSeq(userForSNS);
+			
+			return handleSuccess("가입 성공");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return handleFail("가입 실패", HttpStatus.OK);
+		}
 		
-		
-		return null;
 	}
 	
 	
@@ -99,12 +110,27 @@ public class userSNSController {
             session.setAttribute("access_Token", access_Token);
         }
         
+        String email = userInfo.get("email").toString();
         System.out.println(userInfo.get("email").toString());
         System.out.println(userInfo.get("nickname").toString());
         
-      
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(email, "kakao");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
         
-        return handleSuccess(jwtService.create(userInfo.get("email").toString(), userInfo.get("nickname").toString()));
     }
     
     
@@ -122,12 +148,25 @@ public class userSNSController {
             session.setAttribute("access_Token", access_Token);
         }
         
+        String email = userInfo.get("email").toString();
         System.out.println(userInfo.get("email").toString());
         System.out.println(userInfo.get("nickname").toString());
         
-        
-        
-//        jwtService.create(userInfo.get("email").toString(), userInfo.get("nickname").toString());
-        return handleSuccess(jwtService.create(userInfo.get("email").toString(), userInfo.get("nickname").toString()));
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(email, "naver");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
     }    
 }
