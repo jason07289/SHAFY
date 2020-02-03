@@ -26,9 +26,13 @@ const checkAuth = () => (to, from, next) => {
 
   const blockLogin = ()=> (to, from, next) =>{
       var token = localStorage.JWT
+      console.log(!checkToken(token))
       if(!checkToken(token)){
+        //   로그인 된 상태라면
         console.log(from)
+        return from()
       }
+      return next()
       
   } 
 
