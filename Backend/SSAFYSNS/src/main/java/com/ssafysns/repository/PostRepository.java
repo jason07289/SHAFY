@@ -21,6 +21,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query("select p from Post p where p.hashtag like concat('%', :hashtag, '%')")
 	List<Post> findByHashtag(@Param("hashtag") String hashtag);
 	
+	@Query("select p from Post p where p.pno in :pno_list")
+	List<Post> findByPnoList(@Param("pno_list") List<Integer> pno_list);
+	
 	@Query("select p.pno from Post p where p.hashtag like concat('%', :hashtag, '%')")
 	List<Integer> findPnoByHashtag(String hashtag);	
 	
@@ -28,7 +31,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 //	List<Comment> testNewEntity(@Param("list") List<Integer> hashtag_list);
 	
 	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id)")
-	List<Integer> testAllHash(@Param("id") String id);
-	
+	List<Integer> followHashPno(@Param("id") String id);
 
 }
