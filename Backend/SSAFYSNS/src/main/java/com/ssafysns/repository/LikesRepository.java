@@ -23,5 +23,10 @@ public interface LikesRepository extends JpaRepository<Likes, Integer>{
 	@Query("select l from likes l where l.pno in :pno")
 	List<Likes> findByAllPno(@Param("pno") List<Integer> pno);
 
-
+//	@Modifying
+//	@Query("update comment c set like_check = true where c.cno = :cno and c.id=:id")
+//	void likeCheck(@Param("cno") int cno, @Param("id") String id);
+	
+	@Query("select case when l.cno in :cno_list then 'true' else 'false' end from likes l")
+	List<Boolean> checkCommentLike(@Param("cno_list") List<Integer> cno_list);
 }

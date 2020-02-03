@@ -45,5 +45,4 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Query("update comment c set c.pno = c.pno where c.cno = :cno")// c.like_count = c.like_count-1 where c.cno = :cno")
 	void likesDown(@Param("cno") int cno);
 
-	
 }

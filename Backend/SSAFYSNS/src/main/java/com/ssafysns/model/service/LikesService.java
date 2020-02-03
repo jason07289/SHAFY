@@ -13,5 +13,7 @@ public interface LikesService {
 	public List<Integer> searchById(String id);	//좋아요 누른 글 목록 검색
 	public List<Likes> searchByAllPno(List<Integer> pno); //게시글 좋아요 기록 검색
 	public List<Likes> searchByPno(int pno);
+	
+	public void likeCheck(int cno, String id);
 
 }

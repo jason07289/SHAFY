@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Comment;
+import com.ssafysns.model.dto.FAQ;
 import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.Post;
@@ -30,6 +31,7 @@ import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
 import com.ssafysns.model.service.PostService;
 import com.ssafysns.repository.CommentRepository;
+import com.ssafysns.repository.PostRepository;
 
 import io.swagger.annotations.ApiOperation;
 import javassist.compiler.ast.Pair;
@@ -63,7 +65,15 @@ public class PostController {
 	@ApiOperation(value = "(DB테이블에 있는)모든 Post 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
-		return handleSuccess(postService.searchAll());
+		List<Post> posts = postService.searchAll();
+		for(int i = 0; i<posts.size(); i++) {
+			
+			List<Comment> comment_list = posts.get(i).getComment();
+			for(int j = 0, size = comment_list.size(); j<size; j++) {
+				posts.get(i).getComment().get(j).setPost(null);
+			}
+		}
+		return handleSuccess(posts);
 	}
 	
 	// Post 등록
@@ -95,8 +105,12 @@ public class PostController {
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
 		
-		postService.delete(jwtId, pno);
-		return handleSuccess("Post 삭제 완료");
+		boolean msg = postService.delete(jwtId, pno);
+		if(msg) {
+			return handleSuccess("Post 삭제 완료");
+		} else {
+			return handleFail("게시글 삭제 권한이 없습니다.", HttpStatus.OK);
+		}
 	}
 	
 	// Post 수정
@@ -111,12 +125,13 @@ public class PostController {
 		
 		if(post.getId() == jwtId) {
 			postService.update(jwtId, post);
-			return handleSuccess("Post 수정 완료");
+			return handleSuccess("게시글 수정 완료");
 		} else {
 			/**
 			 * 여기서 return을 뭐를 해야 할까?
 			 */
-			return handleFail(new HashMap<String, String>().put("message", "수정권한이 없습니다."), HttpStatus.BAD_REQUEST);
+			return handleFail("게시글 수정 권한이 없습니다.", HttpStatus.OK);
+//			return handleFail(new HashMap<String, String>().put("message", "수정권한이 없습니다."), HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -134,6 +149,11 @@ public class PostController {
 		//return
 		if(post != null) {
 			List<Comment> comments = searchComments(pno);
+			
+			for(int i = 0, size = comments.size(); i<size; i++) {
+				comments.get(i).setPost(null); //여기야
+				comments.get(i).setLike(null);
+			}
 			List<Likes> likes = searchLikes(pno);
 			pnoMap.put("post", post);
 			pnoMap.put("comment", comments);
@@ -164,17 +184,20 @@ public class PostController {
 	
 	/**
 	 * [탭]
-	 * - 한 개의 hashtag에 해당하는 모든 Post 조회
+	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
 	 */
-	@ApiOperation(value="하나의 hashtag에 해당하는 Post & Comment 목록 조회")
+	@ApiOperation(value="하나의 hashtag에 해당하는 Post & Comment & Likes 목록 조회")
 	@GetMapping("/{hashtag}/one")
 	public ResponseEntity<Map<String, Object>> searchByHashtag(@PathVariable String hashtag) throws Exception {
 		List<Post> posts = searchPostByHash(hashtag);
 		List<Comment> comments = searchCommentByHash(hashtag);
+		List<Integer> pnos = postService.searchPnoList(hashtag);
+		List<Likes> likes = likesService.searchByAllPno(pnos);
 		
 		Map<String, Object> aHashMap = new HashMap<String, Object>();
 		aHashMap.put("post", posts);
 		aHashMap.put("comment", comments);
+		aHashMap.put("like", likes);
 		
 		return handleSuccess(aHashMap);
 	}
@@ -263,12 +286,13 @@ public class PostController {
 	@ApiOperation(value="no로 Comments 삭제")
 	@GetMapping("/comment/delete/{no}")
 	public ResponseEntity<Map<String, Object>> DeleteComment(@PathVariable int no) throws Exception {
+//		Map<String, Object> jwt = jwtService.get("userid");
+//		String jwtId = jwt.get("userid").toString();
+
+		
 		/**
 		 * 작성자만 가능
 		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-		
 		Boolean msg = commentService.delete(jwtId, no);
 		
 		if(msg == true) {
@@ -292,13 +316,6 @@ public class PostController {
 		return comments;
 	}
 
-	
-	//수정 - no넣어주셈
-	@ApiOperation(value="", response=List.class)
-	@PostMapping("/comment/list/{no}")
-	public ResponseEntity<List<Comment>> findAllComments() throws Exception {
-		return new ResponseEntity<List<Comment>>(commentService.searchPno(1), HttpStatus.OK);
-	}
 	
 	
 	/**

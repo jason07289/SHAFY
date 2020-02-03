@@ -69,6 +69,7 @@ public class LikesServiceImpl implements LikesService {
 		}
 		
 	}
+
 	private void likesDown(int cno) {
 		
 		try {
@@ -102,7 +103,7 @@ public class LikesServiceImpl implements LikesService {
 			e.printStackTrace();
 			throw new LikesException("게시글 목록의 좋아요를 가져올 수 없습니다.");
 		}
-		return null;
+		return likes;
 	}
 
 	// 해당 게시글의 좋아요 기록 찾기(한 개의 글에 해당하는)
@@ -133,5 +134,15 @@ public class LikesServiceImpl implements LikesService {
 		return lists;
 	}
 
+	
+	@Override
+	@Transactional
+	public void likeCheck(int cno, String id) {
+		try {
+//			likesRepository.likeCheck(cno, id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
