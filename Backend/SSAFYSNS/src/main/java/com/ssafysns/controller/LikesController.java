@@ -86,7 +86,6 @@ public class LikesController {
 		return new ResponseEntity<List<Integer>>(likes, HttpStatus.OK);
 	}
 	
-	
 	//Exception Handler
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
