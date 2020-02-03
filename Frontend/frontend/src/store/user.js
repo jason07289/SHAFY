@@ -43,7 +43,7 @@ const mutations = {
     state.JWT = JWT;
     localStorage.JWT = JWT;
     //3. 갱신했을때, localstorage에서 토큰값을 가져와서 axios헤더에 붙여줌
-    const accessToken = () => {
+    const accessToken= function(){
       const {JWT} = localStorage.JWT
       if (!JWT) return
       axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;

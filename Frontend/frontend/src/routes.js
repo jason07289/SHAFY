@@ -15,7 +15,7 @@ import SetTags from './views/home/SetTags.vue'
  }
 const checkAuth = () => (to, from, next) => {
     var token = localStorage.JWT
-    console.log("token:"+token)
+    // console.log("token:"+token)
     if (checkToken(token)) {
         //alert("로그인 해주시기 바랍니다.")
          alert("로그인 후 이용해주세요")
@@ -26,15 +26,14 @@ const checkAuth = () => (to, from, next) => {
 
   const blockLogin = ()=> (to, from, next) =>{
       var token = localStorage.JWT
-      console.log(!checkToken(token))
+    // 로그인 했을 때는 이전 페이지로 
       if(!checkToken(token)){
-        //   로그인 된 상태라면
-        console.log(from)
-        return from()
+          console.log(from.path)
+        return next(from)
       }
-      return next()
-      
+    return next()
   } 
+
 
 export default [
 

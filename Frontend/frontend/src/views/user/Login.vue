@@ -109,13 +109,12 @@
                     this.isSubmit = false;
 
                     UserApi.requestLogin(data,res=>{
-                        console.log('1',res.data)
+                        // console.log('1',res.data)
                        // 로그인 성공시
                        if (res.data.state === "ok"){
-                            console.log('2',res.data.state)
+                            // console.log('2',res.data.state)
                             this.$store.dispatch('user/login', res.data)
-                            this.$router.replace({name: 'Home'})
-
+                            .then(()=>this.$router.replace({name: 'Home'}))
                         }
                          else{
                            //실패 한 이유 알람으로 주기
