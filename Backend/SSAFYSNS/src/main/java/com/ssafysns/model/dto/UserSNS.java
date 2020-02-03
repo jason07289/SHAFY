@@ -2,9 +2,12 @@ package com.ssafysns.model.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,7 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Builder
 @Getter
@@ -25,23 +28,22 @@ import lombok.ToString;
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "user_sns")
-public class userSNS {
+public class UserSNS {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
 	private int seq;
 	
 	@Column(length = 100, nullable = false)
-	private String username;
-	
-	@Column(length = 100, nullable = false)
 	private String email;
 	
 	@Column(length = 100, nullable = false)
-	private String nickname;
+	private String type;
 	
-	@Column(length = 1000, nullable = false)
-	private String img;
+	@Column(length = 50)
+	private String id;
 	
-	
+	@ManyToOne
+	@JoinColumn(name = "id", insertable = false, updatable = false,  foreignKey = @ForeignKey(name = "user_sns_id"))
+	private User user;
 }
