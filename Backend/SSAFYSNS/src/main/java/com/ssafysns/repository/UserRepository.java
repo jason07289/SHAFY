@@ -1,17 +1,26 @@
 package com.ssafysns.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.ssafysns.model.dto.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{//<entity, pk의 타입>
-/*	
+	
+	
+	public User findByIdAndName(String id, String name );
+	public User findByIdAndPassword(String id, String password );
+	public User findByNickname(String nickName);
+	public List<User> findByDeletedIs(int deleted);
+	
+/*	 
  * ......................... 
  * jpaRepository 상속시 즉시 쓸 수 있는 Query 메소드
  * 
- * save() -> insert, update
- * 	findOne() -> pk로 레코드 한건 찾기     
+ *  save() -> insert, update
+ * 	getOne(String id) -> pk로 한 건 찾기     
  *  findAll() -> 전체 레코드 불러오기, 정렬, 페이징 가능
  *  count() -> 레코드 개수
  *  delete() -> 레코드 삭제    

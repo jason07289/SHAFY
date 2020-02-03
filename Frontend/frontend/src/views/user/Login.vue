@@ -34,8 +34,6 @@
 
             </button>
 
-
-
             </div>
             <div class="add-option">
                 <div class="text">
@@ -55,19 +53,13 @@
 </template>
 
 <script>
-    // import '../../assets/css/style.scss'
-    // import '../../assets/css/user.scss'
+ /* eslint-disable no-unused-vars */
     import PV from 'password-validator'
-    import * as EmailValidator from 'email-validator';
-    // import KakaoLogin from '../../components/user/snsLogin/Kakao.vue'
-    // import GoogleLogin from '../../components/user/snsLogin/Google.vue'
+    import * as EmailValidator from 'email-validator'
     import UserApi from '../../apis/UserApi'
+    import { mapGetters, mapState } from 'vuex'
 
     export default {
-        components: {
-            // KakaoLogin,
-            // GoogleLogin,
-        },
         created(){
             this.component = this;
 
@@ -77,8 +69,6 @@
                 .is().max(100)
                 .has().digits()
                 .has().letters();
-
-
         },
         watch: {
             password: function (v) {
@@ -106,23 +96,29 @@
                 })
                 this.isSubmit = isSubmit;
 
-
+            
             }
             , login(){
                 if (this.isSubmit) {
-                    let {email,password} = this;
                     let data = {
-                        email,password
+                        id: this.email,
+                        password: this.password
                     }
 
                     //요청 후에는 버튼 비활성화
                     this.isSubmit = false;
 
                     UserApi.requestLogin(data,res=>{
-                        //통신을 통해 전달받은 값 콘솔에 출력
-                       console.log(res.data.data);
-                       if (res.data.data !== "success"){
-                        alert("로그인 실패!")
+                        // console.log('1',res.data)
+                       // 로그인 성공시
+                       if (res.data.state === "ok"){
+                            // console.log('2',res.data.state)
+                            this.$store.dispatch('user/login', res.data)
+                            .then(()=>this.$router.replace({name: 'Home'}))
+                        }
+                         else{
+                           //실패 한 이유 알람으로 주기
+                           alert(res.data)
                        }
                         //요청이 끝나면 버튼 활성화
                         this.isSubmit = true;

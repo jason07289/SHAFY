@@ -31,8 +31,8 @@ public class FollowHashtag {
 	@Column(length = 30, nullable = false)
 	private String id;
 
-	@Column(nullable = false)
-	private boolean deleted;
+//	@Column(nullable = false)
+//	private boolean deleted;
 	
 	// 외래키 설정
 	@ManyToOne
