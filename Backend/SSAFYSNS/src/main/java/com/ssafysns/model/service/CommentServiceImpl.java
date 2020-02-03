@@ -77,7 +77,6 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	@Transactional
-<<<<<<< HEAD
 	public boolean delete(String jwtId, int no) {
 		
 		String id = commentRepository.findById(no).get().getId();
@@ -91,16 +90,6 @@ public class CommentServiceImpl implements CommentService {
 			return true;
 		}
 		return false;		
-=======
-	public void delete(int no) {
-		
-		//deleted = true로 활성화
-		try {
-			commentRepository.updateDeleted(no);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
->>>>>>> branch 'feature/backendPost' of https://lab.ssafy.com/webmobile2-sub3/s02p13a305.git
 	}
 
 	@Override
