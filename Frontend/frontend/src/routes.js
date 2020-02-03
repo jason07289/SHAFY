@@ -18,8 +18,8 @@ const checkAuth = () => (to, from, next) => {
     // console.log("token:"+token)
     if (checkToken(token)) {
         //alert("로그인 해주시기 바랍니다.")
-         alert("로그인 후 이용해주세요")
-        return next('/')
+        alert("로그인 후 이용해주세요")
+        return next({name:'Login'})
     }
     return next()
   }
@@ -29,7 +29,9 @@ const checkAuth = () => (to, from, next) => {
     // 로그인 했을 때는 이전 페이지로 
       if(!checkToken(token)){
           console.log(from.path)
-        return next(from)
+        if (from.path === '/'){
+            return next({name:'Home'})
+        }
       }
     return next()
   } 

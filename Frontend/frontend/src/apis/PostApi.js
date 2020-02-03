@@ -1,5 +1,5 @@
 const axios = require('axios').default
-const hosturl = 'http://70.12.246.122:8080'
+const hosturl = 'http://13.209.18.252:8080'
 const appname = '/post'
 
 /* eslint-disable no-unused-vars */
@@ -12,6 +12,7 @@ const getPostlist = (params,callback,errorCallback) => {
 }
 // 게시글 작성하기
 const requestPosting = (data,callback,errorCallback) => {
+  console.log(axios.defaults.headers)
   axios.post(hosturl+appname, data)
   .then(callback)
   .catch(errorCallback)
@@ -48,7 +49,7 @@ const deleteComment = (data, callback, errorCallback) => {
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
-  requestPosting:(params,callback,errorCallback)=>requestPosting(params,callback,errorCallback),
+  requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
   requestComment:(data,callback,errorCallback)=>requestComment(data,callback,errorCallback),
   updatePosting:(data,callback,errorCallback)=>updatePosting(data,callback,errorCallback),
   deletePosting:(data,callback,errorCallback)=>deletePosting(data,callback,errorCallback),
