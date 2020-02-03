@@ -14,8 +14,8 @@ const getters = {
 const actions = {
   getAllPosts ({ commit }, params){
     PostApi.getPostlist(params,res=>{
-      if (res.state === 'ok'){
-        commit('setProducts', res.data)
+      if (res.data.state === 'ok'){
+        commit('setProducts', res.data.data)
       }else{
         // error 메시지를 브라우저 알림으로
         alert(res.message)
