@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional
-	public String delete(String id, int pno) {
+	public Boolean delete(String id, int pno) {
 		Post post = null;
 		
 		try {
@@ -54,15 +54,15 @@ public class PostServiceImpl implements PostService {
 				throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
 			}
 		} else { // 작성자와 로그인 유저정보가 다를 경우
-			throw new PostException("게시글 수정 권한이 없습니다.");
+			return false;
 		}
 		
-		return null;
+		return true;
 	}
 
 	//게시글 수정버튼	
 	@Override
-	public String update(String id, Post post) {
+	public Boolean update(String id, Post post) {
 		
 		if(post.getId() == id) {
 			try {
@@ -72,10 +72,11 @@ public class PostServiceImpl implements PostService {
 				throw new PostException("게시물 수정 중 오류가 발생했습니다.");
 			}
 		} else {
-			throw new PostException("게시글 수정 권한이 없습니다.");
+			System.out.println("게시글 수정 권한이 없습니다.");
+			return false;
 		}
 		
-		return null;
+		return true;
 	}
 
 	// 모든 Post 조회
@@ -145,7 +146,7 @@ public class PostServiceImpl implements PostService {
 	
 	//[Tab] 탭 해시태그로 Pno 리스트 가져오기
 	@Override
-	public List<Integer> searchPostNo(String hashtag) {
+	public List<Integer> searchPnoList(String hashtag) {
 		System.out.println("==============Pno List 출력==============");
 		List<Integer> pno_list = null;		
 		try {

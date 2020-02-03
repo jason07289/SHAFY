@@ -1,7 +1,10 @@
 package com.ssafysns.model.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -11,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -73,4 +77,11 @@ public class Post {
 	@ManyToOne
 	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_board_id"))
 	private User user;
+	
+	@OneToMany(mappedBy="post")
+	private List<Comment> comment;
+	
+	@OneToMany(mappedBy="post")
+	private List<Likes> like;
+	
 }
