@@ -23,8 +23,7 @@ public class UserServiceImpl implements UserService{
 	UserRepository userRepository;
 	@Autowired
 	JwtService jwtService;
-	@Autowired
-	KakaoAPI kakaoApi;
+
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
@@ -78,6 +77,7 @@ public class UserServiceImpl implements UserService{
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
 						String jwt =jwtService.create(user.getId(), user.getNickname());
 						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
+//						jwtService.get("id");
 //						Map<String, Object> uid = jwtService.get("userid");
 //						Map<String, Object> nickname = jwtService.get("nickname");
 //						System.out.println(uid.get("userid"));
@@ -216,49 +216,19 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User MyInfo() throws Exception {
-		Map<String,String> map =jwtService.get("id");
-		User user = userRepository.getOne(map.get("id"));
+		String userid =jwtService.get("userid");
+		
+		User user = userRepository.getOne(userid);
 		System.out.println(user);
 	
 		return user;
 		
 	}
 
-
-
-
-
-
-
-
-
 	@Override
 	public List<User> list() throws Exception{
 		
 		return userRepository.findByDeletedIs(0);
 	}
-
-
-
-
-
-
-
-
-
-	@Override
-	public String kakaotoken(String code) throws Exception {
-		HashMap<String, Object> userInfo=kakaoApi.getUserInfo(code);
-		String id = userInfo.get("email").toString();
-		String nickname = userInfo.get("nickname").toString();
-		return jwtService.create(id, nickname);
-	}
-
-
-
-
-
-
-
 
 }

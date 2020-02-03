@@ -1,4 +1,4 @@
-package com.ssafysns.repository;
+ package com.ssafysns.repository;
 
 import java.util.List;
 
