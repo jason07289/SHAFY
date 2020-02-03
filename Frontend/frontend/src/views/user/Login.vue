@@ -114,6 +114,7 @@
                        if (res.data.state === "ok"){
                             // console.log('2',res.data.state)
                             this.$store.dispatch('user/login', res.data)
+                            // this.$store.dispatch('user/getUserInfo')
                             .then(()=>this.$router.replace({name: 'Home'}))
                         }
                          else{

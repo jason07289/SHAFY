@@ -1,10 +1,14 @@
-// import UserApi from '@/apis/UserApi'
+import UserApi from '@/apis/UserApi'
 const axios = require('axios').default
 
 // initial state
 const state = {
   JWT : localStorage.getItem('JWT'), // 새로고침해도 토큰값유지하기위함
-  userInfo : {}, // user 프로필 사진, 이름, 닉네임 등 
+  userInfo : {
+    id:'',
+    name:'',
+    img:'',
+  }, // user 프로필 사진, 이름, 닉네임 등 
 }
 
 // getters
@@ -27,14 +31,18 @@ const actions = {
   login({ commit },data){
     //1. data내용을 바탕으로 mutation커밋 (JWT, userInfo 변이)
     commit('loginSuccess', data.JWT)
-    //2. 모든 HTTP요청 헤더에 인증정보를 추가해준다
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`; //베어러는 JWT에서 쓴다는데 잘모르겟다..
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`;
   },
-  logout({commit}){
-    //1. HTTP 헤더 디폴트값 제거
+  logout({ commit }){
     axios.defaults.headers.common['Authorization'] = undefined
-    //2. mutation에 커밋
     commit('logoutSuccess')
+  },
+  getUserInfo(){
+    UserApi.requestUserInFo(res=>{
+      console.log(res)
+    },error=>{
+      console.log(error)
+    })
   }
 }
 // mutations
