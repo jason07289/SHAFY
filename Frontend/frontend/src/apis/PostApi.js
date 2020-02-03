@@ -6,6 +6,7 @@ const appname = '/post'
 // list 받아오기 
 const getPostlist = (params,callback,errorCallback) => {
   //백앤드와 로그인 통신하는 부분
+  console.log('Getpostlist')
   axios.get(hosturl+appname+'/list', params)
   .then(callback)
   .catch(errorCallback)

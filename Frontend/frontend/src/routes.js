@@ -29,18 +29,16 @@ const checkAuth = () => (to, from, next) => {
     // 로그인 했을 때는 이전 페이지로 
       if(!checkToken(token)){
           console.log(from.path)
-        if (from.path === '/'){
-            return next({name:'Home'})
-        }
+          return next(from.path)
       }
-    return next()
+      return next()
   } 
 
 
 export default [
 
     {
-        path : '/',
+        path : '/login',
         name : 'Login',
         component : Login,
         beforeEnter: blockLogin()
@@ -61,7 +59,7 @@ export default [
         component : FindPassword
     },
     {
-        path : '/home',
+        path : '/',
         name : 'Home',
         component : Home,
         beforeEnter: checkAuth()

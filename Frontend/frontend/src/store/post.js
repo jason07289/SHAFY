@@ -2,7 +2,7 @@ import PostApi from '../apis/PostApi'
 
 // initial state
 const state = {
-    posts : {}
+    posts : [],
 }
 
 // getters
@@ -15,7 +15,8 @@ const actions = {
   getAllPosts ({ commit }, params){
     PostApi.getPostlist(params,res=>{
       if (res.data.state === 'ok'){
-        commit('setPostlist', res.data.data)
+        console.log(res)
+        commit('setPostlist', res.data.message)
       }else{
         // error 메시지를 브라우저 알림으로
         alert(res.message)
