@@ -1,6 +1,7 @@
 package com.ssafysns.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
+import com.ssafysns.util.KakaoAPI;
 import com.ssafysns.util.MailUtil;
 @Service
 public class UserServiceImpl implements UserService{
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService{
 	UserRepository userRepository;
 	@Autowired
 	JwtService jwtService;
-	
+
 	
 	@Override
 //	@NotFound(action=NotFoundAction.IGNORE)
@@ -75,6 +77,7 @@ public class UserServiceImpl implements UserService{
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
 						String jwt =jwtService.create(user.getId(), user.getNickname());
 						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
+//						jwtService.get("id");
 //						Map<String, Object> uid = jwtService.get("userid");
 //						Map<String, Object> nickname = jwtService.get("nickname");
 //						System.out.println(uid.get("userid"));
@@ -213,33 +216,19 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User MyInfo() throws Exception {
-		Map<String,String> map =jwtService.get("id");
-		User user = userRepository.getOne(map.get("id"));
+		String userid =jwtService.get("userid");
+		
+		User user = userRepository.getOne(userid);
 		System.out.println(user);
 	
 		return user;
 		
 	}
 
-
-
-
-
-
-
-
-
 	@Override
 	public List<User> list() throws Exception{
 		
 		return userRepository.findByDeletedIs(0);
 	}
-
-
-
-
-
-
-
 
 }

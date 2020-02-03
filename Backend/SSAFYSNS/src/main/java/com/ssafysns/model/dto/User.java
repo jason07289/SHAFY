@@ -1,4 +1,4 @@
-package com.ssafysns.model.dto;
+ package com.ssafysns.model.dto;
 
 import java.util.Date;
 
@@ -164,9 +164,15 @@ public class User {
 	@Column(length=10)
 	private Integer approval;
 	
-	@Column(length=10)
+	@Column(length=10) 
 	private Integer alarm;
 
+	@Builder
+	public User(String id) {
+		this.id=id;
+	}
+	
+	
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")
 //	private List<TabHashtag> tabHashtags = new ArrayList<TabHashtag>();

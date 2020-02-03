@@ -35,6 +35,7 @@ public class JwtServiceImpl implements JwtService{
 						 .claim("nickname", nickName)
 						 .signWith(SignatureAlgorithm.HS256, this.generateKey())
 						 .compact();
+			System.out.println("jwt 생성: "+jwt);
 		return jwt;
 	}	
 
@@ -67,21 +68,30 @@ public class JwtServiceImpl implements JwtService{
 	}
 	
 	@Override
-	public Map<String, String> get(String key) throws UnauthorizedException {
+	public String get(String key) throws UnauthorizedException {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		String jwt = request.getHeader("Authorization");
-		System.out.println("JWT getHeader: "+ jwt);
+		String jwtbearer = request.getHeader("Authorization");
+		System.out.println("JWT getHeader: "+ jwtbearer);
+		
+		String[] strs=jwtbearer.split(" ");
+		System.out.println(strs[0]);
+		System.out.println(strs[1]);
+		String jwt = strs[1];
+		System.out.println("jwt split: "+jwt);
 		Jws<Claims> claims = null;
 		try {
 			claims = Jwts.parser()
 						 .setSigningKey(SALT.getBytes("UTF-8"))
 						 .parseClaimsJws(jwt);
+			
+			System.out.println("this.isUsable(jwt): "+this.isUsable(jwt));
+			System.out.println("get함수......................pass");
 		} catch (Exception e) {
 			throw new UnauthorizedException();
 		}
-		@SuppressWarnings("unchecked")
-		Map<String, String> value = (LinkedHashMap<String, String>)claims.getBody().get(key);
-		return value;
+		System.out.println(claims.getBody().get(key));
+		
+		return claims.getBody().get(key).toString();
 	}	
 	
 }
