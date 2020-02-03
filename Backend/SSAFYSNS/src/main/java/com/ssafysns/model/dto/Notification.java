@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,23 +39,26 @@ public class Notification {
 	private int no;
 
 	@Column(length = 30, nullable = false)
+	// 알람이 발생한 유저의 id
 	private String id;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP) // TIMESTAMP:날짜시분초
+	@CreationTimestamp
+	// id에 해당하는 유저에게 댓글, 좋아요가 발생한 시간
 	private Date datetime;
 
 	@Column(nullable = false)
+	// 댓글, 좋아요가 발생한 게시물
 	private int pno;
 
 	@Column(nullable = false)
+	// 좋아요: 1/댓글: 2/대댓글: 3
 	private int state;
 
-	@Column(nullable = false)
-	private boolean checked;
-
-	@Column()
-	private boolean deleted;
+	@Column(nullable = false, columnDefinition = "int default 0")
+	// 알람 확인여부 0: false, 1: true
+	private int checked;
 
 	// 외래키 설정
 	@ManyToOne
