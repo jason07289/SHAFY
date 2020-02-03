@@ -27,6 +27,7 @@
 <!-- 구분 -->
       <div id="post-body">
         <h2>여기에 게시글정보</h2>
+        <h3>{{postdata}}</h3>
       </div>
 
 <!-- 구분 -->
@@ -38,6 +39,7 @@
 
 <script>
 export default {
+  name: 'Post',
 
 }
 </script>

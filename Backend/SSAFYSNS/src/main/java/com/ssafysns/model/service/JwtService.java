@@ -10,7 +10,7 @@ public interface JwtService {
 
 	public boolean isUsable(String token) throws UnauthorizedException;
 
-	Map<String, Object> get(String key) throws UnauthorizedException;
+	Map<String, String> get(String key) throws UnauthorizedException;
 
 
 }

@@ -67,7 +67,7 @@ public class JwtServiceImpl implements JwtService{
 	}
 	
 	@Override
-	public Map<String, Object> get(String key) throws UnauthorizedException {
+	public Map<String, String> get(String key) throws UnauthorizedException {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		String jwt = request.getHeader("Authorization");
 		System.out.println("JWT getHeader: "+ jwt);
@@ -80,7 +80,7 @@ public class JwtServiceImpl implements JwtService{
 			throw new UnauthorizedException();
 		}
 		@SuppressWarnings("unchecked")
-		Map<String, Object> value = (LinkedHashMap<String, Object>)claims.getBody().get(key);
+		Map<String, String> value = (LinkedHashMap<String, String>)claims.getBody().get(key);
 		return value;
 	}	
 	
