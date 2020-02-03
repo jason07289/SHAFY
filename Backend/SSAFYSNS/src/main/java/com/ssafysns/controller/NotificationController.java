@@ -31,15 +31,25 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
 
-// comments, likes에서 notification 등록 구현!!!
-//	@ApiOperation(value = "댓글, 좋아요 발생시 Notification 등록")
-//	@PostMapping
-//	public ResponseEntity<Map<String, Object>> insert() throws Exception {
-//		
-//	 Notification notification =  new Notification(id, new Date(), pno/cno, 1좋아요/2댓글/3대댓글, 0);
-//	 notificationService.insert(notification);
-//		return handleSuccess("Notification 등록 완료");
-//	}
+/*
+ * 1. comments와 like의 insert 시, controller에서 notification 발생시키기
+
+   - Controller에서
+
+   1. 상단에
+
+   ``` 
+   @Autowired
+   NotificationService notificationService;
+   ```
+
+   2. POST 메서드 안에서
+
+   ```
+   Notification notification =  new Notification(id, new Date(), pno/cno, 1좋아요/2댓글/3대댓글, 0);
+   notificationService.insert(notification);
+   ```
+ * */
 
 	// 1. checked = true이고
 	// 2. datetime 이전이면(단, datetime을 일정시점(일단, 7일로 설정함) 이전으로 설정해야만 삭제할 수 있도록 함) 삭제
