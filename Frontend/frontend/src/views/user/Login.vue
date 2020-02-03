@@ -34,8 +34,6 @@
 
             </button>
 
-
-
             </div>
             <div class="add-option">
                 <div class="text">
@@ -59,6 +57,7 @@
     import PV from 'password-validator'
     import * as EmailValidator from 'email-validator'
     import UserApi from '../../apis/UserApi'
+    import { mapGetters, mapState } from 'vuex'
 
     export default {
         created(){
@@ -101,22 +100,23 @@
             }
             , login(){
                 if (this.isSubmit) {
-                    let {email,password} = this;
                     let data = {
-                        email,password
+                        id: this.email,
+                        password: this.password
                     }
 
                     //요청 후에는 버튼 비활성화
                     this.isSubmit = false;
 
                     UserApi.requestLogin(data,res=>{
-
+                        // console.log('1',res.data)
                        // 로그인 성공시
-                       if (res.state !== "ok"){
-                           
-                           this.$router.replace({name: 'Home'})
+                       if (res.data.state === "ok"){
+                            // console.log('2',res.data.state)
+                            this.$store.dispatch('user/login', res.data)
+                            .then(()=>this.$router.replace({name: 'Home'}))
                         }
-                       else{
+                         else{
                            //실패 한 이유 알람으로 주기
                            alert(res.data)
                        }

@@ -13,7 +13,7 @@
             <img src="/img/kakao_account_login_btn_medium_narrow.png">
         </a>
         <br>
-        <a href="${url}">
+        <a href="https://nid.naver.com/oauth2.0/authorize?client_id=MyOzYfN5jsCLdO3clqvX&redirect_uri=http://localhost:8080/NaverLogin&response_type=code">
 			<img width="223" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/>
 		</a>
     </c:if>
@@ -28,5 +28,5 @@
 
 
     
-</body>
+</body>                                                                                                                                                                                                                ㅠㅠ
 </html>
