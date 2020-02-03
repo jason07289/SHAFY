@@ -15,4 +15,6 @@ public interface NotificationService {
 	public List<Notification> searchAll();
 
 	public int count(String id);
+
+	public boolean userAlarmCheck(String id);
 }
