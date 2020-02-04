@@ -1,8 +1,9 @@
 <template>
 
       <v-card style="align:center;">
-        <v-card-title  style="text-align:center;" class="headline" >{{hashtagName}} 태그를</v-card-title>
-
+        <v-card-actions style="align:center;">
+            <v-card-title  class="headline"  style="text-align:center;align:center;width:100%;" >#{{hashtagName}}</v-card-title>
+        </v-card-actions>
         <v-card-actions>
 
           <v-btn
