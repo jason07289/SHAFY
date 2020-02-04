@@ -55,6 +55,7 @@
         active-class="blue darken-1 white--text"
         column
       >
+<<<<<<< HEAD
         <v-chip v-for="tag in tag_list"  :key="tag"
         @click.stop="clickTag(tag)" 
         >
@@ -68,6 +69,13 @@
         </v-chip>
 
 
+=======
+        <v-chip @click.stop="clickTag" name="SSAFYCIAL">{{ tags }}</v-chip>
+        <v-chip>#서울2기</v-chip>
+        <v-chip>#1월2주차</v-chip>
+        <v-chip>#다리우스</v-chip>
+        <v-chip>#이것이태그다</v-chip>
+>>>>>>> 7c55c5ac461cf97822891fe37c81dd5eba3084ad
       </v-chip-group>
     </v-card-text>
     <v-divider class="mx-4"></v-divider>
@@ -177,6 +185,7 @@ export default {
       /* 변환되어서 출력할 데이터들 */
       postdata_one_line : "게시글 내용 한줄만보여주는부분",
       postdata_full : "본문 전체 보여주는부분본문 전체 보여주는본문 전체 보여본문입니다",
+<<<<<<< HEAD
       postdata_date : "언젠가",
       tag_list : [],
       tag:''
@@ -186,6 +195,15 @@ export default {
     clickTag(tagName) {  //태그 클릭해서 다이얼로그 띄우는 애
       console.log(">>클릭됨 : ",tagName)
       this.dialogTagName = tagName
+=======
+      tagDialog_show: false,
+      tags : '#SSAFYcial',
+    }
+  },
+  methods: {
+    clickTag() {
+      console.log(">>클릭됨 : "+this.tags)
+>>>>>>> 7c55c5ac461cf97822891fe37c81dd5eba3084ad
       this.tagDialog_show = true;
       
     },
