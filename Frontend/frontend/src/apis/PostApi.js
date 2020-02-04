@@ -1,4 +1,7 @@
 const axios = require('axios').default
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
+
+
 const hosturl = 'http://13.209.18.252:8080'
 const appname = '/post'
 
