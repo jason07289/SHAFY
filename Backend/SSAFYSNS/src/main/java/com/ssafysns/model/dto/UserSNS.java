@@ -35,7 +35,7 @@ public class UserSNS {
 	private int seq;
 	
 	@Column(length = 100, nullable = false)
-	private String email;
+	private String snsid;
 	
 	@Column(length = 100, nullable = false)
 	private String type;

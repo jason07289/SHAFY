@@ -7,5 +7,5 @@ import com.ssafysns.model.dto.UserSNS;
 
 @Repository
 public interface UserSNSRepository extends JpaRepository<UserSNS, Integer> {
-	public UserSNS findByEmailAndType(String email,String type);
+	public UserSNS findBySnsidAndType(String snsid,String type);
 }

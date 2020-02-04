@@ -19,19 +19,19 @@ public class UserSNSServiceImpl implements UserSNSService {
 	JwtService jwtService;
 	
 	@Override
-	public Object SNSLogin(String email, String type)throws Exception  {//usersns를 찾고 그에 맞는 user를  반환? 아님 바로 로그인 처리까지?
-		UserSNS usns = userSNSRepository.findByEmailAndType(email, type);
+	public Object SNSLogin(String snsid, String type)throws Exception  {//usersns를 찾고 그에 맞는 user를  반환? 아님 바로 로그인 처리까지?
+		UserSNS usns = userSNSRepository.findBySnsidAndType(snsid, type);
 		if(usns==null) {//새로운 회원 가입이 필요
 			UserSNS newUserSNS = new UserSNS();
-			newUserSNS.setEmail(email);
+			newUserSNS.setSnsid(snsid);
 			newUserSNS.setType(type);
 			userSNSRepository.save(newUserSNS);
-			UserSNS find = userSNSRepository.findByEmailAndType(email, type);
+			UserSNS find = userSNSRepository.findBySnsidAndType(snsid, type);
 			Integer seq = find.getSeq();
 			return seq;//key값 seq
 		}else {// 연동되어있는 id와 닉네임을 불러와서 토큰에 담아주고 반납?
 			
-			UserSNS find = userSNSRepository.findByEmailAndType(email, type);
+			UserSNS find = userSNSRepository.findBySnsidAndType(snsid, type);
 			String id =find.getId();
 			User findUser = userRepository.getOne(id);
 			
@@ -62,7 +62,6 @@ public class UserSNSServiceImpl implements UserSNSService {
 		user.setNickname(userForSNS.getNickname());
 		user.setPassword(userForSNS.getPassword());
 		user.setPhone(userForSNS.getPhone());
-		user.setProvider(userForSNS.getProvider());
 		user.setState(userForSNS.getState());
 		user.setToken(userForSNS.getToken());
 		user.setUtype(userForSNS.getUtype());

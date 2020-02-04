@@ -1,9 +1,7 @@
 package com.ssafysns.model.service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.ibatis.session.SqlSessionException;
@@ -11,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafysns.exception.MyLoginException;
-import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
-import com.ssafysns.util.KakaoAPI;
 import com.ssafysns.util.MailUtil;
 @Service
 public class UserServiceImpl implements UserService{
