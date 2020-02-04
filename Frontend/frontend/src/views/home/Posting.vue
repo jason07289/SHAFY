@@ -23,7 +23,7 @@
       <input type="text" placeholder="게시내용" v-model="postdata.content"
       style="width:100%;height:100%;text-align:center;">
     </div>
-  </div>
+    </div>
 </template>
 /**
 {
@@ -35,25 +35,18 @@
  */
 <script>
 import PostApi from '@/apis/PostApi'
+import { mapState, mapActions } from 'vuex'
+
  /* eslint-disable no-unused-vars */
 export default {
-  data() {
-    return {
-      postdata:{
-        attachments: '',
-        content: '',
-        hastag : '',
-        id : this.$store.state.id ,
-        anonymous : ''
-      }
-    }
-  },
+
   methods: {
     doPosting(){
       let data = this.postdata
+      this.postdata.id = this.user.id
+      console.log(data)
       // 데이터 필수 항목, 유효성 검증
       PostApi.requestPosting(data, res=>{
-        console.log(res.data)
         if(res.data.state==='ok'){
           alert('게시글 작성이 완료 되었습니다.')
         }else{
@@ -62,8 +55,34 @@ export default {
       },error=>{
         alert(`${error} 오류 발생`)
       })
+    },
+    test(){
+      console.log('유저정보',this.user.id)
+    },
+    ...mapActions({
+      getUserInfo : 'user/getUserInfo'
+    })
+  },
+  created(){
+    this.getUserInfo()   
+  },
+  computed:{
+    ...mapState({
+      user: state => state.user.userInfo
+    })
+  },
+  data() {
+    return {
+      postdata:{
+        attachments: '',
+        content: '',
+        hashtag : '',
+        id : '',
+        anonymous : '',
+      },
     }
   },
+  
 }
 </script>
 <style>

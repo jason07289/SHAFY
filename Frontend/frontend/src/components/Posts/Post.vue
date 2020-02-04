@@ -53,7 +53,7 @@
         active-class="blue darken-1 white--text"
         column
       >
-        <v-chip @click.stop="clickTag" name="SSAFYCIAL">#SSAFYcial</v-chip>
+        <v-chip @click.stop="clickTag" name="SSAFYCIAL">{{ tags }}</v-chip>
         <v-chip>#서울2기</v-chip>
         <v-chip>#1월2주차</v-chip>
         <v-chip>#다리우스</v-chip>
@@ -160,11 +160,12 @@ export default {
       postdata_one_line : "게시글 내용 한줄만보여주는부분",
       postdata_full : "본문 전체 보여주는부분본문 전체 보여주는본문 전체 보여본문입니다",
       tagDialog_show: false,
+      tags : '#SSAFYcial',
     }
   },
   methods: {
     clickTag() {
-      console.log(">>클릭됨 : "+this)
+      console.log(">>클릭됨 : "+this.tags)
       this.tagDialog_show = true;
       
     }
