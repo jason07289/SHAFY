@@ -12,7 +12,7 @@
             text
             @click="dialog = false"
           >
-            메인 탭에 팔로우
+            메인 탭에 팔로우(or삭제로합시다)
           </v-btn>
 
         </v-card-actions>
