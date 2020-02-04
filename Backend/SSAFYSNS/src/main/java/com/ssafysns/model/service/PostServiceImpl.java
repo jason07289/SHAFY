@@ -116,12 +116,12 @@ public class PostServiceImpl implements PostService {
 	 * ID 체크***
 	 * 뉴스피드
 	 */
-	// Follow 하는 pno 리스트 가져오기
+	// Follow 하는 Hashtag를 포함한 게시글 리스트 가져오기
 	@Override
 	public List<Integer> followHashPno(String id) {
 		List<Integer> all_hash_pno_list = null;
 		try {
-			all_hash_pno_list  = postRepository.followHashPno(id);
+			all_hash_pno_list  = postRepository.followHashPnoById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -144,7 +144,6 @@ public class PostServiceImpl implements PostService {
 		return posts;
 	}
 	
-	//[Tab] 탭 해시태그로 Pno 리스트 가져오기
 	@Override
 	public List<Integer> searchPnoList(String hashtag) {
 		System.out.println("==============Pno List 출력==============");
@@ -168,6 +167,19 @@ public class PostServiceImpl implements PostService {
 			e.printStackTrace();
 		}
 		
+		return posts;
+	}
+
+	// Likes가 베스트 20인 애들만 출력
+	@Override
+	public List<Post> searchBest20() {
+		List<Post> posts = null;
+		try {
+			posts = postRepository.findAll();
+			posts = posts.subList(0, Integer.min(posts.size(), 20));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return posts;
 	}
 

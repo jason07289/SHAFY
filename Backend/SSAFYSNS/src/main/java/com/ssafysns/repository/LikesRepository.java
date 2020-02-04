@@ -19,22 +19,15 @@ public interface LikesRepository extends JpaRepository<Likes, Integer>{
 	@Query("delete from likes l where l.id=:id and l.pno=:pno and l.cno=:cno")
 	void deleteLikes(@Param("id") String id, @Param("pno") int pno, @Param("cno") int cno);
 
+	// 내가 누른 모든 게시글 + 댓글의 좋아요를 게시글 번호 리스트(pno)로 가져오기
 	@Query("select l.pno from likes l where l.id=:id")
-	List<Integer> searchById(@Param("id") String id);
+	List<Integer> searchPnoById(@Param("id") String id);
+	
+	// 내가 누른 모든 게시글 + 댓글의 좋아요를 댓글 번호 리스트(cno)로 가져오기
+	@Query("select l.cno from likes l where l.id=:id")
+	List<Integer> searchCnoById(@Param("id") String id);
 
-	@Query("select l from likes l where l.pno in :pno")
-	List<Likes> findByAllPno(@Param("pno") List<Integer> pno);
-
-//	@Modifying
-//	@Query("update comment c set like_check = true where c.cno = :cno and c.id=:id")
-//	void likeCheck(@Param("cno") int cno, @Param("id") String id);
-	
-	@Query("select case when l.cno in :cno_list then 'true' else 'false' end from likes l")
-	List<Boolean> checkCommentLike(@Param("cno_list") List<Integer> cno_list);
-	
-	@Query(value = "select * from comment c", nativeQuery=true)
-	List<Map<String, Object>> selectCno(@Param("pno") int pno);
-	
-	@Query(value = "select case when l.cno in :cno_list then 'true' else 'false' end from likes l", nativeQuery = true)
-	List<Boolean> checkLikeTest(@Param("cno_list") List<Integer> cno_list);
+	// pno게시글의 댓글들이 내가 좋아요 누른건지 안누른건지 판별해서 boolean 리스트로 반환
+	@Query(value = "select case when c.cno in :cno_list then 'true' else 'false' end from comment c where c.pno = :pno", nativeQuery = true)
+	List<Boolean> checkLikeTest(@Param("cno_list") List<Integer> cno_list, @Param("pno") int pno);
 }

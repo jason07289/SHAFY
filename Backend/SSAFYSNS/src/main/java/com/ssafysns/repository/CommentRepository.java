@@ -34,6 +34,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Query("select c from comment c where c.pno in :plist")
 	List<Comment> customAllPno(@Param("plist") List<Integer> plist);
 
+	// 얘는 어따쓰는거?????
 	@Query("select c from comment c where c.pno = :pno and c.cno = :cno")
 	Comment searchByPnoCno(@Param("pno") int pno, @Param("cno") int cno);
 
@@ -44,5 +45,8 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Modifying
 	@Query("update comment c set c.pno = c.pno where c.cno = :cno")// c.like_count = c.like_count-1 where c.cno = :cno")
 	void likesDown(@Param("cno") int cno);
+
+	@Query("select c.cno from comment c where c.pno = :pno")
+	List<Integer> searchCnoByPno(@Param("pno") int pno);
 
 }

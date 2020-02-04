@@ -131,6 +131,17 @@ public class CommentServiceImpl implements CommentService {
 		
 		return comments;
 	}
+
+	@Override
+	public List<Integer> searchCnoByPno(int pno) {
+		List<Integer> cno_list = null;
+		try {
+			cno_list = commentRepository.searchCnoByPno(pno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cno_list;
+	}
 	
 	
 }

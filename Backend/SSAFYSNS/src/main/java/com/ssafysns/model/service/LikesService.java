@@ -12,13 +12,13 @@ public interface LikesService {
 	public void delete(String id, int pno, int cno);
 	
 	public List<Integer> searchById(String id);	//좋아요 누른 글 목록 검색
-	public List<Likes> searchByAllPno(List<Integer> pno); //게시글 좋아요 기록 검색
+//	public List<Likes> searchByAllPno(List<Integer> pno); //게시글 좋아요 기록 검색
 	public List<Likes> searchByPno(int pno);
 	
 	public void likeCheck(int cno, String id);
 
-	public List<Comment> selectCno(int pno);
+	public List<Integer> selectCnoById(String id);
 	
-	public List<Boolean> likeTest(List<Integer> cno_list);
+	public List<Boolean> likeBooleanList(List<Integer> cno_list, int pno);
 
 }
