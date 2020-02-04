@@ -2,7 +2,7 @@
   <div>
     <h1>포스트리스트</h1>
     <Post v-for="post in posts"
-    :key="post.pno"/>
+    :key="post.pno" :post="post"/>
   </div>
 </template>
 
@@ -19,6 +19,10 @@ export default {
     mapState({
     posts: state => state.post.posts
   }),
+  created(){
+    this.$store.dispatch('post/getAllPosts')
+  }
+  
 }
 </script>
 

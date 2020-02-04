@@ -1,11 +1,31 @@
 package com.ssafysns.repository;
 
+import java.util.Date;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafysns.model.dto.Notification;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+	// 1. checked = true이고
+	// 2. datetime 이전이면(단, datetime을 일정시점(일단, 7일로 설정함) 이전으로 설정해야만 삭제할 수 있도록 함) 삭제
+	@Modifying
+	@Transactional
+	@Query(value = "delete from notification n where n.datetime <= date_add(now(), interval -1 week) and n.checked = 1 and n.datetime <= :datetime", nativeQuery = true)
+	void deleteByDatetime(@Param("datetime") Date datetime);
 
+	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
+	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
+	int countByIdAndNotChecked(@Param("id") String id);
+
+	@Modifying
+	@Transactional
+	@Query(value = "update Notification set checked = :checked where no = :no", nativeQuery = true)
+	void updateByChecked(@Param("no") int no, @Param("checked") int checked);
 }
