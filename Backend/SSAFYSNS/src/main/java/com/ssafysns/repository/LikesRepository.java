@@ -1,6 +1,7 @@
 package com.ssafysns.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
 
 @Repository
@@ -29,4 +31,10 @@ public interface LikesRepository extends JpaRepository<Likes, Integer>{
 	
 	@Query("select case when l.cno in :cno_list then 'true' else 'false' end from likes l")
 	List<Boolean> checkCommentLike(@Param("cno_list") List<Integer> cno_list);
+	
+	@Query(value = "select * from comment c", nativeQuery=true)
+	List<Map<String, Object>> selectCno(@Param("pno") int pno);
+	
+	@Query(value = "select case when l.cno in :cno_list then 'true' else 'false' end from likes l", nativeQuery = true)
+	List<Boolean> checkLikeTest(@Param("cno_list") List<Integer> cno_list);
 }

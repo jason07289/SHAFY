@@ -1,6 +1,12 @@
 package com.ssafysns.model.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -144,5 +150,50 @@ public class LikesServiceImpl implements LikesService {
 			e.printStackTrace();
 		}
 	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<Comment> selectCno(int pno) {
+		List<Comment> comment_list = new ArrayList<Comment>();
+		List<Map<String, Object>> list = null;
+
+		System.out.println("출력 시작");
+		try {
+			list = likesRepository.selectCno(pno);
+			
+			Comment comment = null;
+			for(int i = 0, size = list.size(); i<size; i++) {
+				System.out.println(i+". ------------------------");
+				//Comment(cno, pno, parent, id, nickname, datetime, content, delete, like_count, like_check)
+				Map<String, Object> now = list.get(i);
+				int cno = Integer.parseInt(now.get("cno").toString());
+				int ppno = Integer.parseInt(now.get("pno").toString());
+//				Integer parent = Integer.parseInt(now.get("parent").toString());
+				String id = now.get("id").toString();
+//				String nickname = now.get("nickname").toString();
+				String from = now.get("datetime").toString();
+				SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date = fm.parse(from);
+				String content = now.get("content").toString();
+				
+//				comment = new Comment(cno, ppno, (Integer)cno, id, "nickname", date, content, 0, 0, false, null, null, null);
+				comment_list.add(comment);
+				comment = null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comment_list;
+	}
+
+	@Override
+	public List<Boolean> likeTest(List<Integer> cno_list) {
+		
+		List<Boolean> boolean_list = likesRepository.checkLikeTest(cno_list);
+		System.out.println(boolean_list.toString());
+		
+		return boolean_list;
+	}
+
 
 }

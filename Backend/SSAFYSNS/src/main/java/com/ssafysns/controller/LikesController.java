@@ -1,5 +1,6 @@
 package com.ssafysns.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
+import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
+import com.ssafysns.repository.CommentRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -31,6 +35,9 @@ public class LikesController {
 	
 	@Autowired
 	LikesService likesService;
+	
+	@Autowired
+	CommentService commentService;
 	
 	@Autowired
 	JwtService jwtService;
@@ -85,6 +92,60 @@ public class LikesController {
 		
 		return new ResponseEntity<List<Integer>>(likes, HttpStatus.OK);
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Test
+	 */
+	@ApiOperation(value="테스트")
+	@GetMapping("/test/{pno}")
+	public ResponseEntity<List<Comment>> searchTest(@PathVariable int pno) throws Exception {
+//		String id = "kimssafy";
+//		List<Comment> comment = commentService.searchPno(pno);
+//		System.out.println(comment.toString());
+		List<Comment> cno_list = likesService.selectCno(pno);
+		System.out.println("comment is====");
+		System.out.println(cno_list.toString());
+		for(int i = 0; i<cno_list.size(); i++) {
+			cno_list.get(i).setLike(null);
+			cno_list.get(i).setPost(null);
+		}
+		
+		return new ResponseEntity<List<Comment>>(cno_list, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="Boolean Test")
+	@GetMapping("/test/likeTest")
+	public ResponseEntity<List<Boolean>> searchTest() throws Exception {
+		List<Integer> cno_list = new ArrayList<Integer>();
+		cno_list.add(1);
+		cno_list.add(3);
+		cno_list.add(7);
+		cno_list.add(12);
+		List<Boolean> b_list = likesService.likeTest(cno_list);
+		
+		return new ResponseEntity<List<Boolean>>(b_list, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="진짜 리얼 테스트")
+	@GetMapping("/test/realTest")
+	public ResponseEntity<List<Boolean>> realTest() throws Exception {
+		List<Integer> cno_list = new ArrayList<Integer>();
+		cno_list.add(1);
+		cno_list.add(3);
+		cno_list.add(7);
+		cno_list.add(12);
+		List<Boolean> b_list = likesService.likeTest(cno_list);
+		
+		return new ResponseEntity<List<Boolean>>(b_list, HttpStatus.OK);
+	}
+	
+	
+	
 	
 	//Exception Handler
 	@ExceptionHandler

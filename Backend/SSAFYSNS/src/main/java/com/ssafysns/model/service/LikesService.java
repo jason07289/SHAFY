@@ -2,6 +2,7 @@ package com.ssafysns.model.service;
 
 import java.util.List;
 
+import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.Post;
 
@@ -15,5 +16,9 @@ public interface LikesService {
 	public List<Likes> searchByPno(int pno);
 	
 	public void likeCheck(int cno, String id);
+
+	public List<Comment> selectCno(int pno);
+	
+	public List<Boolean> likeTest(List<Integer> cno_list);
 
 }

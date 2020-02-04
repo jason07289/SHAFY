@@ -67,6 +67,9 @@ public class Post {
 	@Column(columnDefinition = "int default 0")
 	private int deleted;
 	
+	@Column(columnDefinition = "int default 0")
+	private int anonymous;
+	
 	@Transient
 	private int like_count;
 	

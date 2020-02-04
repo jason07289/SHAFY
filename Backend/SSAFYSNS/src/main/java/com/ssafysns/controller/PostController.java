@@ -25,11 +25,13 @@ import com.ssafysns.model.dto.FAQ;
 import com.ssafysns.model.dto.FollowHashtag;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.Post;
+import com.ssafysns.model.dto.User;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
 import com.ssafysns.model.service.PostService;
+import com.ssafysns.model.service.UserService;
 import com.ssafysns.repository.CommentRepository;
 import com.ssafysns.repository.PostRepository;
 
@@ -52,6 +54,9 @@ public class PostController {
 	
 	@Autowired
 	FollowHashtagService followService;
+	
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	JwtService jwtService;
@@ -82,6 +87,11 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		String id = post.getId();
 		String hashtag = post.getHashtag();
+		
+		User user = userService.MyInfo();
+		String nickname = user.getNickname();
+		
+		post.setNickname(nickname);
 		
 		/**
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
@@ -153,11 +163,17 @@ public class PostController {
 			for(int i = 0, size = comments.size(); i<size; i++) {
 				comments.get(i).setPost(null); //여기야
 				comments.get(i).setLike(null);
+				comments.get(i).setUser(null);
+				if(comments.get(i).getAnonymous() == 1) {	//익명일 경우
+					comments.get(i).setId(null);
+				}
 			}
 			List<Likes> likes = searchLikes(pno);
 			pnoMap.put("post", post);
 			pnoMap.put("comment", comments);
 			pnoMap.put("likes", likes);
+		} else {
+			pnoMap.put("errMsg", false);
 		}
 		
 		return new ResponseEntity<Map<String, Object>>(pnoMap, HttpStatus.OK);
