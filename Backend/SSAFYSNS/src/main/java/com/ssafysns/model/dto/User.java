@@ -164,8 +164,9 @@ public class User {
 	@Column(length=10)
 	private Integer approval;
 	
-	@Column(length=10) 
-	private Integer alarm;
+	@Column(nullable = false, columnDefinition = "int default 0")
+	// 알람 발생 여부 0: false, 1: true
+	private int alarm;
 
 	@Builder
 	public User(String id) {

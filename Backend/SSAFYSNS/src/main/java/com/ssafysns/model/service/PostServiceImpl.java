@@ -111,26 +111,39 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	/**
+	 * ID 체크***
+	 * 뉴스피드
+	 */
+	// Follow 하는 pno 리스트 가져오기
 	@Override
-	public List<Post> searchAllHashTags() {
-		
-		return null;
+	public List<Integer> followHashPno(String id) {
+		List<Integer> all_hash_pno_list = null;
+		try {
+			all_hash_pno_list  = postRepository.followHashPno(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return all_hash_pno_list;
 	}
-
-	// Hashtag로 Post 조회
+	
+	// [뉴스피드]
+	// Follow하는 태그 리스트의 모든 글 가져오기
 	@Override
-	public List<Post> search(String hashtag) {
+	public List<Post> searchAllFollowList(List<Integer> pno_list) {
 		List<Post> posts = null;
 		
 		try {
-			posts = postRepository.findByHashtag(hashtag);
-		} catch (Exception e) {
+			posts = postRepository.findByPnoList(pno_list);
+		} catch(Exception e) {
 			e.printStackTrace();
+			throw new PostException("팔로우하는 모든 게시글 조회 중 오류가 발생했습니다.");
 		}
 		
 		return posts;
 	}
 	
+	//[Tab] 탭 해시태그로 Pno 리스트 가져오기
 	@Override
 	public List<Integer> searchPostNo(String hashtag) {
 		System.out.println("==============Pno List 출력==============");
@@ -142,19 +155,19 @@ public class PostServiceImpl implements PostService {
 		}
 		return pno_list;
 	}
-
-	/**
-	 * ID 체크***
-	 */
+	
+	// [Tab] 탭 해시태그로 게시글 리스트 가져오기
 	@Override
-	public List<Integer> testAllHash(String id) {
-		List<Integer> all_hash_pno_list = null;
+	public List<Post> search(String hashtag) {
+		List<Post> posts = null;
+		
 		try {
-			all_hash_pno_list  = postRepository.testAllHash(id);
+			posts = postRepository.findByHashtag(hashtag);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return all_hash_pno_list;
+		
+		return posts;
 	}
 
 }

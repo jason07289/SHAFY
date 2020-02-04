@@ -77,14 +77,19 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	@Transactional
-	public void delete(int no) {
+	public boolean delete(String jwtId, int no) {
 		
-		//deleted = true로 활성화
-		try {
-			commentRepository.updateDeleted(no);
-		} catch (Exception e) {
-			e.printStackTrace();
+		String id = commentRepository.findById(no).get().getId();
+		
+		if(id == jwtId) {
+			try {
+				commentRepository.updateDeleted(no);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return true;
 		}
+		return false;		
 	}
 
 	@Override
