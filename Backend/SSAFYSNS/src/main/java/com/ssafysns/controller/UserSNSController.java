@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @Api(value="SSAFY SNS", description="SSAFY SNS")
 @EnableAutoConfiguration
-public class userSNSController {
+public class UserSNSController {
 
 	@Autowired
 	private UserSNSService userSNSService;
