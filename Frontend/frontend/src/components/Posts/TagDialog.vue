@@ -2,9 +2,7 @@
 
       <v-card style="align:center;">
         <v-card-title  style="text-align:center;" class="headline" >{{hashtagName}} 태그를</v-card-title>
-
         <v-card-actions>
-
           <v-btn
             style="width:100%;"
             color="green darken-1"

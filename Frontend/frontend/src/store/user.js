@@ -1,4 +1,5 @@
 import UserApi from '@/apis/UserApi'
+import router from '../main'
 const axios = require('axios').default
 
 // initial state
@@ -23,8 +24,21 @@ const getters = {
 // actions
 const actions = {
   login({ commit },data){
-    commit('loginSuccess', data.JWT)
+    console.log('before go to server')
+    return UserApi.requestLogin(data,res=>{
+      if(res.data.state==="ok"){
+        console.log('before commit')
+        commit('loginSuccess', res.data.JWT)
+        console.log('after commit', state.JWT)
+      
+      }else{
+        alert(res.data)
+      }
+    },error=>{
+      console.log('로그인에러',error)
+    })
   },
+
   logout({ commit }){
     axios.defaults.headers.common['Authorization'] = undefined
     axios.interceptors.request.eject();
@@ -34,7 +48,9 @@ const actions = {
     UserApi.requestUserInFo(res=>{
       // console.log('userInfoAPI',res)
       if (res.data.state === 'ok'){
+        console.log(router)
         commit('setUserInfo', res.data.message)
+        
       }else{
         alert(res.data)
       }
@@ -48,12 +64,13 @@ const mutations = {
   loginSuccess(state, JWT){
     state.JWT = JWT
     localStorage.JWT = JWT
-    const accessToken= function(){
-      const {JWT} = localStorage.JWT
-      if (!JWT) return
-      axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;
-    }
-    accessToken()
+    // const accessToken= function(){
+    //   const {JWT} = localStorage.JWT
+    //   if (!JWT) return
+    //   axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;
+    // }
+    // accessToken()
+    router.push({name:'Home'})
   },
   logoutSuccess(state){
     state.JWT = null
