@@ -35,7 +35,7 @@ public class UserSNSServiceImpl implements UserSNSService {
 			String id =find.getId();
 			User findUser = userRepository.getOne(id);
 			
-			return jwtService.create(findUser.getId(), findUser.getNickname());
+			return jwtService.create(findUser.getId(), findUser.getNickname(),findUser.getAuth());
 			//key값 토큰 컨트롤러에서 핸들러에 담음되겄다...
 		}
 	}

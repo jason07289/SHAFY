@@ -1,6 +1,8 @@
 package com.ssafysns.model.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class JwtServiceImpl implements JwtService{
 	private static final String SALT =  "ssafy3ban5jo";
 	
 	@Override
-	public <T> String create(String id, String nickName){
+	public <T> String create(String id, String nickName, String auth){
 		String jwt = Jwts.builder()
 						 .setHeaderParam("typ", "JWT")
 						 .setHeaderParam("alg", "HS256")
@@ -33,6 +35,7 @@ public class JwtServiceImpl implements JwtService{
 						 //payload 부분
 						 .claim("userid", id)
 						 .claim("nickname", nickName)
+						 .claim("auth", auth)
 						 .signWith(SignatureAlgorithm.HS256, this.generateKey())
 						 .compact();
 			System.out.println("jwt 생성: "+jwt);
@@ -92,6 +95,33 @@ public class JwtServiceImpl implements JwtService{
 		System.out.println(claims.getBody().get(key));
 		
 		return claims.getBody().get(key).toString();
-	}	
+	}
+
+//	@Override
+//	public HashMap<String, Object> getUserInfoGoogle(String jwt) throws UnauthorizedException {
+//		System.out.println();
+//        System.out.println();
+//        
+//        //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
+//        HashMap<String, Object> userInfo = new HashMap<>();
+//        System.out.println("get userInfo id token(jwt): "+jwt);
+//        	
+//        Jws<Claims> claims = null;
+//		try {
+//			claims = Jwts.parser()
+//						 .setSigningKey(SALT.getBytes("UTF-8"))
+//						 .parseClaimsJws(jwt);
+//			
+//			System.out.println("this.isUsable(jwt): "+this.isUsable(jwt));
+//			System.out.println("get함수......................pass");
+//		} catch (Exception e) {
+//			throw new UnauthorizedException();
+//		}
+//		System.out.println(claims.getBody());
+//        
+//        return null;
+//	}	
+	
+	
 	
 }

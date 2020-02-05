@@ -79,6 +79,9 @@ public class GithubAPI {
         HashMap<String, Object> userInfo = new HashMap<>();
         String reqURL = "https://api.github.com/user";
         try {
+        	
+        	System.out.println("user get info............");
+
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");

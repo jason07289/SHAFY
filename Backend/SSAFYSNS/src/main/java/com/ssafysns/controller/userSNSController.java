@@ -1,5 +1,7 @@
 package com.ssafysns.controller;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -214,7 +216,16 @@ public class userSNSController {
     public ResponseEntity<Map<String, Object>> gologin(@RequestParam("code") String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = google.getAccessToken(code);
-        HashMap<String, Object> userInfo = google.getUserInfo(access_Token);
+        HashMap<String, Object> userInfo=null;
+		userInfo = google.getUserInfo(access_Token);
+
+//		try {
+//			userInfo = google.getUserInfo(access_Token);
+//		} catch (GeneralSecurityException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
         System.out.println("getUserInfo 완료");
         System.out.println("login Controller : " + userInfo);
         System.out.println("====================login=====================");
@@ -226,24 +237,22 @@ public class userSNSController {
         
         String snsid = userInfo.get("snsid").toString();
         System.out.println(userInfo.get("snsid").toString());
-        System.out.println(userInfo.get("nickname").toString());
         
-//        try {
-//			Object valueForReturn = userSNSService.SNSLogin(snsid, "github");
-//			
-//			if(valueForReturn instanceof String) {
-//				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
-//			}else if(valueForReturn instanceof Integer) {
-//				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
-//			}else {
-//				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
-//			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
-//		}
-        return handleSuccess(jwtService.create(snsid, snsid));
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "google");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
     }
 //    GoogleLogin
     

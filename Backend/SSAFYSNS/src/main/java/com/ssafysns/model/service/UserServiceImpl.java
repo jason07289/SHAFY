@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService{
 					throw new MyLoginException("등록되지 않은 회원입니다.");
 				}else {
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
-						String jwt =jwtService.create(user.getId(), user.getNickname());
+						String jwt =jwtService.create(user.getId(), user.getNickname(), user.getAuth());
 						System.out.println("isUsable: "+ jwtService.isUsable(jwt));
 //						jwtService.get("id");
 //						Map<String, Object> uid = jwtService.get("userid");
