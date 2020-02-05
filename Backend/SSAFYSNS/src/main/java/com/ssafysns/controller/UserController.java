@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -17,13 +18,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.exception.MyLoginException;
 import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserForChangePW;
+import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.UserService;
+import com.ssafysns.snsapi.KakaoAPI;
+import com.ssafysns.snsapi.NaverAPI;
 
 //import com.ssafysns.model.service.UserService;
 
@@ -38,7 +44,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-
+	
+	
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -135,7 +142,7 @@ public class UserController {
 //	
 	
 	
-	@ApiOperation("비밀번호 변경, 현재비밀번호와 바꿀 비번이 달라야함")
+	@ApiOperation("비밀번호 변경, 현재비밀번호와 바꿀 비번이 달라야함 param이란 폼에 id, password, newpassword를 입력받음 ")
 	@PutMapping("/user/changepw")
 	public ResponseEntity<Map<String,Object>> changePW( 	
 			@RequestBody UserForChangePW param){
@@ -212,7 +219,10 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
-		
-		
 	}
+	
+
+
+
+	
 }

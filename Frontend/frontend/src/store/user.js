@@ -1,10 +1,12 @@
-// import UserApi from '@/apis/UserApi'
+import UserApi from '@/apis/UserApi'
+import router from '../main'
 const axios = require('axios').default
 
 // initial state
 const state = {
   JWT : localStorage.getItem('JWT'), // 새로고침해도 토큰값유지하기위함
   userInfo : {}, // user 프로필 사진, 이름, 닉네임 등 
+  config : {},
 }
 
 // getters
@@ -21,40 +23,65 @@ const getters = {
 
 // actions
 const actions = {
-   
+  login({ commit },data){
+    console.log('before go to server')
+    return UserApi.requestLogin(data,res=>{
+      if(res.data.state==="ok"){
+        console.log('before commit')
+        commit('loginSuccess', res.data.JWT)
+        console.log('after commit', state.JWT)
+      
+      }else{
+        alert(res.data)
+      }
+    },error=>{
+      console.log('로그인에러',error)
+    })
+  },
 
+  logout({ commit }){
+    axios.defaults.headers.common['Authorization'] = undefined
+    axios.interceptors.request.eject();
+    commit('logoutSuccess')
+  },
+  getUserInfo({ commit }){
+    UserApi.requestUserInFo(res=>{
+      // console.log('userInfoAPI',res)
+      if (res.data.state === 'ok'){
+        console.log(router)
+        commit('setUserInfo', res.data.message)
+        
+      }else{
+        alert(res.data)
+      }
+    },error=>{
+      console.log(error)
+    })
+  }
 }
-
 // mutations
 const mutations = {
-
-
-  login(state, {data}){
-    //1. state의 JWT갱신
-    state.JWT = data.JWT;
-
-    //2. localstoarge에 JWT값 저장해두기
-    localStorage.JWT = data.JWT;
-    
-    //3-1. 모든 HTTP요청 헤더에 인증정보를 추가해준다
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.JWT}`; //베어러는 JWT에서 쓴다는데 잘모르겟다..
-    //3-2. 갱신했을때, localstorage에서 토큰값을 가져와서 axios헤더에 붙ㅇ준다
-    const accessToken = () => {
-      const {JWT} = localStorage
-      if (!JWT) return
-      axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;
-    }
-    accessToken()
+  loginSuccess(state, JWT){
+    state.JWT = JWT
+    localStorage.JWT = JWT
+    // const accessToken= function(){
+    //   const {JWT} = localStorage.JWT
+    //   if (!JWT) return
+    //   axios.defaults.headers.common['Authorization'] = `Bearer ${JWT}`;
+    // }
+    // accessToken()
+    router.push({name:'Home'})
   },
-  logout(state){
-    //1. HTTP 헤더 디폴트값 제거
-    axios.defaults.headers.common['Authorization'] = undefined
-    //2. mutation에 커밋
+  logoutSuccess(state){
     state.JWT = null
     delete localStorage.JWT;
+  },
+  setUserInfo(state, data){
+    state.userInfo = data
+    console.log('성공', state.userInfo)
   }
-  
 }
+
 
 export default {
   namespaced: true,

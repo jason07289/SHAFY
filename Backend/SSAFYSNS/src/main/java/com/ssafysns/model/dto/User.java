@@ -1,18 +1,13 @@
-package com.ssafysns.model.dto;
+ package com.ssafysns.model.dto;
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -112,9 +107,7 @@ public class User {
 
 	@Column(length = 200)
 	private String password;
-	
-	@Column(length = 100)
-	private String provider;
+
 //	@Getter
 //	@Setter(AccessLevel.PROTECTED) 이런식으로 속성별 제한을 걸수도 있는듯...
 	@Column(length = 20, nullable = false)
@@ -128,7 +121,7 @@ public class User {
 	 */
 	private Date birth;// Temporal 어노테이션 쓸때는 꼭 java.util.date를 쓰도록 하자
 
-	@Column(length = 20, unique = true)
+	@Column(length = 20, unique = true, nullable=false)
 	private String nickname;
 
 	@Column(length = 20, nullable = false)
@@ -164,9 +157,16 @@ public class User {
 	@Column(length=10)
 	private Integer approval;
 	
-	@Column(length=10)
-	private Integer alarm;
+	@Column(nullable = false, columnDefinition = "int default 0")
+	// 알람 발생 여부 0: false, 1: true
+	private int alarm;
 
+	@Builder
+	public User(String id) {
+		this.id=id;
+	}
+	
+	
 	// 외래키 설정
 //	@OneToMany(mappedBy = "user")
 //	private List<TabHashtag> tabHashtags = new ArrayList<TabHashtag>();
