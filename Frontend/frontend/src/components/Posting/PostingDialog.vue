@@ -14,7 +14,7 @@
 <!-- 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
 <v-card-text class="py-0">
   <v-chip-group
-        v-model="tagGroup"
+        v-model="tags"
         multiple=true 
         active-class="blue darken-1 white--text"
         column
@@ -25,7 +25,7 @@
           class="mr-2"
           @click.stop="clickTag(tag)"
         >
-          #{{ tag }}
+          {{ tag }}
         </v-chip>
   </v-chip-group>
       </v-card-text>
@@ -51,8 +51,9 @@
     </v-dialog>
   </v-row>
 </template>
-
+ 
 <script>
+import presetData from './preset'
   export default {
     data () {
       return {
@@ -61,31 +62,23 @@
         selectedTag:[],
         content: '',
         //tags:[], /* keyword:'태그명', selected:false */
-        presets:[{
-          keyword:'2기',
-          values:['2기']
-        }, 
-        {
-          keyword:'싸피셜',
-          values:['싸피셜','ssafycial','기자단']
-        },
-        {
-          keyword:'카페',
-          values:['바나프레소','커피','카페']
-        }],
+        presets:presetData,
+        tagGroup:[],
 
 
 
       }
+      
     },
 
     computed: {
       Tags () {
         if(!this.content) return []
 
-        const tags = []
+        var tags = []
         var flag = false;
 
+        //presets에 등록된 태그가 있는지 검사
         for(const preset of this.presets){
           flag = false;
           for(const value of preset.values){
@@ -98,6 +91,16 @@
             tags.push(preset.keyword)
           }
         }
+        //#으로 시작하는 태그가 있는지 검사
+        var pattern = /#([\w|ㄱ-힣])*[^#\s]/g
+        var sharps = this.content.match(pattern)
+        console.log(sharps)
+        if(sharps!=null&&sharps.length>0){
+        tags = tags.concat(sharps)
+         }
+
+
+
 
         return tags
       },
