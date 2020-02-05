@@ -1,12 +1,6 @@
 package com.ssafysns.model.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,8 +11,12 @@ import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.CommentException;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.LikesException;
+import com.ssafysns.model.dto.Post;
+import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.repository.CommentRepository;
 import com.ssafysns.repository.LikesRepository;
+import com.ssafysns.repository.PostLikesRepository;
+import com.ssafysns.repository.PostRepository;
 
 @Service
 public class LikesServiceImpl implements LikesService {
@@ -27,9 +25,15 @@ public class LikesServiceImpl implements LikesService {
 	LikesRepository likesRepository;
 	
 	@Autowired
+	PostLikesRepository postLikesRepository;
+	
+	@Autowired
 	CommentRepository commentRepository;
 	
-	// 좋아요
+	@Autowired
+	PostRepository postRepository;
+	
+	// 댓글 좋아요
 	@Override
 	public void insert(Likes likes) {
 		/**
@@ -53,10 +57,8 @@ public class LikesServiceImpl implements LikesService {
 			if(comment == null) {
 				throw new LikesException("해당 게시글번호와 댓글번호에 일치하는 데이터가 존재하지 않습니다.");
 			} else {
-				likesRepository.save(likes);
-				
-				// + 해당 댓글/게시글 좋아요 개수 증가
-				likesUp(cno);
+				likesRepository.save(likes);				
+//				likesUpComment(cno);	// + 해당 댓글/게시글 좋아요 개수 증가
 			}
 			
 		} catch (Exception e) {
@@ -65,66 +67,80 @@ public class LikesServiceImpl implements LikesService {
 		}
 	}
 
-	private void likesUp(int cno) {
-		
+	// 게시글 좋아요
+	public void insert(PostLikes postLikes) {
+		/**
+		 * 1. 중복 체크
+		 */
 		try {
-			commentRepository.likesUp(cno);
+			int pno = postLikes.getPost().getPno();
+			Post post = null;
+			
+			try {
+				post = postRepository.findByPno(pno);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new CommentException(pno+"번 글을 가져올 수 없습니다.");
+			}
+			
+			if(post == null) {
+				throw new LikesException("해당 게시글번호가 존재하지 않습니다.");
+			} else {
+				postLikesRepository.save(postLikes);
+//				likesUpPost(pno);		// + 해당 게시글 좋아요 개수 증가
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new LikesException("댓글 좋아요 수를 증가시킬 수 없습니다.");
+			throw new LikesException("게시글에 좋아요를 누를 수 없습니다.");
 		}
-		
+	}
+	
+	// 댓글 likes 올리기
+	private void likesUpComment(int cno) {		
+	
+	}
+	// 댓글 likes 내리기
+	private void likesDownComment(int cno) {		
+	
 	}
 
-	private void likesDown(int cno) {
-		
-		try {
-			commentRepository.likesDown(cno);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new LikesException("댓글 좋아요 수를 감소시킬 수 없습니다.");
-		}
-		
-	}
+	// 게시글 likes 올리기
+	private void likesUpPost(int pno) {		
 
-	// 좋아요 취소
+	}
+	// 게시글 likes 내리기
+	private void likesDownPost(int pno) {		
+	
+	}
+	
+	
+	// 댓글 좋아요 취소
 	@Transactional
 	@Override
 	public void delete(String id, int pno, int cno) {
 		try {
 			likesRepository.deleteLikes(id, pno, cno);
+//			likesDownComment(cno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new LikesException("");
+		}
+	}
+	// 게시글 좋아요 취소
+	@Transactional
+	@Override
+	public void delete(String id, int pno) {
+		try {
+			likesRepository.deleteLikes(id, pno);
+//			likesDownPost(pno);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new LikesException("");
 		}
 	}
 
-	//[뉴스피드] 여러개의 pno리스트에 해당하는 각 게시글 좋아요 기록 가져오기
-//	@Override
-//	public List<Likes> searchByAllPno(List<Integer> pno_list) {
-//		List<Likes> likes = null;
-//		try {
-//			likes = likesRepository.findLikesByAllPno(pno_list);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new LikesException("게시글 목록의 좋아요를 가져올 수 없습니다.");
-//		}
-//		return likes;
-//	}
 
-	// 해당 게시글의 좋아요 기록 찾기(한 개의 글에 해당하는)
-	@Override
-	public List<Likes> searchByPno(int pno) {
-		List<Likes> likes = null;
-//		try {
-//			likes = likeRepository.searchByPno(pno);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new LikesException("게시글의 좋아요를 가져올 수 없습니다.");
-//		}
-		return likes;
-	}
-	
 	// 좋아요 누른 모든 post 번호  찾기(id로 검색)
 	@Override
 	public List<Integer> searchById(String id) {
@@ -140,23 +156,13 @@ public class LikesServiceImpl implements LikesService {
 		return lists;
 	}
 
-	
-	@Override
-	@Transactional
-	public void likeCheck(int cno, String id) {
-		try {
-//			likesRepository.likeCheck(cno, id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
-	public List<Boolean> likeBooleanList(List<Integer> cno_list, int pno) {
+	public List<Boolean> likeBooleanComment(List<Integer> my_like_comment, int pno) {
 		List<Boolean> boolean_list = null;
 		
 		try {
-			boolean_list = likesRepository.checkLikeTest(cno_list, pno);
+			boolean_list = likesRepository.checkLikeComment(my_like_comment, pno);
 			System.out.println(boolean_list.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,6 +170,21 @@ public class LikesServiceImpl implements LikesService {
 		
 		return boolean_list;
 	}
+
+	@Override
+	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list) {
+		List<Boolean> boolean_list = null;
+		
+		try {
+			boolean_list = likesRepository.checkLikePost(my_like_post, follow_list);
+			System.out.println(boolean_list.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return boolean_list;
+	}
+	
 
 	//내가 좋아요 누른 댓글 번호 리스트로 가져오기
 	@Override
@@ -175,6 +196,18 @@ public class LikesServiceImpl implements LikesService {
 			e.printStackTrace();
 		}
 		return cno_list;
+	}
+	
+	//내가 좋아요 누른 게시글 번호 리스트로 가져오기
+	@Override
+	public List<Integer> selectPnoById(String jwtId) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = likesRepository.searchPnoById(jwtId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
 	}
 
 }

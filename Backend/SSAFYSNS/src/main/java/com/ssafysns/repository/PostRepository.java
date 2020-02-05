@@ -30,4 +30,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id)")
 	List<Integer> followHashPnoById(@Param("id") String id);
 
+	Post findByPno(int pno);
+
 }

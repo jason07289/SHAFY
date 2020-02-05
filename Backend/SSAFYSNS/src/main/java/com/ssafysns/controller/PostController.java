@@ -1,5 +1,6 @@
 package com.ssafysns.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class PostController {
 	@Autowired
 	JwtService jwtService;
 	
-	String jwtId = "kimssafy";
+	String jwtId = "kimssafy@gmail.com";
 	
 
 	/**
@@ -76,6 +77,10 @@ public class PostController {
 		
 		// 해시태그에 해당하는 게시글 리스트 가져오기
 		List<Post> post_list = searchPostByHash(hashtag);
+		
+		// 로그인한 사용자가 누른 모든 [게시글] 좋아요 리스트 가져오기
+		List<Integer> pno_list = postService.searchPnoByHash(hashtag);
+		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 
 		post_list = returnPost(post_list);
 		
@@ -99,6 +104,19 @@ public class PostController {
 		List<Integer> pno_by_all_hash = postService.followHashPno(jwtId);
 		List<Post> post_list = postService.searchAllFollowList(pno_by_all_hash);
 		
+		// 로그인한 사용자가 누른 모든 [게시글] 좋아요 리스트 가져오기
+		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
+				
+		// Follow 리스트의 게시글 중 내가 좋아요 눌렀는지 여부
+		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_by_all_hash);
+		
+		for(int i = 0; i<post_list.size(); i++) {
+			if(post_boolean_list.get(i)) {
+				post_list.get(i).setLike_check(true);
+			}
+			post_list.get(i).setLike_count(post_list.get(i).getPostlike().size());
+		}
+				
 		post_list = returnPost(post_list);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
@@ -111,15 +129,15 @@ public class PostController {
 	public List<Post> returnPost(List<Post> posts){
 		List<Post> post_list = posts;
 		
-		// 로그인한 사용자가 누른 모든 좋아요 리스트 가져오기
-		List<Integer> cno_list = likesService.selectCnoById(jwtId);
-		System.out.println("cno_list is " + cno_list.toString());
+		// 로그인한 사용자가 누른 모든 [댓글] 좋아요 리스트 가져오기
+		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
+		System.out.println("my_like_comment is " + my_like_comment.toString());
 		
 		// 각 게시글에 해당하는 댓글 + 각 댓글에 해당하는 좋아요 리스트
 		for(int i = 0, post_size = post_list.size(); i<post_size; i++) {
 			Post post = post_list.get(i);
-			post.setLike(null);
-			post.setUser(null);
+//			post.setPostlike(null);
+//			post.setUser(null);
 
 			int pno = post.getPno();
 			System.out.println("pno is "+pno);
@@ -130,7 +148,7 @@ public class PostController {
 				post.setNickname("익명");
 			}
 			
-			List<Boolean> like_boolean_list = likesService.likeBooleanList(cno_list, pno);
+			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, pno);
 			System.out.println("like_list is "+like_boolean_list.toString());
 			
 			// 해당 게시글(pno)에 달린 댓글 리스트
@@ -141,10 +159,10 @@ public class PostController {
 				Comment temp_comments = temp_comments_list.get(j);
 				
 				// StackOverflow 방지
-				temp_comments.setPost(null);
+//				temp_comments.setPost(null);
 				temp_comments.setLike_count(temp_comments.getLike().size());
-				temp_comments.setLike(null);
-				temp_comments.setUser(null);
+				temp_comments.setLike(null); 
+//				temp_comments.setUser(null);
 				if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
 					temp_comments.setLike_check(true);
 				}
@@ -167,11 +185,15 @@ public class PostController {
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
 		List<Post> posts = postService.searchAll();
-		for(int i = 0; i<posts.size(); i++) {
+		for(int i = 0, size = posts.size(); i<size; i++) {
+			Post post = posts.get(i);
+			post.setUser(null);
+			List<Comment> comment_list = post.getComment();
 			
-			List<Comment> comment_list = posts.get(i).getComment();
-			for(int j = 0, size = comment_list.size(); j<size; j++) {
-				posts.get(i).getComment().get(j).setPost(null);
+			for(int j = 0, jsize = comment_list.size(); j<jsize; j++) {
+				Comment comment = post.getComment().get(j);
+				comment.setLike(null);
+				comment.setUser(null);
 			}
 		}
 		return handleSuccess(posts);
@@ -181,7 +203,7 @@ public class PostController {
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
-		String id = post.getId();
+		String id = post.getUser().getId();
 		String hashtag = post.getHashtag();
 		
 		User user = userService.MyInfo();
@@ -229,7 +251,7 @@ public class PostController {
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
 		
-		if(post.getId() == jwtId) {
+		if(post.getUser().getId() == jwtId) {
 			postService.update(jwtId, post);
 			return handleSuccess("게시글 수정 완료");
 		} else {
@@ -247,17 +269,14 @@ public class PostController {
 	 */
 	@ApiOperation(value="{pno}에 해당하는 게시글, 댓글, 좋아요 조회")
 	@GetMapping("/post/{pno}")
-	public ResponseEntity<Map<String, Object>> searchByPno(@PathVariable int pno) throws Exception {
-		Map<String, Object> pnoMap = new HashMap<String, Object>();
+	public ResponseEntity<Post> searchByPno(@PathVariable int pno) throws Exception {
 		
 		Post post = search(pno);
-		
 		/**
 		 * 1. 내가 게시글을 좋아요 눌렀는지
 		 * 2. 게시글에 달린 좋아요가 몇 개인지?
 		 */
 
-		post.setLike(null);
 		post.setUser(null);
 
 		// 게시글 익명 처리
@@ -267,37 +286,50 @@ public class PostController {
 		}
 		
 		// 로그인한 사용자가 누른 모든 좋아요 리스트 가져오기
-		List<Integer> cno_list = likesService.selectCnoById(jwtId);
-		System.out.println("cno_list is " + cno_list.toString());
-
+		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
+		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
+		
 		// 해당 게시글(pno)에 달린 댓글 리스트
 		List<Comment> temp_comments_list = post.getComment();
 		System.out.println("댓글 사이즈: "+temp_comments_list.size());
 		
-		// 해당 게시글(pno)에 달린 댓글 중 내가 좋아요 눌렀는지 안눌렀는지 여부
-		List<Boolean> like_boolean_list = likesService.likeBooleanList(cno_list, pno);
-		System.out.println("like_list is "+like_boolean_list.toString());
-
-		for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
-			Comment temp_comments = temp_comments_list.get(j);
+		// 해당 게시글에 내가 좋아요 눌렀는지 안눌렀는지
+		List<Integer> pno_list = new ArrayList<Integer>();
+		pno_list.add(pno);
+		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
+		List<Boolean> like_boolean_comment = likesService.likeBooleanComment(my_like_comment, pno);
+		
+		// 게시글 좋아요 개수 + 내가 눌렀는지 여부 체크
+		if(like_boolean_post.get(0)) {
+			post.setLike_check(true);
+		} 
+		post.setLike_count(post.getPostlike().size());
 			
-			// StackOverflow 방지
-			temp_comments.setPost(null);
+		
+		// 댓글마다 처리
+		for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
+			
+			Comment temp_comments = temp_comments_list.get(j);
 			temp_comments.setLike_count(temp_comments.getLike().size());
-			temp_comments.setLike(null);
-			temp_comments.setUser(null);
-			if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
+			if(like_boolean_comment != null && like_boolean_comment.get(j)) {	//내가 좋아요를 누른 댓글일 경우
 				temp_comments.setLike_check(true);
 			}
+			
+			temp_comments.setPost(null); // StackOverflow 방지
+			temp_comments.setLike(null); // StackOverflow 방지
+			temp_comments.setUser(null);
+
 			// 댓글 익명 처리
 			if(temp_comments.getAnonymous() == 1) {
 				//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 				temp_comments.setNickname("익명");
 			}
 		}
+
+		post.setPostlike(null);	//StackOverFlow
 		
-		
-		return new ResponseEntity<Map<String, Object>>(pnoMap, HttpStatus.OK);
+		System.out.println("post is "+post.toString());
+		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 
 	// pno에 해당하는 Post 조회 (함수)
@@ -320,14 +352,12 @@ public class PostController {
 	@ApiOperation(value="베스트 게시글 20개의 해당하는 게시글들의 게시글+댓글+좋아요 전부 가져오기")
 	@GetMapping("/hashtag/best")
 	public ResponseEntity<List<Post>> estPost(@PathVariable String hashtag) throws Exception {
-		
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 한당
 		 */
 		
 		// 해시태그에 해당하는 게시글 리스트 가져오기
 		List<Post> post_list = postService.searchBest20();
-
 		post_list = returnPost(post_list);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
@@ -345,10 +375,7 @@ public class PostController {
 	// 해시태그에 해당하는 Comment 리스트 조회(함수)
 	@ApiOperation(value = "hashtag에 해당하는 Comment 조회")
 	public List<Comment> searchCommentByHash(String hashtag) throws Exception {
-		
 		List<Comment> comments = commentService.joinPost(hashtag);
-
-		//return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 		return comments;
 	}
 
@@ -378,7 +405,7 @@ public class PostController {
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
 		
-		if(comment.getId() == jwtId) {
+		if(comment.getUser().getId() == jwtId) {
 			commentService.update(comment);
 			return handleSuccess("댓글 수정 완료");
 		} else {

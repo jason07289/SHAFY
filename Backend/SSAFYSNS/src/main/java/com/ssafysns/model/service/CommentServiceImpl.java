@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	public boolean delete(String jwtId, int no) {
 		
-		String id = commentRepository.findById(no).get().getId();
+		String id = commentRepository.findById(no).get().getUser().getId();
 		
 		if(id == jwtId) {
 			try {
@@ -91,17 +91,17 @@ public class CommentServiceImpl implements CommentService {
 		}
 		return false;		
 	}
-
+ 
 	@Override
 	public Comment search(String id) {
 		return null;
 	}
 
 	@Override
-	public List<Comment> searchPno(int no) {
+	public List<Comment> searchPno(int pno) {
 		List<Comment> comments = null;
 		try {
-			comments = commentRepository.findByPno(no);
+			comments = commentRepository.findByPno(pno);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

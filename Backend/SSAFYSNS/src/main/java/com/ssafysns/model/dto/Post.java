@@ -1,18 +1,17 @@
 package com.ssafysns.model.dto;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,6 +20,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,6 +40,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class)
 @Table(name = "post")
 public class Post {
 	@Id
@@ -77,14 +81,14 @@ public class Post {
 	private boolean like_check;
 
 	// 외래키 설정
-	@ManyToOne
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_board_id"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_board_id"))
 	private User user;
 	
 	@OneToMany(mappedBy="post")
 	private List<Comment> comment;
 	
 	@OneToMany(mappedBy="post")
-	private List<Likes> like;
+	private List<PostLikes> postlike;
 	
 }

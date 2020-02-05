@@ -20,7 +20,7 @@ public interface PostService {
 	
 	public List<Post> searchAllFollowList(List<Integer> pno_list); // [뉴스피드] follow하는 모든 게시글 리스트 가져오기
 	
-	public List<Integer> searchPnoList(String hashtag); //[tab] hashtag를 가지는 pno 리스트로 불러오기
+	public List<Integer> searchPnoByHash(String hashtag); //[tab] hashtag를 가지는 pno 리스트로 불러오기
 	
 	public List<Post> search(String hashtag);	//[tab] hashtag를 가지는 [tab] 리스트 불러오기
 	

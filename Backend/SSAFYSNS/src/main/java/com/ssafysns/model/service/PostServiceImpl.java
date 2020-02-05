@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
 			throw new PostException("pno에 해당하는 게시글 정보를 불러올 수 없습니다.");
 		}
 		
-		if(post.getId() == id) {
+		if(post.getUser().getId() == id) {
 			try {
 				postRepository.updateDeleted(pno);
 			} catch (Exception e) {
@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Boolean update(String id, Post post) {
 		
-		if(post.getId() == id) {
+		if(post.getUser().getId() == id) {
 			try {
 				postRepository.save(post);
 			} catch (Exception e) {
@@ -145,7 +145,7 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public List<Integer> searchPnoList(String hashtag) {
+	public List<Integer> searchPnoByHash(String hashtag) {
 		System.out.println("==============Pno List 출력==============");
 		List<Integer> pno_list = null;		
 		try {

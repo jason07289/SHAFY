@@ -15,19 +15,29 @@ import com.ssafysns.model.dto.Likes;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Integer>{
 
+	// 댓글 좋아요 취소
 	@Modifying
 	@Query("delete from likes l where l.id=:id and l.pno=:pno and l.cno=:cno")
 	void deleteLikes(@Param("id") String id, @Param("pno") int pno, @Param("cno") int cno);
 
-	// 내가 누른 모든 게시글 + 댓글의 좋아요를 게시글 번호 리스트(pno)로 가져오기
-	@Query("select l.pno from likes l where l.id=:id")
+	// 게시글 좋아요 취소
+	@Modifying
+	@Query("delete from post_likes pl where pl.user.id=:id and pl.post.pno=:pno")
+	void deleteLikes(@Param("id") String id, @Param("pno") int pno); 
+
+	// 내가 누른 모든 게시글 좋아요를 게시글 번호 리스트(pno)로 가져오기
+	@Query("select pl.post.pno from post_likes pl where pl.user.id=:id")
 	List<Integer> searchPnoById(@Param("id") String id);
 	
-	// 내가 누른 모든 게시글 + 댓글의 좋아요를 댓글 번호 리스트(cno)로 가져오기
+	// 내가 누른 모든 댓글의 좋아요를 댓글 번호 리스트(cno)로 가져오기
 	@Query("select l.cno from likes l where l.id=:id")
 	List<Integer> searchCnoById(@Param("id") String id);
 
 	// pno게시글의 댓글들이 내가 좋아요 누른건지 안누른건지 판별해서 boolean 리스트로 반환
 	@Query(value = "select case when c.cno in :cno_list then 'true' else 'false' end from comment c where c.pno = :pno", nativeQuery = true)
-	List<Boolean> checkLikeTest(@Param("cno_list") List<Integer> cno_list, @Param("pno") int pno);
+	List<Boolean> checkLikeComment(@Param("cno_list") List<Integer> cno_list, @Param("pno") int pno);
+
+	@Query(value = "select case when p.pno in :my_like_post then 'true' else 'false' end from Post p where p.pno in :follow_list")
+	List<Boolean> checkLikePost(@Param("my_like_post") List<Integer> my_like_post, @Param("follow_list") List<Integer> follow_list);
+
 }
