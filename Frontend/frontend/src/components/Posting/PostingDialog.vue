@@ -14,7 +14,7 @@
 <!-- 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
 <v-card-text class="py-0">
   <v-chip-group
-        v-model="selection"
+        v-model="tagGroup"
         multiple=true 
         active-class="blue darken-1 white--text"
         column
@@ -22,10 +22,8 @@
         <v-chip
           v-for="(tag, i) in Tags"
           :key="i"
-          @click.stop="clickTag(tag)"
-          active="isSelected(tag)"
           class="mr-2"
-          
+          @click.stop="clickTag(tag)"
         >
           #{{ tag }}
         </v-chip>
@@ -60,7 +58,7 @@
       return {
         dialogm1: '',
         dialog: false,
-        selectedTag:['2기'],
+        selectedTag:[],
         content: '',
         //tags:[], /* keyword:'태그명', selected:false */
         presets:[{
@@ -83,17 +81,6 @@
 
     computed: {
       Tags () {
-          /*
-        if (!this.tags) return []
-
-        const keywords = []
-
-        for (const tags of this.searching) {
-          keywords.push(tags)
-        }
-        return keywords
-        */
-
         if(!this.content) return []
 
         const tags = []
@@ -114,42 +101,34 @@
 
         return tags
       },
-      isSelected(tag) {
-        for(const sel in this.selectedTag){
-          if(tag == sel){
-            //선택한 적 있는 경우
-            // return "blue darken-1 white--text"
-            return true;
-          }
-        }
-        //선택한 적 없는 경우
-        // return ""
-        return false
-      },
 
     },
 
     methods: {
-      
+      printTag(){
+        console.log(this.selectedTag)
+      },
       clickTag(tag){
-        //이미 선택된 태그인 경우
-        console.log(tag)
-        // if(this.isSelected(tag)!=""){
-        if(this.isSelected(tag)){
-          var i=0;
-          for(const sel in this.selectedTag){
-            if(sel == tag){
-              this.selectedTag.slice(i,1)
-              return
-            }
-            i++
+        
+        var now;
+        for(var i=0; i<this.selectedTag.length;i++){
+          now = this.selectedTag[i]
+          if(now == tag){
+            console.log("들어오긴햇어")
+            this.selectedTag.splice(i,1);
+            this.printTag()
+            return
           }
-        }else{
-          //아닌 경우
-          this.selectedTag.push(tag)
+            console.log("sel:"+now+", i:"+i+", length:"+this.selectedTag.length)
+          
         }
+        this.selectedTag.push(tag)
+        this.printTag()
+        return
 
       }
+
+
     },
   }
 </script>
