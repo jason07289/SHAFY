@@ -22,7 +22,6 @@ export default {
   created(){
     this.$store.dispatch('post/getAllPosts')
   }
-  
 }
 </script>
 

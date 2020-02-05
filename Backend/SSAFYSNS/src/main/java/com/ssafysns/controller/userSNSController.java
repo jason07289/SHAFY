@@ -1,5 +1,7 @@
 package com.ssafysns.controller;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserForSNS;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.UserSNSService;
-import com.ssafysns.util.KakaoAPI;
-import com.ssafysns.util.NaverAPI;
+import com.ssafysns.snsapi.GithubAPI;
+import com.ssafysns.snsapi.GoogleAPI;
+import com.ssafysns.snsapi.KakaoAPI;
+import com.ssafysns.snsapi.NaverAPI;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +46,8 @@ public class userSNSController {
 	private NaverAPI naver;
 	
 	@Autowired
-	private JwtService jwtService;
+	private GithubAPI github;
+	
 		
     @RequestMapping(value="/kakao/")
     public String index() {
@@ -87,14 +91,11 @@ public class userSNSController {
 			
 			return handleSuccess("가입 성공");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return handleFail("가입 실패", HttpStatus.OK);
 		}
 		
 	}
-	
-	
 	
 	
     @RequestMapping(value="/KakaoLogin")
@@ -105,17 +106,17 @@ public class userSNSController {
         System.out.println("login Controller : " + userInfo);
         System.out.println("====================login=====================");
         //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
-        if (userInfo.get("email") != null) {
-            session.setAttribute("userId", userInfo.get("email"));
+        if (userInfo.get("snsid") != null) {
+            session.setAttribute("userId", userInfo.get("snsid"));
             session.setAttribute("access_Token", access_Token);
         }
         
-        String email = userInfo.get("email").toString();
-        System.out.println(userInfo.get("email").toString());
+        String snsid = userInfo.get("snsid").toString();
+        System.out.println(userInfo.get("snsid").toString());
         System.out.println(userInfo.get("nickname").toString());
         
         try {
-			Object valueForReturn = userSNSService.SNSLogin(email, "kakao");
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
 			
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
@@ -126,7 +127,6 @@ public class userSNSController {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
 		}
@@ -143,17 +143,17 @@ public class userSNSController {
         System.out.println("login Controller : " + userInfo);
         System.out.println("====================login=====================");
         //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
-        if (userInfo.get("email") != null) {
-            session.setAttribute("userId", userInfo.get("email"));
+        if (userInfo.get("snsid") != null) {
+            session.setAttribute("userId", userInfo.get("snsid"));
             session.setAttribute("access_Token", access_Token);
         }
         
-        String email = userInfo.get("email").toString();
-        System.out.println(userInfo.get("email").toString());
+        String snsid = userInfo.get("snsid").toString();
+        System.out.println(userInfo.get("snsid").toString());
         System.out.println(userInfo.get("nickname").toString());
         
         try {
-			Object valueForReturn = userSNSService.SNSLogin(email, "naver");
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "naver");
 			
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
@@ -164,9 +164,96 @@ public class userSNSController {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
 		}
-    }    
+    }
+    
+    
+    @RequestMapping(value="GithubLogin")
+    public ResponseEntity<Map<String, Object>> glogin(@RequestParam("code") String code, HttpSession session) {
+    	System.out.println("====================login=====================");
+        String access_Token = github.getAccessToken(code);
+        HashMap<String, Object> userInfo = github.getUserInfo(access_Token);
+        System.out.println("getUserInfo 완료");
+        System.out.println("login Controller : " + userInfo);
+        System.out.println("====================login=====================");
+        //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+        if (userInfo.get("snsid") != null) {
+            session.setAttribute("userId", userInfo.get("snsid"));
+            session.setAttribute("access_Token", access_Token);
+        }
+        
+        String snsid = userInfo.get("snsid").toString();
+        System.out.println(userInfo.get("snsid").toString());
+        System.out.println(userInfo.get("nickname").toString());
+        
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "github");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
+    }
+    
+    @Autowired
+    JwtService jwtService;
+    
+    @Autowired
+    GoogleAPI google;
+    
+    
+    @RequestMapping(value="GoogleLogin")
+    public ResponseEntity<Map<String, Object>> gologin(@RequestParam("code") String code, HttpSession session) {
+    	System.out.println("====================login=====================");
+        String access_Token = google.getAccessToken(code);
+        HashMap<String, Object> userInfo=null;
+		userInfo = google.getUserInfo(access_Token);
+
+//		try {
+//			userInfo = google.getUserInfo(access_Token);
+//		} catch (GeneralSecurityException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+        System.out.println("getUserInfo 완료");
+        System.out.println("login Controller : " + userInfo);
+        System.out.println("====================login=====================");
+        //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+        if (userInfo.get("snsid") != null) {
+            session.setAttribute("userId", userInfo.get("snsid"));
+            session.setAttribute("access_Token", access_Token);
+        }
+        
+        String snsid = userInfo.get("snsid").toString();
+        System.out.println(userInfo.get("snsid").toString());
+        
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "google");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
+    }
+//    GoogleLogin
+    
 }

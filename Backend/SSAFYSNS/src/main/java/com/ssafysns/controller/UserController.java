@@ -28,8 +28,8 @@ import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserForChangePW;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.UserService;
-import com.ssafysns.util.KakaoAPI;
-import com.ssafysns.util.NaverAPI;
+import com.ssafysns.snsapi.KakaoAPI;
+import com.ssafysns.snsapi.NaverAPI;
 
 //import com.ssafysns.model.service.UserService;
 

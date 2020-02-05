@@ -5,7 +5,6 @@
             <v-card-title  class="headline"  style="text-align:center;align:center;width:100%;" >#{{hashtagName}}</v-card-title>
         </v-card-actions>
         <v-card-actions>
-
           <v-btn
             style="width:100%;"
             color="green darken-1"

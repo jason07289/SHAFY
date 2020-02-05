@@ -1,4 +1,4 @@
-package com.ssafysns.util;
+package com.ssafysns.snsapi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,12 +16,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
  
 @Service
-public class NaverAPI {
+public class KakaoAPI {
     
     public String getAccessToken (String authorize_code) {
         String access_Token = "";
         String refresh_Token = "";
-        String reqURL = "https://nid.naver.com/oauth2.0/token";
+        String reqURL = "https://kauth.kakao.com/oauth/token";
         
         try {
             URL url = new URL(reqURL);
@@ -35,10 +35,8 @@ public class NaverAPI {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=MyOzYfN5jsCLdO3clqvX");
-            //vi2Dtr5QUP
-            sb.append("&client_secret=vi2Dtr5QUP");
-            sb.append("&redirect_uri=http://localhost:8080/NaverLogin");
+            sb.append("&client_id=61371210ed3f2e84bea6f3de4869f97f");
+            sb.append("&redirect_uri=http://localhost:8080/KakaoLogin");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -81,7 +79,7 @@ public class NaverAPI {
         
         //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<>();
-        String reqURL = "https://openapi.naver.com/v1/nid/me";
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -105,19 +103,15 @@ public class NaverAPI {
             
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
-            System.out.println(1);
-            JsonObject properties = element.getAsJsonObject().get("response").getAsJsonObject();
-            System.out.println(2);
-//            JsonObject naver_account = element.getAsJsonObject().get("naver_account").getAsJsonObject();
-            System.out.println(3);
+            
+            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
             
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            System.out.println(4);
-            String email = properties.getAsJsonObject().get("email").getAsString();
-            System.out.println(5);
+            String email = kakao_account.getAsJsonObject().get("email").getAsString();
             
             userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
+            userInfo.put("snsid", email);
             
         } catch (IOException e) {
             // TODO Auto-generated catch block
