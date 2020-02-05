@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional
-	public String delete(String id, int pno) {
+	public Boolean delete(String id, int pno) {
 		Post post = null;
 		
 		try {
@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
 			throw new PostException("pno에 해당하는 게시글 정보를 불러올 수 없습니다.");
 		}
 		
-		if(post.getId() == id) {
+		if(post.getUser().getId() == id) {
 			try {
 				postRepository.updateDeleted(pno);
 			} catch (Exception e) {
@@ -54,17 +54,17 @@ public class PostServiceImpl implements PostService {
 				throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
 			}
 		} else { // 작성자와 로그인 유저정보가 다를 경우
-			throw new PostException("게시글 수정 권한이 없습니다.");
+			return false;
 		}
 		
-		return null;
+		return true;
 	}
 
 	//게시글 수정버튼	
 	@Override
-	public String update(String id, Post post) {
+	public Boolean update(String id, Post post) {
 		
-		if(post.getId() == id) {
+		if(post.getUser().getId() == id) {
 			try {
 				postRepository.save(post);
 			} catch (Exception e) {
@@ -72,10 +72,11 @@ public class PostServiceImpl implements PostService {
 				throw new PostException("게시물 수정 중 오류가 발생했습니다.");
 			}
 		} else {
-			throw new PostException("게시글 수정 권한이 없습니다.");
+			System.out.println("게시글 수정 권한이 없습니다.");
+			return false;
 		}
 		
-		return null;
+		return true;
 	}
 
 	// 모든 Post 조회
@@ -115,12 +116,12 @@ public class PostServiceImpl implements PostService {
 	 * ID 체크***
 	 * 뉴스피드
 	 */
-	// Follow 하는 pno 리스트 가져오기
+	// Follow 하는 Hashtag를 포함한 게시글 리스트 가져오기
 	@Override
 	public List<Integer> followHashPno(String id) {
 		List<Integer> all_hash_pno_list = null;
 		try {
-			all_hash_pno_list  = postRepository.followHashPno(id);
+			all_hash_pno_list  = postRepository.followHashPnoById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -143,9 +144,8 @@ public class PostServiceImpl implements PostService {
 		return posts;
 	}
 	
-	//[Tab] 탭 해시태그로 Pno 리스트 가져오기
 	@Override
-	public List<Integer> searchPostNo(String hashtag) {
+	public List<Integer> searchPnoByHash(String hashtag) {
 		System.out.println("==============Pno List 출력==============");
 		List<Integer> pno_list = null;		
 		try {
@@ -167,6 +167,19 @@ public class PostServiceImpl implements PostService {
 			e.printStackTrace();
 		}
 		
+		return posts;
+	}
+
+	// Likes가 베스트 20인 애들만 출력
+	@Override
+	public List<Post> searchBest20() {
+		List<Post> posts = null;
+		try {
+			posts = postRepository.findAll();
+			posts = posts.subList(0, Integer.min(posts.size(), 20));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return posts;
 	}
 
