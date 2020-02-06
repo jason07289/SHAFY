@@ -18,20 +18,12 @@
 			<img width="223" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/>
 		</a>
 		<br>
-        <a href="https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://localhost:8080/GithubLogin&response_type=code">
-			<button>깃허브 로그인</button>
+        <a href="https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://13.209.18.252:8080/GithubLogin&response_type=code">
+			<button>깃허브 로그인</button>  
 		</a>
 		
 		<br>
 		<a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:8080/GoogleLogin&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com">
-		로그인</a>
-		
-		
-  
-
-    
- 
-
-
-</body>                                                                                                                                                                                                                ㅠㅠ
+		구글 로그인</a>
+</body>                                                                                                                                                                                                                
 </html>
