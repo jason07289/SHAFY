@@ -1,6 +1,5 @@
 package com.ssafysns.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,21 +9,17 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
-import com.ssafysns.repository.CommentRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -43,7 +38,7 @@ public class LikesController {
 	@Autowired
 	JwtService jwtService;
 	
-	String jwtId = "kimssafy";
+	String jwtId = "forB@gmail.com";
 	
 	/**
 	 * Likes CRUD
@@ -57,9 +52,10 @@ public class LikesController {
 		 */
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
-		
-		PostLikes likes = new PostLikes(jwtId, pno);
-//		likesService.insert(v);
+		System.out.println("게시글 좋아요 누르기_ id: "+jwtId+", pno: "+pno);
+		PostLikes post_likes = new PostLikes(jwtId, pno);
+		System.out.println("#_" + post_likes);
+		likesService.insert(post_likes);
 		return handleSuccess("게시글 좋아요를 눌렀습니다");
 	}
 	
@@ -78,30 +74,6 @@ public class LikesController {
 		return handleSuccess("댓글 좋아요를 눌렀습니다");
 	}
 	
-	// 댓글 좋아요 취소
-	@ApiOperation(value = "댓글 좋아요 취소")
-	@DeleteMapping("cancel/{pno}/{cno}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable int pno, @PathVariable int cno) throws Exception {
-		/**
-		 * 좋아요를 눌렀던 사람만 가능
-		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-		
-		likesService.delete(jwtId, pno, cno);
-		return handleSuccess("댓글 좋아요 취소 완료");
-	}
-	
-	// 게시글 좋아요 취소
-	@ApiOperation(value = "게시글 좋아요 취소")
-	@DeleteMapping("cancel/{pno}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable int pno) throws Exception {
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-		
-		likesService.delete(jwtId, pno);
-		return handleSuccess("게시글 좋아요 취소 완료");
-	}
 	
 	// (하나의 게시글)해당 게시글의 좋아요 목록 가져오기 - PostController
 	// (뉴스피드) 여러개의 게시글 좋아요 목록 가져오기 - PostController
@@ -116,7 +88,6 @@ public class LikesController {
 		
 		return new ResponseEntity<List<Integer>>(likes, HttpStatus.OK);
 	}
-	
 	
 	
 	/**

@@ -15,20 +15,14 @@ import com.ssafysns.model.dto.Likes;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Integer>{
 
+	@Query("select l from likes l where l.id=:id and l.cno=:cno")
+	Likes checkLikes(@Param("id") String id, @Param("cno") int cno);
+	
 	// 댓글 좋아요 취소
 	@Modifying
 	@Query("delete from likes l where l.id=:id and l.pno=:pno and l.cno=:cno")
 	void deleteLikes(@Param("id") String id, @Param("pno") int pno, @Param("cno") int cno);
 
-	// 게시글 좋아요 취소
-	@Modifying
-	@Query("delete from post_likes pl where pl.user.id=:id and pl.post.pno=:pno")
-	void deleteLikes(@Param("id") String id, @Param("pno") int pno); 
-
-	// 내가 누른 모든 게시글 좋아요를 게시글 번호 리스트(pno)로 가져오기
-	@Query("select pl.post.pno from post_likes pl where pl.user.id=:id")
-	List<Integer> searchPnoById(@Param("id") String id);
-	
 	// 내가 누른 모든 댓글의 좋아요를 댓글 번호 리스트(cno)로 가져오기
 	@Query("select l.cno from likes l where l.id=:id")
 	List<Integer> searchCnoById(@Param("id") String id);
