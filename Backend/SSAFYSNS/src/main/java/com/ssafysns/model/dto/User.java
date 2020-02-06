@@ -4,15 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -102,8 +97,7 @@ public class User {
 	private String id;
 
 //	@NotNull 이걸로도 낫 널 지정 가능 이렇게 하면 자바상에서도 에러를 잡아줘서 더 좋긴함
-	@Column(length = 20, unique = true)
-	private String token;
+
 
 //@ToString.Exclude tostring메서드 제외도 가능 @EqualsAndHashCode.Exclude 마찬가지
 	@Column(length = 20, nullable = false)
@@ -112,9 +106,7 @@ public class User {
 
 	@Column(length = 200)
 	private String password;
-	
-	@Column(length = 100)
-	private String provider;
+
 //	@Getter
 //	@Setter(AccessLevel.PROTECTED) 이런식으로 속성별 제한을 걸수도 있는듯...
 	@Column(length = 20, nullable = false)
@@ -128,7 +120,7 @@ public class User {
 	 */
 	private Date birth;// Temporal 어노테이션 쓸때는 꼭 java.util.date를 쓰도록 하자
 
-	@Column(length = 20, unique = true)
+	@Column(length = 20, unique = true, nullable=false)
 	private String nickname;
 
 	@Column(length = 20, nullable = false)
@@ -164,7 +156,7 @@ public class User {
 	@Column(length=10)
 	private Integer approval;
 	
-	@Column(nullable = false, columnDefinition = "int default 0")
+//	@Column(nullable = false, columnDefinition = "int default 0")
 	// 알람 발생 여부 0: false, 1: true
 	private int alarm;
 

@@ -13,6 +13,8 @@ public interface CommentService {
 	public boolean  delete(String jwtId, int no);
 	public Comment search(String id);
 	public List<Comment> searchPno(int pno);//해당 게시글 댓글 조회
+	public List<Integer> searchCnoByPno(int pno); //해당 게시글 댓글번호 조회
+	
 	public List<Comment> searchId(String id);	//회원별 댓글 조회
 	public List<Comment> searchAllCommenetList(List<Integer> list);
 }

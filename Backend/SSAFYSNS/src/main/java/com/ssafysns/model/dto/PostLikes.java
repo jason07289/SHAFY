@@ -25,43 +25,34 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity(name = "likes")
-public class Likes {
+@Entity(name = "post_likes")
+public class PostLikes { 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY로 해야 Auto Increment
 	@Column(nullable = false, unique = true)
 	private int no;
 
-	@Column(nullable = false)
-	private int pno;
-	
-	@Column(nullable = false)		// 댓글이 아닌 게시글 좋아요일 경우 cno = -1로 처리 
-	private Integer cno;
-
-	@Column(nullable = false, length = 30)
-	private String id;
+//	@Column(nullable = false) 
+//	private int pno;
+////
+//	@Column(nullable = false, length = 30)
+//	private String id;
 
 	 // 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_pno"))
+	@JoinColumn(name = "pno", referencedColumnName="pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_postlikes_pno"))
 	private Post post;
 
-	// 외래키 설정
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_cno"))
-	private Comment comment;
-
 
 	// 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_id"))
+	@JoinColumn(name = "id", referencedColumnName="id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_postlikes_id"))
 	private User user;
 	
-	public Likes(String id, int pno, int cno) {
-		this.id = id;
-		this.pno = pno;
-		this.cno = cno;
+	public PostLikes(String id, int pno) {
+		this.getUser().setId(id);
+		this.getPost().setPno(pno);
 	}
 
 }
