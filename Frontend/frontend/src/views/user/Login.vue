@@ -1,151 +1,76 @@
-
 <template>
-    <div class="user" id="login" >
-        <div class="wrapC">
-            <h1 >로그인을 하고 나면 <br>좋은 일만 있을 거예요.</h1>
-
-
-            <div class="input-with-label">
-                <input v-model="email" v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
-                       @keyup.enter="login"
-                       id="email" placeholder="이메일을 입력하세요."
-                       type="text"/>
-                <label for="email">이메일</label>
-                <div class="error-text" v-if="error.email">
-                    {{error.email}}
-                </div>
+    <v-app id="inspire">
+    <v-card class="mx-auto"
+    max-width="344"
+    outlined>
+        <v-img
+        src="https://gitlab.com/Yoowoobin/img_tmp_wb/-/raw/master/Free_imgURL/%EC%83%A4%ED%94%BC%EB%A1%9C%EA%B3%A02.png">
+        </v-img>
+        <div class="mx-3 mt-3">
+        <v-form v-model="valid">
+            <v-text-field
+            v-model="email"
+            :rules="emailRules"
+            placeholder="E-mail"
+            outlined
+            ></v-text-field>
+            <v-text-field
+            v-model="password"
+            :rules="passwordRules"
+            :counter="20"
+            :type="show1 ? 'text' : 'password'"
+            placeholder="비밀번호"
+            outlined
+            ></v-text-field>
+            <div class="text-center">
+              <v-btn 
+              block
+              class="primary"
+              @click="login()">
+              로그인
+              </v-btn>
             </div>
-
-            <div class="input-with-label">
-                <input v-model="password" type="password"
-                       v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
-                       id="password"
-                       @keyup.enter="login"
-                       placeholder="비밀번호를 입력하세요."/>
-                <label for="password">비밀번호</label>
-                <div class="error-text" v-if="error.password">
-                    {{error.password}}
-
-                </div>
-            </div>
-            <button class="btn btn--back btn--login" v-on:click="login" :disabled="!isSubmit"
-                    :class="{disabled : !isSubmit}">
-                로그인
-
-            </button>
-
-            </div>
-            <div class="add-option">
-                <div class="text">
-                    <p>혹시</p>
-                    <div class="bar"></div>
-                </div>
-                <div class="wrap">
-                    <p>비밀번호를 잊으셨나요?</p>
-                    <router-link v-bind:to="{name:'FindPassword'}" class="btn--text">비밀번호 찾기</router-link>
-                </div>
-                <div class="wrap">
-                    <p>아직 회원이 아니신가요?</p>
-                    <router-link v-bind:to="{name:'Join'}" class="btn--text">가입하기</router-link>
-                </div>
-            </div>
-        </div>
+        </v-form>
+        <hr class="my-3">
+      </div>
+      <div style="text-align:right;padding-right:23px;">
+        <router-link v-bind:to="{name:'FindPassword'}" class="text-center" >아이디를 잊으셨나요?</router-link><br>
+        <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link>
+      </div>
+    </v-card>
+    </v-app>
 </template>
 
 <script>
  /* eslint-disable no-unused-vars */
-    import PV from 'password-validator'
-    import * as EmailValidator from 'email-validator'
-    import UserApi from '../../apis/UserApi'
-    import { mapGetters, mapState } from 'vuex'
+import UserApi from '../../apis/UserApi'
+import { mapGetters, mapState, mapActions } from 'vuex'
 
-    export default {
-        created(){
-            this.component = this;
-
-
-            this.passwordSchema
-                .is().min(8)
-                .is().max(100)
-                .has().digits()
-                .has().letters();
-        },
-        watch: {
-            password: function (v) {
-                this.checkForm();
-            },
-            email: function (v) {
-                this.checkForm();
-            },
-        },
-        methods: {
-            checkForm(){
-                if (this.email.length >= 0 && !EmailValidator.validate(this.email))
-                    this.error.email = "이메일 형식이 아닙니다."
-                else this.error.email = false;
-
-                if (this.password.length >= 0 && !this.passwordSchema.validate(this.password))
-                    this.error.password = '영문,숫자 포함 8 자리이상이어야 합니다.'
-                else
-                    this.error.password = false;
-
-
-                let isSubmit = true;
-                Object.values(this.error).map(v => {
-                    if (v) isSubmit = false;
-                })
-                this.isSubmit = isSubmit;
-
-            
-            }
-            , login(){
-                if (this.isSubmit) {
-                    let data = {
-                        id: this.email,
-                        password: this.password
-                    }
-
-                    //요청 후에는 버튼 비활성화
-                    this.isSubmit = false;
-
-                    UserApi.requestLogin(data,res=>{
-                        // console.log('1',res.data)
-                       // 로그인 성공시
-                       if (res.data.state === "ok"){
-                            // console.log('2',res.data.state)
-                            this.$store.dispatch('user/login', res.data)
-                            .then(()=>this.$router.replace({name: 'Home'}))
-                        }
-                         else{
-                           //실패 한 이유 알람으로 주기
-                           alert(res.data)
-                       }
-                        //요청이 끝나면 버튼 활성화
-                        this.isSubmit = true;
-                    },error=>{ 
-                        //요청이 끝나면 버튼 활성화
-                        this.isSubmit = true;
-                    })
-
-                }
-            }
-        },
-        data: () => {
-            return {
-                email: '',
-                password: '',
-                passwordSchema: new PV(),
-                error: {
-                    email: false,
-                    passowrd: false,
-                },
-                isSubmit: false,
-                component: this
-            }
-        }
-
+export default {
+  data: ()=>{
+    return {
+      show1: false,
+      valid: false,
+      email:'',
+      emailRules:[
+        v => !!v || '이메일을 입력해주세요.',
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 형식을 지켜주세요'
+      ],
+      password: '',
+      passwordRules:[
+        v => !!v || '비밀번호를 입력해주세요',
+        v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+      ]
     }
-
+  },
+  methods:{
+    ...mapActions({
+      loginSubmit:'user/login',
+      pushToLogin:'user/pushToLogin'
+    }),
+    async login(){
+      this.loginSubmit({'id':this.email, 'password': this.password})
+   }
+  }
+}
 </script>
-
-
