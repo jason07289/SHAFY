@@ -2,14 +2,35 @@
   <div>
     <h1>SNS 로그인 하는중입니다...</h1>
     <h1>{{ this.$route.query }}</h1>
+    <h1>{{ this.$route.params }}</h1>
   </div>
 </template>
 
 <script>
+ /* eslint-disable no-unused-vars */
+import SNSApi from '../../apis/SNSApi'
 export default {
-  created(){
-    console.log(this.$route.query)
-    
+  data(){
+    return{
+      link : `request${this.$route.params}Login`,
+      params : {
+        code: this.$route.query
+      }
+    }
+  },
+  mounted(){
+    SNSApi.link(params, 
+    res=>{
+      if (res.data.state === 'ok'){
+        // 회원가입 페이지로 
+        this.$route.push({name:'Join'})
+      }else{
+        alert(`${red.data} 오류 발생`)
+        // 실패 한 이유 띄우고 로그인 페이지로 
+      }
+    },err=>{
+      console.log(err)
+    })    
   }
 }
 </script>

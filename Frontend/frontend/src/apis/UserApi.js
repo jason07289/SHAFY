@@ -5,8 +5,8 @@
 const axios = require('axios').default
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
-const hosturl = 'http://13.209.18.252:8080'
-// const hosturl = 'http://70.12.246.122:8080'
+// const hosturl = 'http://13.209.18.252:8080'
+const hosturl = 'http://70.12.246.122:8080'
 const appname = '/user'
 
  /* eslint-disable no-unused-vars */
