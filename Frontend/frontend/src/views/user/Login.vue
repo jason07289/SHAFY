@@ -36,6 +36,11 @@
       <div style="text-align:right;padding-right:23px;">
         <router-link v-bind:to="{name:'FindPassword'}" class="text-center" >아이디를 잊으셨나요?</router-link><br>
         <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link>
+        <a href="https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://13.209.18.252:8080/GithubLogin&response_type=code">
+			<button>깃허브 로그인</button>
+		</a>
+    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://70.12.246.122:8080/GoogleLogin&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com">
+		구글 로그인</a>
       </div>
     </v-card>
     </v-app>
@@ -49,6 +54,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   data: ()=>{
     return {
+      // naverlink = "https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://13.209.18.252:8080/GithubLogin&response_type=code",
       show1: false,
       valid: false,
       email:'',
