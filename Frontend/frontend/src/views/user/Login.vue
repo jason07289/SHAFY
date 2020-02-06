@@ -80,7 +80,7 @@ export default {
       this.loginSubmit({'id':this.email, 'password': this.password})
    },
    Github(){
-     axios.get('https://github.com/login/oauth/authorize?client_id=37260ef4113a421086a6')
+     axios.get('https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489')
    }
   }
 }
