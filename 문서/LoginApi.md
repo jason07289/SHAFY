@@ -144,3 +144,92 @@ https://antdev.tistory.com/36
 - 본 프로젝트에서는 email, 혹은 sns id 밖에 쓰지 않지만 확장성을 고려해 map 형태로 사용자 정보를 받았다.
 
 ### database와의 연동
+
+- 소셜 로그인을 했을 때, 설정한 redirect url로 데이터를 보낼 수 있다.
+
+- klogin 함수
+
+- ```java
+    @RequestMapping(value="/KakaoLogin")
+    public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
+    	System.out.println("====================login=====================");
+        String access_Token = kakao.getAccessToken(code);
+        HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
+        System.out.println("login Controller : " + userInfo);
+        System.out.println("====================login=====================");
+        //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+        if (userInfo.get("snsid") != null) {
+            session.setAttribute("userId", userInfo.get("snsid"));
+            session.setAttribute("access_Token", access_Token);
+        }
+        
+        String snsid = userInfo.get("snsid").toString();
+        System.out.println(userInfo.get("snsid").toString());
+        System.out.println(userInfo.get("nickname").toString());
+        
+        try {
+			Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
+			
+			if(valueForReturn instanceof String) {
+				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+			}else if(valueForReturn instanceof Integer) {
+				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+			}else {
+				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+		}
+        
+    }
+
+- getUserInfo(소셜 로그인 토큰을 decode해서 나온 소셜 사용자 정보)를 통해 연동이 이루어진다.
+
+- 여기서 분기가 두가지로 나뉘게 된다.
+
+- 첫번째 로그인시 연동이 되있지 않음으로 소셜로그인에 대한 table을 바로 만들고 seq를 반납하게 했다.
+
+- SNSLogin 함수
+
+- ``` java
+    public Object SNSLogin(String snsid, String type)throws Exception  {//usersns를 찾고 그에 맞는 user를  반환? 아님 바로 로그인 처리까지?
+		UserSNS usns = userSNSRepository.findBySnsidAndType(snsid, type);
+		if(usns==null) {//새로운 회원 가입이 필요
+			UserSNS newUserSNS = new UserSNS();
+			newUserSNS.setSnsid(snsid);
+			newUserSNS.setType(type);
+			userSNSRepository.save(newUserSNS);
+			UserSNS find = userSNSRepository.findBySnsidAndType(snsid, type);
+			Integer seq = find.getSeq();
+			return seq;//key값 seq
+		}else {// 연동되어있는 id와 닉네임을 불러와서 토큰에 담아주고 반납?
+			
+			UserSNS find = userSNSRepository.findBySnsidAndType(snsid, type);
+			String id =find.getId();
+			User findUser = userRepository.getOne(id);
+			
+			return jwtService.create(findUser.getId(), findUser.getNickname(),findUser.getAuth());
+			//key값 토큰 컨트롤러에서 핸들러에 담음되겄다...
+		}
+	}
+
+- seq가 나오면 기존 db에 있는 아이디에 연동을 할지 새로 가입을 할지 정할 수 있다.
+- ![image](https://user-images.githubusercontent.com/38865267/73898299-4a949080-48cc-11ea-9b9c-31d1aeac93b2.png)
+
+- 코드예제는 카카오지만 네이버로 연동 테스트를 실행해 보았다.
+
+- user table
+
+- ![image](https://user-images.githubusercontent.com/38865267/73898599-45841100-48cd-11ea-82e1-a2b54253aa21.png)
+
+- user_sns table
+
+- ![image](https://user-images.githubusercontent.com/38865267/73898566-21c0cb00-48cd-11ea-8fda-fba333311e70.png)
+
+- 연동이 된 후에는 SNSLogin에서 else로 가게 되므로 소셜 로그인 -> 본 서비스 DB에 있는 아이디로 연동해서 로그인이 가능하며 jwt 토큰을 발급해준다.
+
+- ![image](https://user-images.githubusercontent.com/38865267/73898920-4f5a4400-48ce-11ea-8f21-5a26981a5e87.png)
+
+- ![image](https://user-images.githubusercontent.com/38865267/73898949-64cf6e00-48ce-11ea-9796-28367925a57b.png)
