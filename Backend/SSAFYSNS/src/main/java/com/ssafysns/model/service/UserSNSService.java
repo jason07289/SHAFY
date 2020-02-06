@@ -7,4 +7,6 @@ public interface UserSNSService {
 	
 	public boolean signUpWithSeq(UserForSNS userForSNS) throws Exception ;
 	
+	public boolean IntegrateWithId(UserForSNS userForSNS) throws Exception;
+	
 }

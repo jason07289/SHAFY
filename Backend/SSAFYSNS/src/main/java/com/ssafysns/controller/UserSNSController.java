@@ -97,6 +97,19 @@ public class UserSNSController {
 		
 	}
 	
+	@ApiOperation("sns로그인 후 db에 있는 기존의 id와 연동/ 연동후 테스트도 가능할듯~")
+	@PostMapping("/user/IntegrateWithId")
+	public ResponseEntity<Map<String, Object>> IntegrateWithId(@RequestBody UserForSNS userForSNS){
+		
+		try {
+			userSNSService.IntegrateWithId(userForSNS);
+			return handleSuccess("연동 성공");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return handleFail("연동 실패", HttpStatus.OK);
+		}
+		
+	}
 	
     @RequestMapping(value="/KakaoLogin")
     public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
