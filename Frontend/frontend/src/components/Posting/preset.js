@@ -1,4 +1,5 @@
-export default [{
+export default [
+  {
     keyword:'#2기',
     values:['2기']
   }, 
@@ -9,4 +10,5 @@ export default [{
   {
     keyword:'#카페',
     values:['바나프레소','커피','카페']
-  }]
+  },
+]

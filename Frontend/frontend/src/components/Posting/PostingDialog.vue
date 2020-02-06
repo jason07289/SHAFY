@@ -12,7 +12,10 @@
         <v-divider></v-divider>
 
 <!-- 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-<v-card-text class="py-0">
+<v-card-text  class="py-0"
+              style="margin-top:10px;"
+>
+  <span class="subheading" style="padding-left:10px;">#HashTags</span>
   <v-chip-group
         v-model="tags"
         multiple=true 
@@ -23,7 +26,7 @@
           v-for="(tag, i) in Tags"
           :key="i"
           class="mr-2"
-          @click.stop="clickTag(tag)"
+          @click="clickTag(tag)"
         >
           {{ tag }}
         </v-chip>
@@ -44,8 +47,10 @@
 <!-- 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="dialog = false">태그 생성</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">close</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">Photo</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">Done</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -64,9 +69,6 @@ import presetData from './preset'
         //tags:[], /* keyword:'태그명', selected:false */
         presets:presetData,
         tagGroup:[],
-
-
-
       }
       
     },
