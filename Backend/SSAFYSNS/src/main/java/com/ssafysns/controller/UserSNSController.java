@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,22 +113,12 @@ public class UserSNSController {
 		}
 		
 	}
-	
-	@ApiOperation("github 버튼")
-	@GetMapping("user/githubButton")
-	public ModelAndView githubButton() {
-		
-		ModelAndView mav = new ModelAndView("https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://13.209.18.252:8080/GithubLogin&response_type=code");
-		
-		return mav;
-		
-	}
-	
+
 	
 //  @RequestMapping(value="/KakaoLogin")
     @ApiOperation("KakaoLogin 버튼")
-   	@GetMapping("KakaoLogin")
-    public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
+   	@GetMapping("/userSNS/KakaoLogin/{code}")
+    public ResponseEntity<Map<String, Object>> klogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = kakao.getAccessToken(code);
         HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
@@ -162,8 +153,9 @@ public class UserSNSController {
     }
     
     
-    @RequestMapping(value="NaverLogin")
-    public ResponseEntity<Map<String, Object>> nlogin(@RequestParam("code") String code, HttpSession session) {
+    @ApiOperation("NaverLogin 버튼")
+   	@GetMapping("/userSNS/NaverLogin/{code}")
+    public ResponseEntity<Map<String, Object>> nlogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = naver.getAccessToken(code);
         HashMap<String, Object> userInfo = naver.getUserInfo(access_Token);
@@ -200,8 +192,8 @@ public class UserSNSController {
     
 //    @RequestMapping(value="GithubLogin")
     @ApiOperation("github 연동")
-	@GetMapping("GithubLogin")
-    public ResponseEntity<Map<String, Object>> glogin(@RequestParam("code") String code, HttpSession session) {
+	@GetMapping("/userSNS/GithubLogin/")
+    public ResponseEntity<Map<String, Object>> glogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = github.getAccessToken(code);
         HashMap<String, Object> userInfo = github.getUserInfo(access_Token);
@@ -242,8 +234,10 @@ public class UserSNSController {
     GoogleAPI google;
     
     
-    @RequestMapping(value="GoogleLogin")
-    public ResponseEntity<Map<String, Object>> gologin(@RequestParam("code") String code, HttpSession session) {
+    
+    @ApiOperation("GoogleLogin 버튼")
+   	@GetMapping("/userSNS/GoogleLogin/{code}")
+    public ResponseEntity<Map<String, Object>> gologin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = google.getAccessToken(code);
         HashMap<String, Object> userInfo=null;
@@ -284,6 +278,166 @@ public class UserSNSController {
 			return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
 		}
     }
-//    GoogleLogin
     
+////  @RequestMapping(value="/KakaoLogin")
+//    @ApiOperation("KakaoLogin 버튼")
+//    @GetMapping("KakaoLogin")
+//    public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
+//    	System.out.println("====================login=====================");
+//    	String access_Token = kakao.getAccessToken(code);
+//    	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
+//    	System.out.println("login Controller : " + userInfo);
+//    	System.out.println("====================login=====================");
+//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+//    	if (userInfo.get("snsid") != null) {
+//    		session.setAttribute("userId", userInfo.get("snsid"));
+//    		session.setAttribute("access_Token", access_Token);
+//    	}
+//    	
+//    	String snsid = userInfo.get("snsid").toString();
+//    	System.out.println(userInfo.get("snsid").toString());
+//    	System.out.println(userInfo.get("nickname").toString());
+//    	
+//    	try {
+//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
+//    		
+//    		if(valueForReturn instanceof String) {
+//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+//    		}else if(valueForReturn instanceof Integer) {
+//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+//    		}else {
+//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+//    	}
+//    	
+//    }
+//    
+//    
+//    @RequestMapping(value="NaverLogin")
+//    public ResponseEntity<Map<String, Object>> nlogin(@RequestParam("code") String code, HttpSession session) {
+//    	System.out.println("====================login=====================");
+//    	String access_Token = naver.getAccessToken(code);
+//    	HashMap<String, Object> userInfo = naver.getUserInfo(access_Token);
+//    	System.out.println("getUserInfo 완료");
+//    	System.out.println("login Controller : " + userInfo);
+//    	System.out.println("====================login=====================");
+//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+//    	if (userInfo.get("snsid") != null) {
+//    		session.setAttribute("userId", userInfo.get("snsid"));
+//    		session.setAttribute("access_Token", access_Token);
+//    	}
+//    	
+//    	String snsid = userInfo.get("snsid").toString();
+//    	System.out.println(userInfo.get("snsid").toString());
+//    	System.out.println(userInfo.get("nickname").toString());
+//    	
+//    	try {
+//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "naver");
+//    		
+//    		if(valueForReturn instanceof String) {
+//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+//    		}else if(valueForReturn instanceof Integer) {
+//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+//    		}else {
+//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+//    	}
+//    }
+//    
+//    
+////    @RequestMapping(value="GithubLogin")
+//    @ApiOperation("github 연동")
+//    @GetMapping("GithubLogin")
+//    public ResponseEntity<Map<String, Object>> glogin(@RequestParam("code") String code, HttpSession session) {
+//    	System.out.println("====================login=====================");
+//    	String access_Token = github.getAccessToken(code);
+//    	HashMap<String, Object> userInfo = github.getUserInfo(access_Token);
+//    	System.out.println("getUserInfo 완료");
+//    	System.out.println("login Controller : " + userInfo);
+//    	System.out.println("====================login=====================");
+//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+//    	if (userInfo.get("snsid") != null) {
+//    		session.setAttribute("userId", userInfo.get("snsid"));
+//    		session.setAttribute("access_Token", access_Token);
+//    	}
+//    	
+//    	String snsid = userInfo.get("snsid").toString();
+//    	System.out.println(userInfo.get("snsid").toString());
+//    	System.out.println(userInfo.get("nickname").toString());
+//    	
+//    	try {
+//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "github");
+//    		
+//    		if(valueForReturn instanceof String) {
+//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+//    		}else if(valueForReturn instanceof Integer) {
+//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+//    		}else {
+//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+//    	}
+//    }
+//    
+//    @Autowired
+//    JwtService jwtService;
+//    
+//    @Autowired
+//    GoogleAPI google;
+//    
+//    
+//    @RequestMapping(value="GoogleLogin")
+//    public ResponseEntity<Map<String, Object>> gologin(@RequestParam("code") String code, HttpSession session) {
+//    	System.out.println("====================login=====================");
+//    	String access_Token = google.getAccessToken(code);
+//    	HashMap<String, Object> userInfo=null;
+//    	userInfo = google.getUserInfo(access_Token);
+//    	
+////		try {
+////			userInfo = google.getUserInfo(access_Token);
+////		} catch (GeneralSecurityException e) {
+////			e.printStackTrace();
+////		} catch (IOException e) {
+////			e.printStackTrace();
+////		}
+//    	System.out.println("getUserInfo 완료");
+//    	System.out.println("login Controller : " + userInfo);
+//    	System.out.println("====================login=====================");
+//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+//    	if (userInfo.get("snsid") != null) {
+//    		session.setAttribute("userId", userInfo.get("snsid"));
+//    		session.setAttribute("access_Token", access_Token);
+//    	}
+//    	
+//    	String snsid = userInfo.get("snsid").toString();
+//    	System.out.println(userInfo.get("snsid").toString());
+//    	
+//    	try {
+//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "google");
+//    		
+//    		if(valueForReturn instanceof String) {
+//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+//    		}else if(valueForReturn instanceof Integer) {
+//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+//    		}else {
+//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+//    	}
+//    }
+//    
 }
