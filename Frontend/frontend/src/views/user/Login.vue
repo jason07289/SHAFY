@@ -1,5 +1,6 @@
 <template>
     <v-app id="inspire">
+      <tmp></tmp>
     <v-card class="mx-auto"
     max-width="344"
     outlined>
@@ -45,8 +46,12 @@
  /* eslint-disable no-unused-vars */
 import UserApi from '../../apis/UserApi'
 import { mapGetters, mapState, mapActions } from 'vuex'
+import tmp from '../home/SetTags'
 
 export default {
+  components: {
+    tmp,
+  },
   data: ()=>{
     return {
       show1: false,
@@ -59,7 +64,7 @@ export default {
       password: '',
       passwordRules:[
         v => !!v || '비밀번호를 입력해주세요',
-        v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+        //v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
       ]
     }
   },

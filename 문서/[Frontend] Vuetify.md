@@ -9,6 +9,7 @@ $ vue add vuetify
 $ npm install vuetify --save
 $ npm install sass sass-loader fibers deepmerge -D
 $ npm install material-design-icons-iconfont --save
+$ npm install --save vuedraggable
 ```
 
 #### 적용

@@ -18,7 +18,7 @@
   <span class="subheading" style="padding-left:10px;">#HashTags</span>
   <v-chip-group
         v-model="tags"
-        multiple=true 
+        multiple 
         active-class="blue darken-1 white--text"
         column
       >
@@ -66,7 +66,7 @@ import presetData from './preset'
         dialog: false,
         selectedTag:[],
         content: '',
-        //tags:[], /* keyword:'태그명', selected:false */
+        tags:[], /* keyword:'태그명', selected:false */
         presets:presetData,
         tagGroup:[],
       }

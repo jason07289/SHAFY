@@ -1,3 +1,4 @@
+//이건 나중에 팀원 다같이 1시간정도 만들기
 export default [
   {
     keyword:'#2기',
