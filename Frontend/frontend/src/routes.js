@@ -7,6 +7,7 @@ import Home from './views/home/Home.vue'
 import MyPage from './views/home/MyPage.vue'
 import Posting from './views/home/Posting.vue'
 import SetTags from './views/home/SetTags.vue'
+import SNSLogin from './views/user/SNSLogin.vue'
 
  /* eslint-disable no-unused-vars */
  //라우터가드(인증정보 체크해서 로그인페이지로 보내기)
@@ -47,6 +48,11 @@ export default [
         path : '/user/join',
         name : 'Join',
         component : Join
+    },
+    {
+        path : '/login/github',
+        name : 'SNSLogin',
+        component : SNSLogin
     },
     {
         path : '/user/join/:type',
