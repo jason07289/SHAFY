@@ -21,11 +21,13 @@ import com.ssafysns.model.service.JwtService;
  
 @Service
 public class GoogleAPI {
-	 @Autowired
-     JwtService jwtService;
+	 
+	 
+	 static final String redirectUrl="http://70.12.246.84:8080/login/google";
+//	 static final String redirectUrl="http://70.12.246.84:8080/login/google";
+
     public String getAccessToken (String authorize_code) {
         String id_token = "";
-        String refresh_Token = "";
         String reqURL = "https://accounts.google.com/o/oauth2/token";
         
 
@@ -44,7 +46,8 @@ public class GoogleAPI {
             sb.append("&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat");
             //vi2Dtr5QUP
             sb.append("&client_secret=ktdrKY1-7vtqHkGPZy_WLeqX");
-            sb.append("&redirect_uri=http://localhost:8080/GoogleLogin");
+            sb.append("&redirect_uri=");
+            sb.append(redirectUrl);
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -81,85 +84,7 @@ public class GoogleAPI {
         
         return id_token;
     }
-    
-//    public HashMap<String, Object> getUserInfo (String id_token) throws GeneralSecurityException, IOException {
-//        System.out.println();
-//        System.out.println();
-//        
-//        String clientID = "434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com";
-//        
-//        HttpTransport transport = new NetHttpTransport();
-//        JacksonFactory jsonFactory = new JacksonFactory();
-//        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-//        		.setAudience(Collections.singletonList(clientID)).build();
-//        
-//        GoogleIdToken idToken =verifier.verify(id_token);
-//        if(idToken != null) {
-//        	Payload payload = idToken.getPayload();
-//        	String userId = payload.getSubject();
-//        	System.out.println("User ID: " + userId);
-//
-//        	  // Get profile information from payload
-////        	String email = payload.getEmail();
-////        	boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-//        }else {
-//        	System.out.println("Invalid ID token. ");
-//        }
-//        
-//        HashMap<String, Object> userInfo = new HashMap<>();
-//        System.out.println("get userInfo id token: "+id_token);
-//        String[] strs = id_token.split(" ");
-//        System.out.println(Arrays.toString(strs));
-//        
-//        return userInfo;
-//    }
-    
-//    public HashMap<String, Object> getUserInfo (String access_Token) {
-//        
-//        //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
-//        HashMap<String, Object> userInfo = new HashMap<>();
-//        String reqURL = "https://accounts.google.com/o/oauth2/auth";
-//        try {
-//            URL url = new URL(reqURL);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("POST");
-//            
-//            //    요청에 필요한 Header에 포함될 내용
-////            conn.setRequestProperty("Content_Length","length");
-//            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
-//            
-//            int responseCode = conn.getResponseCode();
-//            System.out.println("responseCode : " + responseCode);
-//            
-//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            
-//            String line = "";
-//            String result = "";
-//            
-//            while ((line = br.readLine()) != null) {
-//                result += line;
-//            }
-//            System.out.println("response body : " + result);
-//            
-//            JsonParser parser = new JsonParser();
-//            JsonElement element = parser.parse(result);
-//            
-//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-//            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-//            
-//            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-//            String email = kakao_account.getAsJsonObject().get("email").getAsString();
-//            
-//            userInfo.put("nickname", nickname);
-//            userInfo.put("snsid", email);
-//            
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        
-//        return userInfo;
-//    }
+
     public HashMap<String, Object> getUserInfo (String access_Token) {
         //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
         HashMap<String, Object> userInfo = new HashMap<>();
