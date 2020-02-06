@@ -39,7 +39,7 @@ public class GithubAPI {
             sb.append("&client_id=1f5e75a219bc30381489");
             //vi2Dtr5QUP
             sb.append("&client_secret=1c00701bc5fd1901b70e779f3600aeff0b87cfd6");
-            sb.append("&redirect_uri=http://localhost:8080/GithubLogin");
+            sb.append("&redirect_uri=http://13.209.18.252:8080/GithubLogin");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();

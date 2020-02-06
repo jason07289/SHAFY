@@ -13,11 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ssafysns.model.dto.UserForSNS;
 import com.ssafysns.model.service.JwtService;
@@ -111,7 +113,20 @@ public class UserSNSController {
 		
 	}
 	
-    @RequestMapping(value="/KakaoLogin")
+	@ApiOperation("github 버튼")
+	@GetMapping("user/githubButton")
+	public ModelAndView githubButton() {
+		
+		ModelAndView mav = new ModelAndView("https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=http://13.209.18.252:8080/GithubLogin&response_type=code");
+		
+		return mav;
+		
+	}
+	
+	
+//  @RequestMapping(value="/KakaoLogin")
+    @ApiOperation("KakaoLogin 버튼")
+   	@GetMapping("KakaoLogin")
     public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = kakao.getAccessToken(code);
@@ -183,7 +198,9 @@ public class UserSNSController {
     }
     
     
-    @RequestMapping(value="GithubLogin")
+//    @RequestMapping(value="GithubLogin")
+    @ApiOperation("github 연동")
+	@GetMapping("GithubLogin")
     public ResponseEntity<Map<String, Object>> glogin(@RequestParam("code") String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = github.getAccessToken(code);
