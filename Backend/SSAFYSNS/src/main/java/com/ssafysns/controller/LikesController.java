@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Likes;
+import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
+import com.ssafysns.model.service.PostService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -77,17 +79,6 @@ public class LikesController {
 	
 	// (하나의 게시글)해당 게시글의 좋아요 목록 가져오기 - PostController
 	// (뉴스피드) 여러개의 게시글 좋아요 목록 가져오기 - PostController
-	
-	
-	// 내가 좋아요 누른 게시글 @번호 가져오기
-	@ApiOperation(value="내가 좋아요 누른 글 가져오기")
-	@PostMapping("/me")
-	public ResponseEntity<List<Integer>> searchById() throws Exception {
-		String id = "kimssafy";
-		List<Integer> likes = likesService.searchById(id); //좋아요 누른 글 리스트 리스트 반환
-		
-		return new ResponseEntity<List<Integer>>(likes, HttpStatus.OK);
-	}
 	
 	
 	/**

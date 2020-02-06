@@ -89,6 +89,27 @@ public class PostServiceImpl implements PostService {
 			throw new PostException("게시물 목록 검색 중 오류가 발생했습니다.");
 		}
 	}
+	
+	// 최근 한 달 Post 조회
+	@Override
+	public List<Post> searchAMonth() {
+		try {
+			return postRepository.findAMonth();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("최근 한달 간 게시물 목록 검색 중 오류가 발생했습니다.");
+		}
+	}
+	// 최근 한 달 Post Pno 조회
+	@Override
+	public List<Integer> searchPnoAMonth() {
+		try {
+			return postRepository.findPnoAMonth();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("최근 한달 간 게시물 번호 목록 검색 중 오류가 발생했습니다.");
+		}
+	}
 
 	// pno로 Post 조회
 	@Override

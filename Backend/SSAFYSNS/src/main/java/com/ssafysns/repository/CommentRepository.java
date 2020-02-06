@@ -13,30 +13,30 @@ import com.ssafysns.model.dto.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-	@Query("select c from comment c where c.user.id=:id")
+	@Query("select c from comment c where c.id=:id and c.deleted=0")
 	List<Comment> findById(String id);
 
 	@Modifying
-	@Query("update comment c set c.deleted = 1 where c.cno=:cno")
+	@Query("update comment c set c.deleted = 1 where c.cno=:cno and c.deleted=0")
 	void updateDeleted(@Param("cno") int cno); 
 
-	@Query("select c from comment c where c.post.pno = :pno")
+	@Query("select c from comment c where c.pno=:pno and c.deleted=0")
 	List<Comment> findByPno(@Param("pno") int pno);
 	
-	@Query("select c from comment c, Post p where c.post.pno = p.pno and p.hashtag like concat('%', :hashtag, '%')")
+	@Query("select c from comment c, Post p where c.pno = p.pno and p.hashtag like concat('%', :hashtag, '%') and c.deleted=0")
 	List<Comment> joinCustom(@Param("hashtag") String hashtag);
 	
 //	@Query("select c from comment c, (select p from Post p where p.hashtag like concat('%', :hashtag, '%')) as post where c.pno = post.pno")
 //	List<Comment> joinCustomComment(@Param("hashtag") String hashtag);
 	
-	@Query("select c from comment c where c.post.pno in (select post.pno from Post post where post.hashtag like concat('%', :hashtag, '%'))")
+	@Query("select c from comment c where c.pno in (select post.pno from Post post where post.hashtag like concat('%', :hashtag, '%')) and c.deleted=0")
 	List<Comment> joinCustomComment(@Param("hashtag") String hashtag);	
 	
-	@Query("select c from comment c where c.post.pno in :plist")
+	@Query("select c from comment c where c.pno in :plist and c.deleted=0")
 	List<Comment> customAllPno(@Param("plist") List<Integer> plist);
 
 	// 얘는 어따쓰는거?????
-	@Query("select c from comment c where c.post.pno = :pno and c.cno = :cno")
+	@Query("select c from comment c where c.pno = :pno and c.cno=:cno and c.deleted=0")
 	Comment searchByPnoCno(@Param("pno") int pno, @Param("cno") int cno);
 
 	/*
@@ -49,8 +49,11 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	void likesDownComment(@Param("cno") int cno);
 	*/
 
-	@Query("select c.cno from comment c where c.post.pno = :pno")
+	@Query("select c.cno from comment c where c.pno=:pno and c.deleted=0")
 	List<Integer> searchCnoByPno(@Param("pno") int pno);
+
+	@Query("select c from comment c where c.pno=:pno and c.cno=:cno and c.deleted=0")
+	Comment checkComment(@Param("pno") int pno, @Param("cno") Integer cno);
 
 
 }
