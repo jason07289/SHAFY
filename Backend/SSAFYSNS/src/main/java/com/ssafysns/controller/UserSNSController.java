@@ -51,6 +51,10 @@ public class UserSNSController {
 	@Autowired
 	private GithubAPI github;
 	
+    @Autowired
+    private GoogleAPI google;
+    
+	
 //		
 //    @RequestMapping(value="/kakao/")
 //    public String index() {
@@ -117,7 +121,7 @@ public class UserSNSController {
 	
 //  @RequestMapping(value="/KakaoLogin")
     @ApiOperation("KakaoLogin 버튼")
-   	@GetMapping("/userSNS/KakaoLogin/{code}")
+   	@GetMapping("/userSNS/kakaoLogin/{code}")
     public ResponseEntity<Map<String, Object>> klogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = kakao.getAccessToken(code);
@@ -154,7 +158,7 @@ public class UserSNSController {
     
     
     @ApiOperation("NaverLogin 버튼")
-   	@GetMapping("/userSNS/NaverLogin/{code}")
+   	@GetMapping("/userSNS/naverLogin/{code}")
     public ResponseEntity<Map<String, Object>> nlogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = naver.getAccessToken(code);
@@ -192,7 +196,7 @@ public class UserSNSController {
     
 //    @RequestMapping(value="GithubLogin")
     @ApiOperation("github 연동")
-	@GetMapping("/userSNS/GithubLogin/{code}")
+	@GetMapping("/userSNS/githubLogin/{code}")
     public ResponseEntity<Map<String, Object>> glogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = github.getAccessToken(code);
@@ -227,16 +231,11 @@ public class UserSNSController {
 		}
     }
     
-    @Autowired
-    JwtService jwtService;
-    
-    @Autowired
-    GoogleAPI google;
-    
+
     
     
     @ApiOperation("GoogleLogin 버튼")
-   	@GetMapping("/userSNS/GoogleLogin/{code}")
+   	@GetMapping("/userSNS/googleLogin/{code}")
     public ResponseEntity<Map<String, Object>> gologin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = google.getAccessToken(code);
