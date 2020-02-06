@@ -51,13 +51,13 @@ public class UserSNSController {
 	@Autowired
 	private GithubAPI github;
 	
-		
-    @RequestMapping(value="/kakao/")
-    public String index() {
-        
-        return "index";
-    }
-    
+//		
+//    @RequestMapping(value="/kakao/")
+//    public String index() {
+//        
+//        return "index";
+//    }
+//    
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
 		return handleFail(e.getMessage(), HttpStatus.OK);
@@ -192,7 +192,7 @@ public class UserSNSController {
     
 //    @RequestMapping(value="GithubLogin")
     @ApiOperation("github 연동")
-	@GetMapping("/userSNS/GithubLogin/")
+	@GetMapping("/userSNS/GithubLogin/{code}")
     public ResponseEntity<Map<String, Object>> glogin(@PathVariable String code, HttpSession session) {
     	System.out.println("====================login=====================");
         String access_Token = github.getAccessToken(code);
