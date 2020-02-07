@@ -7,6 +7,7 @@ const state = {
   JWT : localStorage.getItem('JWT'), // 새로고침해도 토큰값유지하기위함
   userInfo : {}, // user 프로필 사진, 이름, 닉네임 등 
   config : {},
+  seq: 0,
 }
 
 // getters
@@ -57,6 +58,15 @@ const actions = {
     },error=>{
       console.log(error)
     })
+  },
+  SNSLogin({ commit }, data){
+    // 데이터가 토큰인 경우 loginSuccess로 
+    if (data.token === undefined){
+      commit('loginSuccess',data.JWT)
+    }else{
+      commit('setSNSseq', data.seq)
+    } 
+    // 데이터가 시퀀스인 경우 시퀀스 값 저장하고 라우팅해주기
   }
 }
 // mutations
@@ -79,6 +89,11 @@ const mutations = {
   setUserInfo(state, data){
     state.userInfo = data
     console.log('성공', state.userInfo)
+  },
+  setSNSseq(state, data){
+    state.seq = data
+    console.log('시퀀스 저장', data)
+    router.push({name:'Join'})
   }
 }
 
