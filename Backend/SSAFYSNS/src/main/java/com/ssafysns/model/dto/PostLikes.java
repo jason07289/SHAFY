@@ -33,11 +33,11 @@ public class PostLikes {
 	@Column(nullable = false, unique = true)
 	private int no;
 
-//	@Column(nullable = false) 
-//	private int pno;
+	@Column(nullable = false) 
+	private int pno;
 ////
-//	@Column(nullable = false, length = 30)
-//	private String id;
+	@Column(nullable = false, length = 30)
+	private String id;
 
 	 // 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -51,8 +51,10 @@ public class PostLikes {
 	private User user;
 	
 	public PostLikes(String id, int pno) {
-		this.getUser().setId(id);
-		this.getPost().setPno(pno);
+//		this.getUser().setId(id);
+//		this.getPost().setPno(pno);
+		this.setId(id);
+		this.setPno(pno);
 	}
 
 }
