@@ -19,7 +19,8 @@ import com.google.gson.JsonParser;
 @Service
 public class GithubAPI {
 //    static final String redirectUrl="http://localhost:8080/GithubLogin";
-    static final String redirectUrl="http://70.12.246.84:8080/login/github";
+//	static final String redirectUrl="http://70.12.246.84:8080/login/github";
+    static final String redirectUrl="http://i02a305.p.ssafy.io/login/github";
     public String getAccessToken (String authorize_code) {
         String access_Token = "";
         String reqURL = "https://github.com/login/oauth/access_token";
