@@ -60,6 +60,15 @@ public class Notification {
 	// 알람 확인여부 0: false, 1: true
 	private int checked;
 
+	public Notification( String id, Date datetime, int pno, int state, int checked) {
+		super();
+		this.id = id;
+		this.datetime = datetime;
+		this.pno = pno;
+		this.state = state;
+		this.checked = checked;
+	}
+
 	// 외래키 설정
 	@ManyToOne
 	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_notification_id"))

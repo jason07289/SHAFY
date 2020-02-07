@@ -44,8 +44,9 @@ public class NotificationController {
 	 * 
 	 * 2. POST 메서드 안에서
 	 * 
-	 * ``` Notification notification = new Notification(id, new Date(), pno/cno,
-	 * 1좋아요/2댓글/3대댓글, 0); notificationService.insert(notification); ```
+	 * Notification 발생시킴
+	 * Notification notification = new Notification(likes.getId(), new Date(), cno OR pno, 좋아요: 1 OR 댓글: 2 OR 대댓글: 3, 0); 
+	 * notificationService.insert(notification);
 	 */
 
 	// 1. checked = true이고
