@@ -33,7 +33,8 @@ const actions = {
         console.log('after commit', state.JWT)
       
       }else{
-        alert(res.data)
+        console.log(res)
+        // alert(res.data)
       }
     },error=>{
       console.log('로그인에러',error)
@@ -60,11 +61,12 @@ const actions = {
     })
   },
   SNSLogin({ commit }, data){
+    console.log(data)
     // 데이터가 토큰인 경우 loginSuccess로 
     if (data.token === undefined){
-      commit('loginSuccess',data.JWT)
-    }else{
       commit('setSNSseq', data.seq)
+    }else{
+      commit('loginSuccess',data.JWT)
     } 
     // 데이터가 시퀀스인 경우 시퀀스 값 저장하고 라우팅해주기
   }
