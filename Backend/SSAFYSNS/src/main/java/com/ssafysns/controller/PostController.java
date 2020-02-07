@@ -214,13 +214,13 @@ public class PostController {
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
-		String id = post.getUser().getId();
+		String id = post.getId();
 		String hashtag = post.getHashtag();
 		
-		User user = userService.MyInfo();
-		String nickname = user.getNickname();
+//		User user = userService.MyInfo();
+//		String nickname = user.getNickname();
 		
-		post.setNickname(nickname);
+//		post.setNickname(nickname);
 		
 		/**
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
@@ -262,7 +262,7 @@ public class PostController {
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
 		
-		if(post.getUser().getId() == jwtId) {
+		if(post.getId() == jwtId) {
 			postService.update(jwtId, post);
 			return handleSuccess("게시글 수정 완료");
 		} else {
@@ -424,7 +424,7 @@ public class PostController {
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
 		
-		if(comment.getUser().getId() == jwtId) {
+		if(comment.getId() == jwtId) {
 			commentService.update(comment);
 			return handleSuccess("댓글 수정 완료");
 		} else {
