@@ -278,42 +278,42 @@ public class UserSNSController {
 		}
     }
     
-////  @RequestMapping(value="/KakaoLogin")
+  @RequestMapping(value="/KakaoLogin")
 //    @ApiOperation("KakaoLogin 버튼")
 //    @GetMapping("KakaoLogin")
-//    public ResponseEntity<Map<String, Object>> klogin(@RequestParam("code") String code, HttpSession session) {
-//    	System.out.println("====================login=====================");
-//    	String access_Token = kakao.getAccessToken(code);
-//    	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
-//    	System.out.println("login Controller : " + userInfo);
-//    	System.out.println("====================login=====================");
-//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
-//    	if (userInfo.get("snsid") != null) {
-//    		session.setAttribute("userId", userInfo.get("snsid"));
-//    		session.setAttribute("access_Token", access_Token);
-//    	}
-//    	
-//    	String snsid = userInfo.get("snsid").toString();
-//    	System.out.println(userInfo.get("snsid").toString());
-//    	System.out.println(userInfo.get("nickname").toString());
-//    	
-//    	try {
-//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
-//    		
-//    		if(valueForReturn instanceof String) {
-//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
-//    		}else if(valueForReturn instanceof Integer) {
-//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
-//    		}else {
-//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
-//    		}
-//    		
-//    	} catch (Exception e) {
-//    		e.printStackTrace();
-//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
-//    	}
-//    	
-//    }
+    public ResponseEntity<Map<String, Object>> KLocalLogin(@RequestParam("code") String code, HttpSession session) {
+    	System.out.println("====================login=====================");
+    	String access_Token = kakao.getAccessToken(code);
+    	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
+    	System.out.println("login Controller : " + userInfo);
+    	System.out.println("====================login=====================");
+    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+    	if (userInfo.get("snsid") != null) {
+    		session.setAttribute("userId", userInfo.get("snsid"));
+    		session.setAttribute("access_Token", access_Token);
+    	}
+    	
+    	String snsid = userInfo.get("snsid").toString();
+    	System.out.println(userInfo.get("snsid").toString());
+    	System.out.println(userInfo.get("nickname").toString());
+    	
+    	try {
+    		Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
+    		
+    		if(valueForReturn instanceof String) {
+    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+    		}else if(valueForReturn instanceof Integer) {
+    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+    		}else {
+    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+    		}
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+    	}
+    	
+    }
 //    
 //    
 //    @RequestMapping(value="NaverLogin")

@@ -43,7 +43,7 @@ public class UserSNS {
 	@Column(length = 50)
 	private String id;
 	
-	@ManyToOne
+	@ManyToOne  
 	@JoinColumn(name = "id", insertable = false, updatable = false,  foreignKey = @ForeignKey(name = "user_sns_id"))
 	private User user;
 }

@@ -5,6 +5,10 @@
 <html>
 <head>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	
+	<script src="https://unpkg.com/vue"></script>
+	
+	 
 <!-- 	구글 플랫폼 라이브러리-->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Insert title here</title>
@@ -25,5 +29,15 @@
 		<br>
 		<a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=http://localhost:8080/GoogleLogin&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com">
 		구글 로그인</a>
+		
+			<br>	<br>	<br>
+		
+		
+		
+		<div id="app"> {{ message }} </div>  
+		<script> var app = new Vue({ el: '#app', data: { message: '안녕하세요 Vue!' } }); </script>
+		
+		
+		
 </body>                                                                                                                                                                                                                
 </html>
