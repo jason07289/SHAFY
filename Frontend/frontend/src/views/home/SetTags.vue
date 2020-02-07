@@ -22,25 +22,42 @@
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
 <!-- 참고사이트 : https://github.com/David-Desmaisons/draggable-example -->
     <v-card-actions>
-       <div class="col-md-3">
-      <draggable class="list-group" tag="ul" 
-        v-model="list" 
-        v-bind="dragOptions" 
-        :move="onMove" 
-        :options="{animation:300, handle:'.badge'}"
-        @start="isDragging=true" 
-        @end="isDragging=false"
-      >
-        <transition-group type="transition" :name="'flip-list'">
-          <li class="list-group-item" v-for="element in list" :key="element.order">
-            <span class="badge">//{{element.order}}//</span>
-            <i :class="element.fixed? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'" @click=" element.fixed=! element.fixed" aria-hidden="true"></i>
-            {{element.name}}
-          </li>
-        </transition-group>
-      </draggable>
-    </div>
+      
+        <draggable
+          v-model="list" 
+          v-bind="dragOptions" 
+          :move="onMove" 
+          :options="{animation:300, handle:'.badge'}"
+          @start="isDragging=true" 
+          @end="isDragging=false"
+          style="width:100%;"
+        >
+        
+          <!-- <transition-group type="transition" :name="'flip-list'"> -->
+            <v-card-actions
+            v-for="(element,index) in list" 
+            :key="element.order">
+            <v-chip 
+            label=""
+            outlined=""
+            style="width:100%;align:center;"
+            >
+              <span class="badge"><v-icon class="mr-1">mdi-pound</v-icon></span>
+              
+              {{element.name}}
+              <v-spacer></v-spacer>
+              <v-icon right
+              @click="list.splice(index,1)"
+              style="position:right;"
+              >mdi-close-circle-outline</v-icon>
+            </v-chip>
+            </v-card-actions>
+          <!-- </transition-group> -->
+        </draggable>
+      
     </v-card-actions>
+
+    <!-- 배열 확인용 -->
     <v-card-actions>
      <div class="list-group col-md-3">
       <pre>{{listString}}</pre>
@@ -48,7 +65,7 @@
     </v-card-actions>
 <!-- 탭추가 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
-      <v-btn color="blue darken-1"  style="align:center;">탭추가</v-btn>
+      <v-btn @click="addTag" color="blue darken-1"  style="align:center;">탭추가</v-btn>
     </v-card-actions>
   </v-card>
   </v-app>
@@ -62,7 +79,7 @@ import draggable from "vuedraggable";
  export default {
    data: () => ({
       list: message.map((name, index) => {
-        return { name, order: index + 1, fixed: false };
+        return { name, order: index + 1 };
       }),
       editable: true,
       isDragging: false,
@@ -83,6 +100,12 @@ import draggable from "vuedraggable";
       return (
         (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
       );
+    },
+    addTag(){
+      this.list.push({
+        name: (this.list.length+1)+"탭추가",
+        order: this.list.length+1
+      })
     }
   },
   computed: {
@@ -111,18 +134,19 @@ import draggable from "vuedraggable";
   }
   }
   const message = [
-  "#점심메뉴",
-  "#서울3기",
-  "#임베디드",
-  "#2기3반5조",
-  "#흑흑",
-  "#어려워",
-  "#뷰의신",
-  "#집가고싶다"
+  "점심메뉴",
+  "서울3기",
+  "임베디드",
+  "2기3반5조",
+  "흑흑",
+  "어려워",
+  "뷰의신",
+  "집가고싶다"
 ];
 </script>
 
 <style>
+/*드래그전용 건들노노*/
 .flip-list-move {
   transition: transform 0.5s;
 }
@@ -142,4 +166,9 @@ import draggable from "vuedraggable";
 .list-group-item i {
   cursor: pointer;
 }
+
+.v-chip__content{
+  width:100%;
+}
+
 </style>
