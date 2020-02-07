@@ -1,4 +1,4 @@
- package com.ssafysns.model.dto;
+  package com.ssafysns.model.dto;
 
 import java.util.Date;
 
@@ -97,8 +97,7 @@ public class User {
 	private String id;
 
 //	@NotNull 이걸로도 낫 널 지정 가능 이렇게 하면 자바상에서도 에러를 잡아줘서 더 좋긴함
-	@Column(length = 20, unique = true)
-	private String token;
+
 
 //@ToString.Exclude tostring메서드 제외도 가능 @EqualsAndHashCode.Exclude 마찬가지
 	@Column(length = 20, nullable = false)
@@ -157,7 +156,7 @@ public class User {
 	@Column(length=10)
 	private Integer approval;
 	
-	@Column(nullable = false, columnDefinition = "int default 0")
+//	@Column(nullable = false, columnDefinition = "int default 0")
 	// 알람 발생 여부 0: false, 1: true
 	private int alarm;
 

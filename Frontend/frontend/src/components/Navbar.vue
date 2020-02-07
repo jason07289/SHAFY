@@ -7,17 +7,22 @@
     <router-link v-bind:to="{name:'SetTags'}">해시태그관리|</router-link>
     <router-link v-bind:to="{name:'Posting'}">게시글작성 | </router-link>
     <router-link v-bind:to="{name:'Login'}">로그인 |</router-link>
-    <p @click="logout">로그아웃</p>
+    <PostingDialog></PostingDialog>
+    
   </div>  
 </template>
 
 <script>
+import PostingDialog from '../components/Posting/PostingDialog'
 export default {
   name: 'Navbar',
   data:()=>{
     return{
-      component: this
+      component: this,
     }
+  },
+  components: {
+    PostingDialog,
   },
   methods:{
     logout(){
