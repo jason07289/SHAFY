@@ -2,13 +2,13 @@
   
   <div style="width:100%;">
     
-
+    <v-app>
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
     max-width="344"
     class="mx-auto"
     outlined
-    style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;"
+    style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
     >
 <!-- 타이틀 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-title>탭 관리</v-card-title>
@@ -27,7 +27,7 @@
   
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
 <!-- 참고사이트 : https://github.com/David-Desmaisons/draggable-example -->
-    <v-card-actions>
+    <!-- <v-card-actions style="padding-bottom:0px;"> -->
       
         <draggable
           v-model="list" 
@@ -42,11 +42,13 @@
           <transition-group type="transition" :name="'flip-list'">
             <v-card-actions
             v-for="(element,index) in list" 
-            :key="element.order">
+            :key="element.order"
+            style="padding:0px 16px 5px 16px;"
+            >
             <v-chip 
             label=""
             outlined=""
-            style="height:45px;width:100%;align:center;"
+            style="height:45px;width:100%;"
             >
               <span class="badge"><v-icon class="mr-1">mdi-pound</v-icon></span>
               
@@ -61,16 +63,25 @@
           </transition-group>
         </draggable>
       
-    </v-card-actions>
+    <!-- </v-card-actions> -->
 
     
 <!-- 탭추가 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
-      <v-btn @click="addTag" color="blue darken-1"  style="align:center;">탭추가</v-btn>
+      <v-chip 
+        v-if="list.length<10"
+        label=""
+        style="height:45px;width:100%;margin:0px 8px 10px 8px;"
+        @click="addTag"
+      >
+        <v-spacer></v-spacer>
+        <v-icon class="mr-1">mdi-plus</v-icon>
+        <v-spacer></v-spacer>
+      </v-chip>
     </v-card-actions>
   </v-card>
  
-
+    </v-app>
   </div>
 </template>
 
