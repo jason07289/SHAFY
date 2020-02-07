@@ -96,7 +96,7 @@ import presetData from './preset'
         //#으로 시작하는 태그가 있는지 검사
         var pattern = /#([\w|ㄱ-힣])*[^#\s]/g
         var sharps = this.content.match(pattern)
-        console.log(sharps)
+        
         if(sharps!=null&&sharps.length>0){
         tags = tags.concat(sharps)
          }
@@ -119,7 +119,7 @@ import presetData from './preset'
         for(var i=0; i<this.selectedTag.length;i++){
           now = this.selectedTag[i]
           if(now == tag){
-            console.log("들어오긴햇어")
+            //console.log("들어오긴햇어")
             this.selectedTag.splice(i,1);
             this.printTag()
             return

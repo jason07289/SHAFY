@@ -1,24 +1,24 @@
 <template>
-  <div>
+  
+  <div style="width:100%;">
+    
 
-    <v-app id="inspire">
+    <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
     max-width="344"
     class="mx-auto"
     outlined
-  >
+    style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;"
+    >
 <!-- 타이틀 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-    <h1>태그 관리</h1>
-    <v-divider class="mx-3"></v-divider>
+    <v-card-title>탭 관리</v-card-title>
+    <v-divider class="mx-0"></v-divider>
 <!-- 버튼들 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
-          <v-btn color="blue darken-1" text >전체선택</v-btn>
-          <v-btn color="blue darken-1" text >선택삭제</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text >수정완료</v-btn>
      </v-card-actions>
   
-    <v-divider class="mx-3"></v-divider>
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
 <!-- 참고사이트 : https://github.com/David-Desmaisons/draggable-example -->
     <v-card-actions>
@@ -33,14 +33,14 @@
           style="width:100%;"
         >
         
-          <!-- <transition-group type="transition" :name="'flip-list'"> -->
+          <transition-group type="transition" :name="'flip-list'">
             <v-card-actions
             v-for="(element,index) in list" 
             :key="element.order">
             <v-chip 
             label=""
             outlined=""
-            style="width:100%;align:center;"
+            style="height:45px;width:100%;align:center;"
             >
               <span class="badge"><v-icon class="mr-1">mdi-pound</v-icon></span>
               
@@ -52,23 +52,23 @@
               >mdi-close-circle-outline</v-icon>
             </v-chip>
             </v-card-actions>
-          <!-- </transition-group> -->
+          </transition-group>
         </draggable>
       
     </v-card-actions>
 
     <!-- 배열 확인용 -->
-    <v-card-actions>
+    <!-- <v-card-actions>
      <div class="list-group col-md-3">
       <pre>{{listString}}</pre>
     </div>
-    </v-card-actions>
+    </v-card-actions> -->
 <!-- 탭추가 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
       <v-btn @click="addTag" color="blue darken-1"  style="align:center;">탭추가</v-btn>
     </v-card-actions>
   </v-card>
-  </v-app>
+ 
 
   </div>
 </template>
