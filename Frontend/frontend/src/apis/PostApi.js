@@ -2,7 +2,7 @@ const axios = require('axios').default
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
 
-const hosturl = 'http://13.209.18.252:8080'
+const hosturl = 'http://i02a305.p.ssafy.io'
 const appname = '/post'
 
 /* eslint-disable no-unused-vars */

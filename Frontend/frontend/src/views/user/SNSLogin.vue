@@ -19,8 +19,9 @@ export default {
     }
   },
   mounted(){
-    console.log(this.params)
-    SNSApi.link(this.params, 
+    console.log('Loginsns',this.params)
+    consolge.log(this.link)
+    SNSApi.this.link(this.params, 
     res=>{
       if (res.data.state === 'ok'){
         // 회원가입 페이지로 
