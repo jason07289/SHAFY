@@ -23,7 +23,8 @@ import com.ssafysns.model.service.JwtService;
 public class GoogleAPI {
 	 
 	 
-	 static final String redirectUrl="http://70.12.246.84:8080/login/google";
+//	 static final String redirectUrl="http://70.12.246.84:8080/login/google";
+	 static final String redirectUrl="http://i02a305.p.ssafy.io/login/google";
 //	 static final String redirectUrl="http://70.12.246.84:8080/login/google";
 
     public String getAccessToken (String authorize_code) {
