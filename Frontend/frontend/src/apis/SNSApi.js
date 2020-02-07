@@ -28,11 +28,11 @@ const requestnaverLogin = (params, callback, errorCallback) => {
   .catch(errorCallback)
 }
 
-const UserApi = {
+const SNSApi = {
   requestgithubLogin:(data,callback,errorCallback)=>requestgithubLogin(data,callback,errorCallback),
   requestgoogleLogin:(params, callback, errorCallback) =>requestgoogleLogin(params, callback, errorCallback),
   requestkakaoLogin:(params, callback, errorCallback) =>requestkakaoLogin(params, callback, errorCallback),
   requestnaverLogin:(params, callback, errorCallback) =>requestnaverLogin(params, callback, errorCallback)
 }
 
-export default UserApi
+export default SNSApi
