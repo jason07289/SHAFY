@@ -12,14 +12,12 @@ import SNSApi from '../../apis/SNSApi'
 export default {
   data(){
     return{
-      link : `request${this.$route.params}Login`,
-      params : {
-        code: this.$route.query
-      }
+      link : this.$route.params,
+      code : this.$route.query
     }
   },
   mounted(){
-    console.log('Loginsns',this.params)
+    console.log('Loginsns',this.code)
     console.log(this.link)
     SNSApi.this.link(this.params, 
     res=>{
@@ -31,7 +29,7 @@ export default {
         // 실패 한 이유 띄우고 로그인 페이지로 
       }
     },err=>{
-      console.log(err)
+      console.log('err',err)
     })    
   }
 }
