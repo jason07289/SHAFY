@@ -9,6 +9,7 @@ $ vue add vuetify
 $ npm install vuetify --save
 $ npm install sass sass-loader fibers deepmerge -D
 $ npm install material-design-icons-iconfont --save
+$ npm install --save vuedraggable
 ```
 
 #### 적용
@@ -56,4 +57,7 @@ Vue.use(Vuetify) // Vuetify를 사용하도록 지시
 	...
 </head>
 ```
+
+참고 
+[아마존 공식문서](https://docs.aws.amazon.com/ko_kr/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
 
