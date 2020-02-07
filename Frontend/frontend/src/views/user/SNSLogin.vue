@@ -20,7 +20,7 @@ export default {
   },
   mounted(){
     console.log('Loginsns',this.params)
-    consolge.log(this.link)
+    console.log(this.link)
     SNSApi.this.link(this.params, 
     res=>{
       if (res.data.state === 'ok'){
