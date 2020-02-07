@@ -119,7 +119,6 @@ export default {
             },
             password:'',
             passwordcheck:'',
-
             email:'',
             passwordSchema: new PV(),
             error: {
