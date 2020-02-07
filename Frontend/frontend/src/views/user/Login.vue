@@ -49,7 +49,7 @@
  /* eslint-disable no-unused-vars */
 import UserApi from '../../apis/UserApi'
 import { mapActions } from 'vuex'
-const myurl = 'http://70.12.246.84'
+const myurl = 'http://70.12.246.84:8080'
 
 export default {
   data: ()=>{

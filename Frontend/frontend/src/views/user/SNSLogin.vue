@@ -19,13 +19,13 @@ export default {
     }
   },
   mounted(){
-    SNSApi.link(params, 
+    SNSApi.link(this.params, 
     res=>{
       if (res.data.state === 'ok'){
         // 회원가입 페이지로 
         this.$route.push({name:'Join'})
       }else{
-        alert(`${red.data} 오류 발생`)
+        alert(`${res.data} 오류 발생`)
         // 실패 한 이유 띄우고 로그인 페이지로 
       }
     },err=>{

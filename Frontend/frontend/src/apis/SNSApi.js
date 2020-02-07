@@ -1,6 +1,7 @@
 const axios = require('axios').default
 
-const hosturl = 'http://70.12.246.122:8080'
+// const hosturl = 'http://70.12.246.122:8080'
+const hosturl = 'http://i02a305.p.ssafy.io:8080'
 const appname = '/userSNS'
 
 const requestgithubLogin = (params, callback, errorCallback) => {
