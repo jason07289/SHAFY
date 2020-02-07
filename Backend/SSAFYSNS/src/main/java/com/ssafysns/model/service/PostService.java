@@ -16,6 +16,9 @@ public interface PostService {
 
 	public List<Post> searchAll();
 	
+	public List<Post> searchAMonth();
+	public List<Integer> searchPnoAMonth();
+	
 	public List<Integer> followHashPno(String id); // [뉴스피드] follow하는 모든 pno 리스트 가져오기
 	
 	public List<Post> searchAllFollowList(List<Integer> pno_list); // [뉴스피드] follow하는 모든 게시글 리스트 가져오기

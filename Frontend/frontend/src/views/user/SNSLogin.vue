@@ -9,31 +9,44 @@
 <script>
  /* eslint-disable no-unused-vars */
 import SNSApi from '../../apis/SNSApi'
+import { mapActions } from 'vuex'
+
 export default {
   data(){
     return{
-      link : `request${this.$route.params}Login`,
-      params : {
-        code: this.$route.query
-      }
+      todosite :this.$route.params['togosite'],
+      code : this.$route.query
     }
   },
   mounted(){
-    console.log('Loginsns',this.params)
-    consolge.log(this.link)
-    SNSApi.this.link(this.params, 
-    res=>{
-      if (res.data.state === 'ok'){
-        // 회원가입 페이지로 
-        this.$route.push({name:'Join'})
-      }else{
-        alert(`${res.data} 오류 발생`)
-        // 실패 한 이유 띄우고 로그인 페이지로 
-      }
-    },err=>{
-      console.log(err)
-    })    
+    if (this.todosite === 'github'){
+      SNSApi.github(this.code,
+      res=>{
+        if(res.data.state === 'ok'){
+            console.log('res',res.data.token)
+            // 회원가입 페이지로 
+            // // 1. res에 token 필드가 없으면 회원가입
+            if(res.data.token === undefined){
+              this.SNSLogin({seq:res.data.message})
+              // this.$router.push({name:'Join'})
+            }
+            // 2. token 값이 있다면 바로 Home 페이지로
+        }else{
+          this.SNSLogin({JWT:res.data.token})
+          console.log('소셜 로그인 성공')
+          console.log(res.data.message) 
+        }
+      },err=>{
+        console.log(err)
+      })
+    } 
+  },
+  methods:{
+    ...mapActions({
+      SNSLogin:'user/SNSLogin'
+    })
   }
+
 }
 </script>
 

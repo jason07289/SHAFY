@@ -43,8 +43,8 @@ public class Comment {
 	@Column(nullable = false, unique = true)
 	private int cno;
 //
-//	@Column(nullable = false)
-//	private int pno; 
+	@Column(nullable = false)
+	private int pno; 
 
 	@Column()
 	private int parent; 
