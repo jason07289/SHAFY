@@ -17,7 +17,9 @@ import com.google.gson.JsonParser;
  
 @Service
 public class NaverAPI {
-    
+    static final String redirectUrl="http://70.12.246.84:8080/login/naver";
+//    static final String redirectUrl="http://localhost:8080/NaverLogin";
+
     public String getAccessToken (String authorize_code) {
         String access_Token = "";
         String refresh_Token = "";
@@ -38,7 +40,8 @@ public class NaverAPI {
             sb.append("&client_id=MyOzYfN5jsCLdO3clqvX");
             //vi2Dtr5QUP
             sb.append("&client_secret=vi2Dtr5QUP");
-            sb.append("&redirect_uri=http://localhost:8080/NaverLogin");
+            sb.append("&redirect_uri=");
+            sb.append(redirectUrl);
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();

@@ -17,7 +17,9 @@ import com.google.gson.JsonParser;
  
 @Service
 public class KakaoAPI {
-    
+    static final String redirectUrl="http://70.12.246.84:8080/login/kakao";
+//    static final String redirectUrl="http://localhost:8080/KakaoLogin";
+
     public String getAccessToken (String authorize_code) {
         String access_Token = "";
         String refresh_Token = "";
@@ -36,7 +38,8 @@ public class KakaoAPI {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=61371210ed3f2e84bea6f3de4869f97f");
-            sb.append("&redirect_uri=http://localhost:8080/KakaoLogin");
+            sb.append("&redirect_uri=");
+            sb.append(redirectUrl);
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
