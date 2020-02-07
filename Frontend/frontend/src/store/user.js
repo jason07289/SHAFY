@@ -8,6 +8,8 @@ const state = {
   userInfo : {}, // user 프로필 사진, 이름, 닉네임 등 
   config : {},
   seq: 0,
+  myurl:'http://70.12.246.84:8080',
+  hosturl:'http://70.12.246.122:8080',
 }
 
 // getters
