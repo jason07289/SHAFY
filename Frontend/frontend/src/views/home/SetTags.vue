@@ -16,8 +16,14 @@
 <!-- 버튼들 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text >수정완료</v-btn>
+          <v-btn color="blue darken-1" text @click="editDone">수정완료</v-btn>
      </v-card-actions>
+          <!-- 배열 확인용 -->
+          <v-card-actions v-if="check">
+          <div class="list-group col-md-3">
+            <pre>{{listString}}</pre>
+          </div>
+          </v-card-actions>
   
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
 <!-- 참고사이트 : https://github.com/David-Desmaisons/draggable-example -->
@@ -57,12 +63,7 @@
       
     </v-card-actions>
 
-    <!-- 배열 확인용 -->
-    <!-- <v-card-actions>
-     <div class="list-group col-md-3">
-      <pre>{{listString}}</pre>
-    </div>
-    </v-card-actions> -->
+    
 <!-- 탭추가 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
       <v-btn @click="addTag" color="blue darken-1"  style="align:center;">탭추가</v-btn>
@@ -83,7 +84,8 @@ import draggable from "vuedraggable";
       }),
       editable: true,
       isDragging: false,
-      delayedDragging: false
+      delayedDragging: false,
+      check:false
    }),
    components: {
     draggable
@@ -106,6 +108,9 @@ import draggable from "vuedraggable";
         name: (this.list.length+1)+"탭추가",
         order: this.list.length+1
       })
+    },
+    editDone(){
+      this.check = true
     }
   },
   computed: {

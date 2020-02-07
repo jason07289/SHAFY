@@ -1,6 +1,5 @@
 <template>
     <v-app id="inspire">
-      <tmp></tmp>
     <v-card class="mx-auto"
     max-width="344"
     outlined>
@@ -36,7 +35,11 @@
       </div>
       <div style="text-align:right;padding-right:23px;">
         <router-link v-bind:to="{name:'FindPassword'}" class="text-center" >아이디를 잊으셨나요?</router-link><br>
-        <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link>
+        <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link><br>
+        <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a>
+        <a :href=link.google><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">구글로 로그인</a>
+        <a :href=link.kakao><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">카카오로 로그인</a>
+        <a :href=link.naver><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">네이버로 로그인</a>
       </div>
     </v-card>
     </v-app>
@@ -45,15 +48,19 @@
 <script>
  /* eslint-disable no-unused-vars */
 import UserApi from '../../apis/UserApi'
-import { mapGetters, mapState, mapActions } from 'vuex'
-import tmp from '../home/SetTags'
+import { mapActions } from 'vuex'
+const myurl = 'http://70.12.246.84:8080'
+// const myurl = 'http://i02a305.p.ssafy.io'
 
 export default {
-  components: {
-    tmp,
-  },
   data: ()=>{
     return {
+      link:{
+        github:`https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=${myurl}/login/github&response_type=code`,
+        google:`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${myurl}/login/google&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com`,
+        kakao:`https://kauth.kakao.com/oauth/authorize?client_id=61371210ed3f2e84bea6f3de4869f97f&redirect_uri=${myurl}/login/kakao&response_type=code`,
+        naver:`https://nid.naver.com/oauth2.0/authorize?client_id=MyOzYfN5jsCLdO3clqvX&redirect_uri=${myurl}/login/naver&response_type=code`,
+      },
       show1: false,
       valid: false,
       email:'',
@@ -64,7 +71,7 @@ export default {
       password: '',
       passwordRules:[
         v => !!v || '비밀번호를 입력해주세요',
-        //v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+        v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
       ]
     }
   },
@@ -73,9 +80,9 @@ export default {
       loginSubmit:'user/login',
       pushToLogin:'user/pushToLogin'
     }),
-    async login(){
+    login(){
       this.loginSubmit({'id':this.email, 'password': this.password})
-   }
+   },
   }
 }
 </script>
