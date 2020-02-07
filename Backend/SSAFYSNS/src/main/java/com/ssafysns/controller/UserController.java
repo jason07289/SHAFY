@@ -89,7 +89,7 @@ public class UserController {
 
 	
 	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), token 중복불가 - session 토큰이 들어갈 자리")
-	@PostMapping("/user/signup/")
+	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
 			if(userService.create(user)) {
