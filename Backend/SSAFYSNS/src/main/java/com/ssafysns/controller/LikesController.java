@@ -59,7 +59,7 @@ public class LikesController {
 //		String jwtId = jwt.get("userid").toString();
 		
 		PostLikes likes = new PostLikes(jwtId, pno);
-//		likesService.insert(v);
+		likesService.insert(likes);
 		return handleSuccess("게시글 좋아요를 눌렀습니다");
 	}
 	

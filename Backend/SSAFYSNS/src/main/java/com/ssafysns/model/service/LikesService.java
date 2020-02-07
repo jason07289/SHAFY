@@ -5,10 +5,13 @@ import java.util.List;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.Post;
+import com.ssafysns.model.dto.PostLikes;
 
 public interface LikesService {
 	
 	public void insert(Likes likes);
+	public void insert(PostLikes likes);
+	
 	public void delete(String id, int pno, int cno);	//댓글 좋아요 취소
 	void delete(String id, int pno);	//게시글 좋아요 취소
 	

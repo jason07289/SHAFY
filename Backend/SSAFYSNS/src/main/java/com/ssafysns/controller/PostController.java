@@ -203,14 +203,16 @@ public class PostController {
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
-		String id = post.getUser().getId();
+		System.out.println("Post 등록...");
+		String id = post.getId();
 		String hashtag = post.getHashtag();
+		System.out.println("id: "+id + ", hashtag: hashtag"+hashtag);
+//		User user = userService.MyInfo();
+//		String nickname = user.getNickname();
 		
-		User user = userService.MyInfo();
-		String nickname = user.getNickname();
+//		post.setNickname(nickname);
 		
-		post.setNickname(nickname);
-		
+		System.out.println("등록시작..");
 		/**
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
 		 */
