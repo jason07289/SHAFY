@@ -58,3 +58,6 @@ Vue.use(Vuetify) // Vuetify를 사용하도록 지시
 </head>
 ```
 
+참고 
+[아마존 공식문서](https://docs.aws.amazon.com/ko_kr/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+
