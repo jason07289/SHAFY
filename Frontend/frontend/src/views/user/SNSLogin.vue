@@ -19,6 +19,7 @@ export default {
     }
   },
   mounted(){
+    console.log(this.params)
     SNSApi.link(this.params, 
     res=>{
       if (res.data.state === 'ok'){
