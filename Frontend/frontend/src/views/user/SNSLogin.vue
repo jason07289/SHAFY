@@ -12,14 +12,13 @@ import SNSApi from '../../apis/SNSApi'
 export default {
   data(){
     return{
-      link : this.$route.params,
       code : this.$route.query
     }
   },
   mounted(){
     console.log('Loginsns',this.code)
-    console.log(this.link)
-    SNSApi.this.link(this.params, 
+    console.log(this.$route.params)
+    SNSApi.this.$route.params(this.params, 
     res=>{
       if (res.data.state === 'ok'){
         // 회원가입 페이지로 
