@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService{
 			System.out.println(user.getPassword());
 			System.out.println("gggggggggggggggggg"); 
 			user.setDeleted(0);
+			user.setCode(aes.encrypt(user.getId()));
 			System.out.println(find.isPresent());
 			if(find.isPresent()) {
 			if(find.get()!=null) {
