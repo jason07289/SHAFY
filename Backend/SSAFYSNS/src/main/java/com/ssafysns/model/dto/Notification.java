@@ -60,6 +60,7 @@ public class Notification {
 	// 알람 확인여부 0: false, 1: true
 	private int checked;
 
+	
 	public Notification( String id, Date datetime, int pno, int state, int checked) {
 		super();
 		this.id = id;
