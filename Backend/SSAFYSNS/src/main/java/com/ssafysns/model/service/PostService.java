@@ -8,9 +8,9 @@ import com.ssafysns.model.dto.Post;
 public interface PostService {
 	public void insert(String id, Post post);
 
-	public Boolean delete(String id, int pno);
+	public Boolean delete(int pno);
 
-	public Boolean update(String id, Post post);
+	public Boolean update(Post post);
 
 	public Optional<Post> search(int pno);
 

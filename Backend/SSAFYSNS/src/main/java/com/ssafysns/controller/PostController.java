@@ -253,8 +253,11 @@ public class PostController {
 		 * 작성자만 가능
 		 */
 		String jwtId = jwtService.get("userid");
-		boolean msg = postService.delete(jwtId, pno);
-		if(msg) {
+		
+		Post post = postService.search(pno).get();
+		
+		if(post.getId().equals(jwtId)) {
+			postService.delete(pno);
 			return handleSuccess("Post 삭제 완료");
 		} else {
 			return handleFail("게시글 삭제 권한이 없습니다.", HttpStatus.OK);
@@ -268,18 +271,12 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		System.out.println("포스트 수정");
-		post.setPostlike(null);
-		post.setUser(null);
-		post.setComment(null);
-		System.out.println(post.toString());
 		
 		String jwtId = jwtService.get("userid");
 		System.out.println("ID: "+jwtId+" vs "+post.getId());
 		
 		if(post.getId().equals(jwtId)) {
-			System.out.println("===수정시작====");
-			postService.update(jwtId, post);
+			postService.update(post);
 			return handleSuccess("게시글 수정 완료");
 		} else {
 			/**
