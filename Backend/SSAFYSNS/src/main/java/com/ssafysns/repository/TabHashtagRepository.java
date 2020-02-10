@@ -22,6 +22,11 @@ public interface TabHashtagRepository extends JpaRepository<TabHashtag, Integer>
 	@Query(value = "delete from tab_hashtag t where t.id = :id")
 	void deleteByUserId(@Param("id") String id);
 
+	@Modifying
+	@Transactional
+	@Query(value = "update tab_hashtag t set t.hashtag = :hashtag where t.id = :id")
+	void updateByUserId(@Param("id") String id, @Param("hashtag") String hashtag);
+
 //	@Modifying
 //	@Transactional
 //	@Query(value = "delete from tab_hashtag t where t.id = :id and t.hashtag = :hashtag")
@@ -31,5 +36,5 @@ public interface TabHashtagRepository extends JpaRepository<TabHashtag, Integer>
 //	Optional<TabHashtag> findByUserIdAndHashtag(@Param("id") String id, @Param("hashtag") String hashtag);
 
 	@Query(value = "select t from tab_hashtag t where t.id = :id")
-	TabHashtag findByUserId(@Param("id") String id);
+	Optional<TabHashtag> findByUserId(@Param("id") String id);
 }

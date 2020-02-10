@@ -1,5 +1,7 @@
 package com.ssafysns.model.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,40 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 
 	@Autowired
 	TabHashtagRepository tabHashtagRepository;
+
+	@Override
+	public void update(TabHashtag tabHashtag) {
+		try {
+			// 만약, hashtag의 길이가 0이면("") id에 해당하는 tabHashtag record를 삭제
+			if (tabHashtag.getHashtag().length() == 0) {
+				tabHashtagRepository.deleteByUserId(tabHashtag.getId());
+			}
+			// tabHashtag의 insert, delete, update가 모두 이루어짐.
+			else {
+				String id = tabHashtag.getId();
+				Optional<TabHashtag> find = tabHashtagRepository.findByUserId(id);
+				if (find.isPresent()) {
+					tabHashtagRepository.updateByUserId(id, tabHashtag.getHashtag());
+				} else {
+					tabHashtagRepository.save(tabHashtag);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("TabHashtag 수정 중 오류가 발생했습니다.");
+		}
+	}
+
+	@Override
+	public Optional<TabHashtag> searchById(String id) {
+		try {
+			return tabHashtagRepository.findByUserId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TabHashtagException("TabHashtag 조회 중 오류가 발생했습니다.");
+		}
+	}
 
 //	@Override
 //	public void insert(TabHashtag tabHashtag) {
@@ -59,23 +95,6 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 //		}
 //	}
 
-	@Override
-	public void update(TabHashtag tabHashtag) {
-		try {
-			// 만약, hashtag의 길이가 0이면("") id에 해당하는 tabHashtag record를 삭제
-			if (tabHashtag.getHashtag().length() == 0) {
-				tabHashtagRepository.deleteByUserId(tabHashtag.getId());
-			} 
-			// tabHashtag의 insert, delete, update가 모두 이루어짐.
-			else {
-				tabHashtagRepository.save(tabHashtag);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TabHashtagException("TabHashtag 수정 중 오류가 발생했습니다.");
-		}
-	}
-
 //	@Override
 //	public Optional<TabHashtag> search(int no) {
 //		try {
@@ -85,15 +104,6 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 //			throw new TabHashtagException("TabHashtag 조회 중 오류가 발생했습니다.");
 //		}
 //	}
-
-	public TabHashtag searchById(String id) {
-		try {
-			return tabHashtagRepository.findByUserId(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TabHashtagException("TabHashtag 조회 중 오류가 발생했습니다.");
-		}
-	}
 
 //	@Override
 //	public List<TabHashtag> searchAll() {
@@ -105,14 +115,14 @@ public class TabHashtagServiceImpl implements TabHashtagService {
 //		}
 //	}
 
-	@Override
-	public int count() {
-		try {
-			return (int) tabHashtagRepository.count();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TabHashtagException();
-		}
-	}
+//	@Override
+//	public int count() {
+//		try {
+//			return (int) tabHashtagRepository.count();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new TabHashtagException();
+//		}
+//	}
 
 }
