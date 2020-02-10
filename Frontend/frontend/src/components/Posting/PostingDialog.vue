@@ -1,12 +1,14 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog"  max-width="444px" height="600px">
+<v-dialog v-model="dialog"  persistent max-width="444px" height="600px">
  <!-- 버튼부분 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->     
-      <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Posting</v-btn>
-      </template>
+      <!-- <template v-slot:activator="{ on }"> -->
+        <!-- <v-btn color="primary" dark v-on="on">Posting</v-btn> -->
+      
+      <!-- </template> -->
 
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    
       <v-card>
         <v-card-title>게시글 작성</v-card-title>
         <v-divider></v-divider>
@@ -53,7 +55,7 @@
           <v-btn color="blue darken-1" text @click="dialog = false">Done</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+</v-dialog>
   </v-row>
 </template>
  
@@ -62,7 +64,6 @@ import presetData from './preset'
   export default {
     data () {
       return {
-        dialogm1: '',
         dialog: false,
         selectedTag:[],
         content: '',

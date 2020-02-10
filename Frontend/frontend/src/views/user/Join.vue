@@ -27,7 +27,8 @@ export default {
     components: {
         joinType,
     },
-    
-    
+    created(){
+        console.log(this.$store)
+    }
 }
 </script>
