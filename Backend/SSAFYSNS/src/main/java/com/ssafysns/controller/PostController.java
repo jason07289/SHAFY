@@ -76,6 +76,7 @@ public class PostController {
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
 		page = Integer.max(0, page*20-1);
+		
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
 		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
 		
