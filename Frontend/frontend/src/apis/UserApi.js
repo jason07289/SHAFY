@@ -39,7 +39,8 @@ const requestUserDelete = (data, callback, errorCallback) =>{
 }
 
 const requestSignup = (data, callback, errorCallback) => {
-    axios.post(hosturl+appname+'/signUp/', data)
+    console.log(data)
+    axios.post(hosturl+appname+'/signup', data)
     .then(callback)
     .catch(errorCallback)
 }
@@ -51,7 +52,7 @@ const requestNicknameCheck = (params, callback, errorCallback) => {
     .catch(errorCallback)
 }
 const requestFindPw = (data, callback, errorCallback) => {
-    axios.put(hosturl+appname+'/findPw', data)
+    axios.put(hosturl+appname+'/findpw', data)
     .then(callback)
     .catch(errorCallback)
 }
