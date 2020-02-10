@@ -90,24 +90,6 @@ public class LikesServiceImpl implements LikesService {
 		}
 	}
 	
-	// 댓글 likes 올리기
-	private void likesUpComment(int cno) {		
-	
-	}
-	// 댓글 likes 내리기
-	private void likesDownComment(int cno) {		
-	
-	}
-
-	// 게시글 likes 올리기
-	private void likesUpPost(int pno) {		
-
-	}
-	// 게시글 likes 내리기
-	private void likesDownPost(int pno) {		
-	
-	}
-	
 	
 	// 댓글 좋아요 취소
 	@Transactional
