@@ -48,10 +48,6 @@ export default {
     }
   },
   methods:{
-    logout(){
-      this.$store.dispatch('user/logout')
-      .then(()=>this.$router.push({name:'Login'}))
-    },
     routing(routeName){
       this.$router.push({ name: routeName})
     },

@@ -217,7 +217,6 @@ export default {
    this.setDate()
    this.setContent()
    this.makeTagList()
-
   },
   props:{
     post: {
