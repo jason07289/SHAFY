@@ -24,6 +24,7 @@ import com.ssafysns.model.service.FavoritesHashtagService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.TabHashtagService;
+import com.ssafysns.util.SSAFYCertification;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -47,6 +48,8 @@ public class HashtagController {
 	@ApiOperation(value = "모든 TabHashtag 목록 조회")
 	@GetMapping("/tabtag/list")
 	public ResponseEntity<Map<String, Object>> searchAllTabHashtag() throws Exception {
+		SSAFYCertification s = new SSAFYCertification();
+		s.runStart("lovemode1993@naver.com");
 		return handleSuccess(tabHashtagService.searchAll());
 	}
 
