@@ -48,11 +48,15 @@
 <script>
  /* eslint-disable no-unused-vars */
 import UserApi from '../../apis/UserApi'
-import { mapActions } from 'vuex'
-const myurl = 'http://70.12.246.84:8080'
-// const myurl = 'http://i02a305.p.ssafy.io'
+import { mapActions, mapState } from 'vuex'
 
+const myurl = 'http://70.12.246.84:8080'
 export default {
+  computed:{
+    ...mapState({
+      myurl:'user/myurl'
+    }),
+  },
   data: ()=>{
     return {
       link:{
@@ -83,6 +87,10 @@ export default {
     login(){
       this.loginSubmit({'id':this.email, 'password': this.password})
    },
+  },
+  created(){
+    console.log(this.$store.state)
   }
+  
 }
 </script>
