@@ -1,26 +1,23 @@
 package com.ssafysns.model.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.ssafysns.model.dto.TabHashtag;
 
 public interface TabHashtagService {
-	public void insert(TabHashtag tabHashtag);
+//	public void insert(TabHashtag tabHashtag);
+//
+//	public void delete(int no);
 
-	public void delete(int no);
+//	public void deleteById(String id);
 
-	public void deleteById(String id);
-
-	public void deleteByIdAndHashtag(String id, String hashtag);
+//	public void deleteByIdAndHashtag(String id, String hashtag);
 
 	public void update(TabHashtag tabHashtag);
 
-	public Optional<TabHashtag> search(int no);
+//	public Optional<TabHashtag> search(int no);
 
-	public List<TabHashtag> searchById(String id);
+	public TabHashtag searchById(String id);
 
-	public List<TabHashtag> searchAll();
+//	public List<TabHashtag> searchAll();
 
 	public int count();
 }

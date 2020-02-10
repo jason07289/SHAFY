@@ -44,18 +44,18 @@ public class HashtagController {
 	// ***********************************************************************************************************
 	// TabHashtag
 	// 모든 TabHashtag 조회
-	@ApiOperation(value = "모든 TabHashtag 목록 조회")
-	@GetMapping("/tabtag/list")
-	public ResponseEntity<Map<String, Object>> searchAllTabHashtag() throws Exception {
-		return handleSuccess(tabHashtagService.searchAll());
-	}
+//	@ApiOperation(value = "모든 TabHashtag 목록 조회")
+//	@GetMapping("/tabtag/list")
+//	public ResponseEntity<Map<String, Object>> searchAllTabHashtag() throws Exception {
+//		return handleSuccess(tabHashtagService.searchAll());
+//	}
 
-	// no에 해당하는 TabHashtag 조회
-	@ApiOperation(value = "no에 해당하는 TabHashtag 조회")
-	@GetMapping("/tabtag/{no}")
-	public ResponseEntity<Map<String, Object>> searchTabHashtag(@PathVariable int no) throws Exception {
-		return handleSuccess(tabHashtagService.search(no));
-	}
+//	// no에 해당하는 TabHashtag 조회
+//	@ApiOperation(value = "no에 해당하는 TabHashtag 조회")
+//	@GetMapping("/tabtag/{no}")
+//	public ResponseEntity<Map<String, Object>> searchTabHashtag(@PathVariable int no) throws Exception {
+//		return handleSuccess(tabHashtagService.search(no));
+//	}
 
 	// id에 해당하는 TabHashtag 조회
 	@ApiOperation(value = "id에 해당하는 TabHashtag 조회")
@@ -79,60 +79,60 @@ public class HashtagController {
 //		return handleSuccess("TabHashtag 등록 완료");
 //	}
 
-	// TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)
-	@ApiOperation(value = "TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
-	@PostMapping("/tabtag")
-	public ResponseEntity<Map<String, Object>> insertTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
-		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
+//	// TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)
+//	@ApiOperation(value = "TabHashtag 등록(no: Auto-increment, id: 로그인한 user의 id, hashtag: 입력 필수!!!)")
+//	@PostMapping("/tabtag")
+//	public ResponseEntity<Map<String, Object>> insertTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
+//		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
+//
+//		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
+////		Map<String, Object> uid = jwtService.get("userid");
+////		tabHashtag.setId(uid.get("userid").toString());
+//
+//		tabHashtagService.insert(tabHashtag);
+//		return handleSuccess("TabHashtag 등록 완료");
+//	}
 
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기
-//		Map<String, Object> uid = jwtService.get("userid");
-//		tabHashtag.setId(uid.get("userid").toString());
+//	// no에 해당하는 TabHashtag 삭제
+//	@ApiOperation(value = "no에 해당하는 TabHashtag 삭제")
+//	@DeleteMapping("/tabtag/{no}")
+//	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable int no) throws Exception {
+//		tabHashtagService.delete(no);
+//		return handleSuccess("TabHashtag 삭제 완료");
+//	}
 
-		tabHashtagService.insert(tabHashtag);
-		return handleSuccess("TabHashtag 등록 완료");
-	}
+//	// id에 해당하는 TabHashtag 모두 삭제
+//	@ApiOperation(value = "id에 해당하는 TabHashtag 모두 삭제")
+//	@DeleteMapping("/tabtag")
+//	public ResponseEntity<Map<String, Object>> deleteTabHashtag() throws Exception {
+//		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+////		Map<String, Object> uid = jwtService.get("userid");
+////		String id = uid.get("userid").toString();
+//
+//		// test시 직접 입력
+//		String id = "";
+//
+//		tabHashtagService.deleteById(id);
+//		return handleSuccess("TabHashtag 삭제 완료");
+//	}
 
-	// no에 해당하는 TabHashtag 삭제
-	@ApiOperation(value = "no에 해당하는 TabHashtag 삭제")
-	@DeleteMapping("/tabtag/{no}")
-	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable int no) throws Exception {
-		tabHashtagService.delete(no);
-		return handleSuccess("TabHashtag 삭제 완료");
-	}
-
-	// id에 해당하는 TabHashtag 모두 삭제
-	@ApiOperation(value = "id에 해당하는 TabHashtag 모두 삭제")
-	@DeleteMapping("/tabtag")
-	public ResponseEntity<Map<String, Object>> deleteTabHashtag() throws Exception {
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
-//		Map<String, Object> uid = jwtService.get("userid");
-//		String id = uid.get("userid").toString();
-
-		// test시 직접 입력
-		String id = "";
-
-		tabHashtagService.deleteById(id);
-		return handleSuccess("TabHashtag 삭제 완료");
-	}
-
-	// id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제
-	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제")
-	@DeleteMapping("/tabtag/hashtag/{hashtag}")
-	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String hashtag) throws Exception {
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
-//		Map<String, Object> uid = jwtService.get("userid");
-//		String id = uid.get("userid").toString();
-
-		// test시 직접 입력
-		String id = "";
-
-		tabHashtagService.deleteByIdAndHashtag(id, hashtag);
-		return handleSuccess("TabHashtag 삭제 완료");
-	}
+//	// id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제
+//	@ApiOperation(value = "id에 해당하는 사용자의 hashtag에 해당하는 TabHashtag 삭제")
+//	@DeleteMapping("/tabtag/hashtag/{hashtag}")
+//	public ResponseEntity<Map<String, Object>> deleteTabHashtag(@PathVariable String hashtag) throws Exception {
+//		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+////		Map<String, Object> uid = jwtService.get("userid");
+////		String id = uid.get("userid").toString();
+//
+//		// test시 직접 입력
+//		String id = "";
+//
+//		tabHashtagService.deleteByIdAndHashtag(id, hashtag);
+//		return handleSuccess("TabHashtag 삭제 완료");
+//	}
 
 	// TabHashtag 수정
-	@ApiOperation(value = "TabHashtag 수정(Hashtag는 등록, 삭제만 있으므로 수정 기능은 삭제 예정)")
+	@ApiOperation(value = "TabHashtag 수정(insert, delete, update가 모두 update를 통해 이루어짐.)")
 	@PutMapping("/tabtag")
 	public ResponseEntity<Map<String, Object>> updateTabHashtag(@RequestBody TabHashtag tabHashtag) throws Exception {
 		tabHashtagService.update(tabHashtag);
