@@ -1,35 +1,66 @@
 <template>
   <div class="Navbar">
-    <span>네브바|</span>
-    <router-link v-bind:to="{name:'MyPage'}">마이페이지|</router-link>
-    <router-link v-bind:to="{name:'BookMark'}">북마크|</router-link>
-    <router-link v-bind:to="{name:'Home'}">홈|</router-link>
-    <router-link v-bind:to="{name:'SetTags'}">해시태그관리|</router-link>
-    <router-link v-bind:to="{name:'Posting'}">게시글작성 | </router-link>
-    <router-link v-bind:to="{name:'Login'}">로그인 |</router-link>
-    <h1 @click="logout">로그아웃</h1>
-    <PostingDialog></PostingDialog>
+         
+
+    <v-bottom-navigation
+      hide-on-scroll
+      fixed
+    >
+
+
+      <v-btn @click="routing('MyPage')">
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+
+      <v-btn @click="routing('SetTags')">
+        <v-icon>mdi-pound</v-icon>
+      </v-btn>
+
+      <v-btn @click="routing('Home')">
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+  
+      <v-btn @click="routing('Notification')">
+        <v-icon>mdi-bell</v-icon>
+      </v-btn>
+
+      <v-btn @click="routing('Posting')">
+        <v-icon>mdi-lead-pencil</v-icon> 
+      </v-btn>
+      
+
+
+    </v-bottom-navigation>
+    
+
+
     
   </div>  
 </template>
 
 <script>
-import PostingDialog from '../components/Posting/PostingDialog'
 export default {
   name: 'Navbar',
   data:()=>{
     return{
       component: this,
+      dialog:false,
     }
-  },
-  components: {
-    PostingDialog,
   },
   methods:{
     logout(){
       this.$store.dispatch('user/logout')
       .then(()=>this.$router.push({name:'Login'}))
+    },
+    routing(routeName){
+      this.$router.push({ name: routeName})
+    },
+    clickPosting(){
+      this.dialog = true;
+      console.log('뭐해......')
     }
   }
 }
 </script>
+<style scoped>
+</style>
