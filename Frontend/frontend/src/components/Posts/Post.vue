@@ -24,7 +24,7 @@
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title class="body-1 mt-1 mb-0">{{post.nickname}}</v-list-item-title> 
-        <v-list-item-subtitle class = "caption mt-0">{{post.datetime}}</v-list-item-subtitle>
+        <v-list-item-subtitle class = "caption mt-0">{{postdata_date}}</v-list-item-subtitle>
       </v-list-item-content>
       <v-row
           align="center"
@@ -190,10 +190,6 @@ export default {
       this.tagDialog_show = true;
       
     },
-    setDate(){
-      console.log('setDate()')
-      
-    },
     setContent(){
       //한줄미리보기 해주는거
       var line_max = 3 //보여줄 글자 수(25자정도 넘으면 줄넘어갈듯?)
@@ -213,8 +209,8 @@ export default {
     3. 보여줄 한 줄만 설정      => setContent()
     4. 태그리스트 생성
     */
-    
-   this.setDate()
+   console.log('시간받아온것 : '+this.post.datetime)
+   this.postdata_date = transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
 
@@ -228,6 +224,77 @@ export default {
   
 
 
+}
+function transferTime(time){    
+     var now = new Date();
+     var sYear = time.substring(0,4);
+     var sMonth = time.substring(5,7)-1;
+     var sDate = time.substring(8,10);
+     var sHour = time.substring(11,13);
+     var sMin = time.substring(14,16);
+     var sSecond = time.substring(17,19);
+     var sc = 1000;
+ 
+     var today = new Date(sYear,sMonth,sDate,sHour,sMin,sSecond);
+     //지나간 초
+     var pastSecond = parseInt((now-today)/sc,10);
+    //  console.log("지나간초:"+pastSecond)
+    
+
+
+    // 자세한 코드----------------------
+     var date;
+     var hour;
+     var min;
+     var str = "";
+ 
+     var restSecond = 0;
+     if(pastSecond > 86400){
+      date = parseInt(pastSecond / 86400,10);
+      restSecond = pastSecond % 86400;
+      str = date + "일 ";
+      if(restSecond > 3600){
+       hour = parseInt(restSecond / 3600,10);
+       restSecond = restSecond % 3600;
+       str = str + hour + "시간 ";
+       if(restSecond > 60){
+        min = parseInt(restSecond / 60,10);
+        restSecond = restSecond % 60;
+        str = str + min + "분 " + restSecond + "초 전";
+       }else{
+        str = str + restSecond + "초 전";
+       }
+      }else if(restSecond > 60){
+       min = parseInt(restSecond / 60,10);
+       restSecond = restSecond % 60;
+       str = str + min + "분 " + restSecond + "초 전";
+      }else{
+       str = str + restSecond + "초 전";
+      }
+     }else if(pastSecond > 3600){
+      hour = parseInt(pastSecond / 3600,10);
+      restSecond = pastSecond % 3600;
+      str = str + hour + "시간 ";
+      if(restSecond > 60){
+       min = parseInt(restSecond / 60,10);
+       restSecond = restSecond % 60;
+       str = str + min + "분 " + restSecond + "초 전";
+      }else{
+       str = str + restSecond + "초 전";
+      }
+     }else if(pastSecond > 60){
+      min = parseInt(pastSecond / 60,10);
+      restSecond = pastSecond % 60;
+      str = str + min + "분 " + restSecond + "초 전";
+     }else{
+      str = pastSecond + "초 전";
+     }
+ 
+     if(str=="0초 전"){
+         str = "방금 전";
+     }
+     
+     return str;
 }
 </script>
 
