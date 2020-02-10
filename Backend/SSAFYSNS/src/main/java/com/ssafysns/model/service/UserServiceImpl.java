@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User MyInfo() throws Exception {
 		String userid =jwtService.get("userid");
-		
+		System.out.println("userID:  "+userid);
 		User user = userRepository.getOne(userid);
 		System.out.println(user);
 	
