@@ -8,7 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserForSNS extends User{
-
-	 
 	private int seq;
 }
+

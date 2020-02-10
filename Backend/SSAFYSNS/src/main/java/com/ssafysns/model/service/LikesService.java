@@ -5,12 +5,15 @@ import java.util.List;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.Post;
+import com.ssafysns.model.dto.PostLikes;
 
 public interface LikesService {
 	
 	public void insert(Likes likes);
-	public void delete(String id, int pno, int cno);	//댓글 좋아요 취소
-	void delete(String id, int pno);	//게시글 좋아요 취소
+	public void insert(PostLikes likes);
+	
+	public void delete(Likes likes);	//댓글 좋아요 취소
+	void delete(PostLikes postLikes);	//게시글 좋아요 취소
 	
 	public List<Integer> searchById(String id);	//좋아요 누른 글 목록 검색
 	
@@ -20,5 +23,4 @@ public interface LikesService {
 	public List<Boolean> likeBooleanComment(List<Integer> my_like_comment, int pno);
 	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list);
 	
-
 }
