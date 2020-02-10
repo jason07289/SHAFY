@@ -3,7 +3,7 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
 
 
 // const hosturl = 'http://i02a305.p.ssafy.io'
-const hosturl = 'http://70.12.246.122:8080'
+const hosturl = 'http://70.12.247.81:8080'
 const appname = '/post'
 
 /* eslint-disable no-unused-vars */
