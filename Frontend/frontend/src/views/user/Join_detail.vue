@@ -240,19 +240,22 @@ export default {
         }
       }
       if (isrequired === true){
-        if (this.togosite !== ''){
-
+        console.log(this.togosite)
+        if (this.togosite === '' || this.togosite === undefined){
+          console.log('그냥 회원가입')
+          console.log(this.signUpForm)
+          this.normalJoin(this.signUpForm)
+        }else{
           console.log('SNS가입 할 것임')
           console.log(this.signUpForm)
           this.SNSJoin(this.signUpForm)
-        }else{
-          this.normalJoin(this.signUpForm)
         }
       }  
     }
   },
   created(){
     console.log(this.$store)
+    console.log(this)
   }
 }
 </script>

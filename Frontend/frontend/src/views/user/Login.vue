@@ -52,18 +52,13 @@ import { mapActions, mapState } from 'vuex'
 
 const myurl = 'http://70.12.246.84:8080'
 export default {
-  computed:{
-    ...mapState({
-      myurl:'user/myurl'
-    }),
-  },
   data: ()=>{
     return {
       link:{
         github:`https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=${myurl}/login/github&response_type=code`,
-        google:`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${myurl}/login/google&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com`,
-        kakao:`https://kauth.kakao.com/oauth/authorize?client_id=61371210ed3f2e84bea6f3de4869f97f&redirect_uri=${myurl}/login/kakao&response_type=code`,
-        naver:`https://nid.naver.com/oauth2.0/authorize?client_id=MyOzYfN5jsCLdO3clqvX&redirect_uri=${myurl}/login/naver&response_type=code`,
+        // google:`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${myurl}/login/google&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com`,
+        // kakao:`https://kauth.kakao.com/oauth/authorize?client_id=61371210ed3f2e84bea6f3de4869f97f&redirect_uri=${myurl}/login/kakao&response_type=code`,
+        // naver:`https://nid.naver.com/oauth2.0/authorize?client_id=MyOzYfN5jsCLdO3clqvX&redirect_uri=${myurl}/login/naver&response_type=code`,
       },
       show1: false,
       valid: false,
@@ -89,7 +84,7 @@ export default {
    },
   },
   created(){
-    console.log(this.$store.state)
+    console.log(this.$store.state.user.myurl)
   }
   
 }

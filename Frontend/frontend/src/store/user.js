@@ -86,10 +86,11 @@ const actions = {
       })
     // 데이터가 토큰인 경우 loginSuccess로 
   },
-  Join(data){
+  Join({ commit },data){
     UserApi.requestSignup(data,
       res=>{
         if(res.data.state === 'ok'){
+          alert('회원가입에 성공하셨습니다.')
           router.replace({name:'Login'})
         }else{
           // 중복 ID인경우 알람 띄우기

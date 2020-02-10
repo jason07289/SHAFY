@@ -39,6 +39,7 @@ const requestUserDelete = (data, callback, errorCallback) =>{
 }
 
 const requestSignup = (data, callback, errorCallback) => {
+    console.log(data)
     axios.post(hosturl+appname+'/signup', data)
     .then(callback)
     .catch(errorCallback)
