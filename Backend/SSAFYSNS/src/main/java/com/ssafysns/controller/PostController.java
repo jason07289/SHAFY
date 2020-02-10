@@ -3,6 +3,7 @@ package com.ssafysns.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
+import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
+import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
+import com.ssafysns.model.service.NotificationService;
 import com.ssafysns.model.service.PostService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
@@ -57,6 +61,9 @@ public class PostController {
 	
 	@Autowired
 	TabHashtagService tabService;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Autowired
 	JwtService jwtService;
@@ -329,7 +336,7 @@ public class PostController {
 			post.setLike_check(true);
 		} 
 		post.setLike_count(post.getPostlike().size());
-			
+		post.setPostlike(null);
 		
 		// 댓글마다 처리
 		for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
@@ -419,6 +426,10 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
 		String jwtId = jwtService.get("userid");
 		commentService.insert(jwtId, comment);
+		
+//		Notification notification =  new Notification(jwtId, new Date(), comment.getPno(), 2, 0);
+//		notificationService.insert(notification);
+		
 		return handleSuccess("댓글 등록 완료");
 	}
 	
@@ -468,7 +479,6 @@ public class PostController {
 		return comments;
 	}
 
-	
 	
 	/**
 	 * ExceptionHandler
