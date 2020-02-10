@@ -49,7 +49,7 @@ public class UserSNSServiceImpl implements UserSNSService {
 		User user = new User(userForSNS.getId());
 		UserSNS userSNS = userSNSRepository.getOne(userForSNS.getSeq());
 		userSNS.setId(userForSNS.getId());
-		
+		AES256Util aes = new AES256Util();
 		user.setAlarm(userForSNS.getAlarm());
 		user.setApproval(userForSNS.getApproval());
 		user.setAuth(userForSNS.getAuth());
@@ -57,18 +57,18 @@ public class UserSNSServiceImpl implements UserSNSService {
 		user.setBirth(userForSNS.getBirth());
 		user.setClass1(userForSNS.getClass1());
 		user.setClass2(userForSNS.getClass2());
-		user.setDeleted(userForSNS.getDeleted());
+		user.setDeleted(0);
 		user.setGrade(userForSNS.getGrade());
 		user.setId(userForSNS.getId());
 		user.setImg(userForSNS.getImg());
 		user.setLocation(userForSNS.getLocation());
 		user.setName(userForSNS.getName());
 		user.setNickname(userForSNS.getNickname());
-		user.setPassword(userForSNS.getPassword());
+		user.setPassword(aes.encrypt(userForSNS.getPassword()));
 		user.setPhone(userForSNS.getPhone());
 		user.setState(userForSNS.getState());
 		user.setUtype(userForSNS.getUtype());
-		
+		user.setCode(aes.encrypt(user.getId()));
 		userRepository.save(user);
 		userSNSRepository.save(userSNS);
 		return false;
