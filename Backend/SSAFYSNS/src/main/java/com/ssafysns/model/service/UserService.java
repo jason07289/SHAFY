@@ -18,4 +18,5 @@ public interface UserService {
 	public boolean signOut(String id, String pw);
 	public User MyInfo()throws Exception;
 	public List<User> list() throws Exception;
+	public boolean nickIdCheck(String id);
 }

@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,8 @@ public class UserServiceImpl implements UserService{
 			
 			System.out.println(user.getId());
 			System.out.println(user.getPassword());
-			System.out.println("gggggggggggggggggg");
+			System.out.println("gggggggggggggggggg"); 
+			user.setDeleted(0);
 			System.out.println(find.isPresent());
 			if(find.isPresent()) {
 			if(find.get()!=null) {
@@ -39,6 +42,7 @@ public class UserServiceImpl implements UserService{
 					throw new SQLException("이미 등록된 아이디 입니다.");
 					
 				}else {
+					
 					userRepository.save(user);
 					return true;
 				}
@@ -187,6 +191,30 @@ public class UserServiceImpl implements UserService{
 		return false;
 	}
 
+	@Override
+	public boolean nickIdCheck(String id) {
+		try {
+			System.out.println(id);
+			System.out.println(userRepository.getOne(id));
+			if(userRepository.getOne(id)==null) {
+				
+				return true;
+			}else {
+				System.out.println("false-> 사용중");
+				return false;
+			}
+			
+		}catch (EntityNotFoundException e) {
+			System.out.println("사용가능합니다.");
+			return true;
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+		
+	}
 
 	@Override
 	public boolean signOut(String id, String pw) {
