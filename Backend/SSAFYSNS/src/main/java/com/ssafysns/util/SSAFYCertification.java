@@ -12,14 +12,14 @@ public class SSAFYCertification {
 
 			Runtime rt = Runtime.getRuntime();
 
-//			String[] cmd = { "java", "-jar", "/home/ubuntu/SSAFYSNSCertification.jar", id };
-			String[] cmd = { "ls "};
+			String[] cmd = { "java", "-jar", "SSAFYSNSCertification.jar", id };
 			Process p = rt.exec(cmd);
+
 			System.out.println(id);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
 			String line = null;
-			
+
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 			}
