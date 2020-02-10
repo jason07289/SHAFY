@@ -77,9 +77,9 @@ public class JwtServiceImpl implements JwtService{
 		System.out.println("JWT getHeader: "+ jwtbearer);
 		
 		String[] strs=jwtbearer.split(" ");
-		System.out.println(strs[0]);
-		System.out.println(strs[1]);
-		String jwt = strs[1];
+//		System.out.println(strs[0]);
+//		System.out.println(strs[0]);
+		String jwt = strs[strs.length-1];
 		System.out.println("jwt split: "+jwt);
 		Jws<Claims> claims = null;
 		try {

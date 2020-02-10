@@ -81,6 +81,8 @@ public class UserSNSController {
 		resultMap.put("JWT",token);
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
+	
+
 
 	private ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -88,9 +90,17 @@ public class UserSNSController {
 		resultMap.put("message",  data);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	private ResponseEntity<Map<String, Object>> handleFail(Object data, int seq,HttpStatus status) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("state",  "fail");
+		resultMap.put("message",  data);
+		resultMap.put("seq",  seq);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
     
 	@ApiOperation("SNS로그인 시 회원가입할때, 기존이랑 같으나 userforSNS 객체엔 seq가 추가되어있다.")
-	@PostMapping("/user/signUpWithSeq/")
+	@PostMapping("/user/signUpWithSeq")
 	public ResponseEntity<Map<String, Object>> signUpWithSeq(@RequestBody UserForSNS userForSNS){
 		
 		try {
@@ -144,7 +154,7 @@ public class UserSNSController {
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
 			}else if(valueForReturn instanceof Integer) {
-				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+				return handleFail("서비스를 이용하시려면 연동이 필요합니다.",Integer.parseInt(valueForReturn.toString()), HttpStatus.OK);
 			}else {
 				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
 			}
@@ -182,7 +192,7 @@ public class UserSNSController {
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
 			}else if(valueForReturn instanceof Integer) {
-				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+				return handleFail("서비스를 이용하시려면 연동이 필요합니다.",Integer.parseInt(valueForReturn.toString()), HttpStatus.OK);
 			}else {
 				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
 			}
@@ -220,7 +230,7 @@ public class UserSNSController {
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
 			}else if(valueForReturn instanceof Integer) {
-				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+				return handleFail("서비스를 이용하시려면 연동이 필요합니다.",Integer.parseInt(valueForReturn.toString()), HttpStatus.OK);
 			}else {
 				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
 			}
@@ -267,7 +277,7 @@ public class UserSNSController {
 			if(valueForReturn instanceof String) {
 				return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
 			}else if(valueForReturn instanceof Integer) {
-				return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+				return handleFail("서비스를 이용하시려면 연동이 필요합니다.",Integer.parseInt(valueForReturn.toString()), HttpStatus.OK);
 			}else {
 				return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
 			}
@@ -278,42 +288,40 @@ public class UserSNSController {
 		}
     }
     
-  @RequestMapping(value="/KakaoLogin")
-//    @ApiOperation("KakaoLogin 버튼")
-//    @GetMapping("KakaoLogin")
-    public ResponseEntity<Map<String, Object>> KLocalLogin(@RequestParam("code") String code, HttpSession session) {
-    	System.out.println("====================login=====================");
-    	String access_Token = kakao.getAccessToken(code);
-    	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
-    	System.out.println("login Controller : " + userInfo);
-    	System.out.println("====================login=====================");
-    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
-    	if (userInfo.get("snsid") != null) {
-    		session.setAttribute("userId", userInfo.get("snsid"));
-    		session.setAttribute("access_Token", access_Token);
-    	}
-    	
-    	String snsid = userInfo.get("snsid").toString();
-    	System.out.println(userInfo.get("snsid").toString());
-    	System.out.println(userInfo.get("nickname").toString());
-    	
-    	try {
-    		Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
-    		
-    		if(valueForReturn instanceof String) {
-    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
-    		}else if(valueForReturn instanceof Integer) {
-    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
-    		}else {
-    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
-    		}
-    		
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
-    	}
-    	
-    }
+//  @RequestMapping(value="/KakaoLogin")
+//    public ResponseEntity<Map<String, Object>> KLocalLogin(@RequestParam("code") String code, HttpSession session) {
+//    	System.out.println("====================login=====================");
+//    	String access_Token = kakao.getAccessToken(code);
+//    	HashMap<String, Object> userInfo = kakao.getUserInfo(access_Token);
+//    	System.out.println("login Controller : " + userInfo);
+//    	System.out.println("====================login=====================");
+//    	//    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+//    	if (userInfo.get("snsid") != null) {
+//    		session.setAttribute("userId", userInfo.get("snsid"));
+//    		session.setAttribute("access_Token", access_Token);
+//    	}
+//    	
+//    	String snsid = userInfo.get("snsid").toString();
+//    	System.out.println(userInfo.get("snsid").toString());
+//    	System.out.println(userInfo.get("nickname").toString());
+//    	
+//    	try {
+//    		Object valueForReturn = userSNSService.SNSLogin(snsid, "kakao");
+//    		
+//    		if(valueForReturn instanceof String) {
+//    			return handleSuccess("소셜 로그인 토큰 발급 완료.", valueForReturn.toString());
+//    		}else if(valueForReturn instanceof Integer) {
+//    			return handleSuccess(Integer.parseInt(valueForReturn.toString()));
+//    		}else {
+//    			return handleFail("리턴값이 String이나 Integer가 아닙니다.", HttpStatus.OK);
+//    		}
+//    		
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    		return handleFail("소셜 로그인 중 오류 발생", HttpStatus.OK);
+//    	}
+//    	
+//    }
 //    
 //    
 //    @RequestMapping(value="NaverLogin")
