@@ -1,8 +1,11 @@
 <template>
     <v-app-bar
       color="white"
+      flat
       elevate-on-scroll
       fixed
+      dense
+      style="background-color:white;"
     >
 
       <v-toolbar-title>#SHARFY</v-toolbar-title>
