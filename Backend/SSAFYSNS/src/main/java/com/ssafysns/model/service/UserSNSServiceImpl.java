@@ -61,7 +61,7 @@ public class UserSNSServiceImpl implements UserSNSService {
 		user.setGrade(userForSNS.getGrade());
 		user.setId(userForSNS.getId());
 		user.setImg(userForSNS.getImg());
-		user.setLoacation(userForSNS.getLoacation());
+		user.setLocation(userForSNS.getLocation());
 		user.setName(userForSNS.getName());
 		user.setNickname(userForSNS.getNickname());
 		user.setPassword(userForSNS.getPassword());

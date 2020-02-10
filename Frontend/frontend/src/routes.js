@@ -2,7 +2,7 @@ import Login from './views/user/Login.vue'
 import Join from './views/user/Join.vue'
 import Join_detail from './views/user/Join_detail'
 import FindPassword from './views/user/FindPassword.vue'
-import BookMark from './views/home/BookMark.vue'
+import Notification from './views/home/Notification.vue'
 import Home from './views/home/Home.vue'
 import MyPage from './views/home/MyPage.vue'
 import Posting from './views/home/Posting.vue'
@@ -71,9 +71,9 @@ export default [
         beforeEnter: checkAuth()
     },
     {
-        path : '/home/bookmark',
-        name : 'BookMark',
-        component : BookMark,
+        path : '/home/notification',
+        name : 'Notification',
+        component : Notification,
         beforeEnter: checkAuth()
     },
     {

@@ -1,100 +1,178 @@
 <template>
-    <div>
-        <div id='basicInfo'>
-            <div id="basicTitle">
-                <h1>{{ this.$route.params.type}}</h1>
-                <label>
-                    기본 정보
-                </label>
-            </div>
-            
-            <input v-model="email" type="email" placeholder="이메일" v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}">
-            <label>*</label><br>
-            <div class="error-text" v-if="error.email">{{error.email}}</div>
-            
-            <input v-model="password" type="password" placeholder="비밀번호" 
-            v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}">
-            <label>*</label><br>
-            <div class="error-text" v-if="error.password">{{error.password}}</div>
-            <input v-model="passwordcheck" type="password" placeholder="비밀번호 확인" 
-            v-bind:class="{error : error.passwordcheck, complete:!error.passwordcheck&&passwordcheck.length!==0}">
-            <label>*</label><br>
-            <div class="error-text" v-if="error.passwordcheck">{{error.passwordcheck}}</div>
-            <input v-model="signUpForm.name" type="text" placeholder="이름" ><label>*</label><br>
-            <input v-model="signUpForm.nickname" type="text" placeholder="닉네임" ><br>
-            <label for="location">지역 | </label><label>*</label><br>
-            <select v-model="signUpForm.location" name="location" id="location">
-                <option v-for="location in Info.location" :key="location">{{ location }}</option>
-            </select><br>
-            <label for="phone">휴대폰 번호 | </label><label>*</label><br>
-            <input v-model="signUpForm.phone" type="tel" name="phone" placeholder="010-1234-1234"><br>
-            <label for="birth">생일 | </label><label>*</label><br>
-            <input v-model="signUpForm.birth" type="date" name="birth" id="birth"><br>
-            <label for="img">사진 등록 | </label>
-            <input type="image" :src="signUpForm.img" name="img" id="img">
-    </div>
-    <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
-        <label for="class1">1학기 반 선택 | </label>
-        <select v-model="signUpForm.class1" name="class1" id="class1">
-            <option v-for="c in Info.class1" :key="c">{{ c }}</option>
-        </select>
-        <label for="class1">2학기 반 선택 | </label>
-        <select v-model="signUpForm.class2" name="class2" id="class2">
-            <option v-for="c in Info.class2" :key="c">{{ c }}</option>
-        </select><br>
-        <label for="grade">기수 선택</label>
-        <select v-model="signUpForm.grade" name="grade" id="grade">
-            <option v-for="c in Info.grade" :key="c">{{ c }}</option>
-        </select><br>
-        <label for="state">상태 구분</label>
-        <select v-model="signUpForm.state" name="state" id="state">
-            <option v-for="c in Info.state" :key="c">{{ c }}</option>
-        </select>
+  <v-app id="inspire">
+    <v-card class="mx-auto"
+    max-width ="500"
+    outlined
+    >
+    <h1>{{ this.$route.params.type}}</h1>
+    <v-form>
+        <v-text-field
+        v-model="email"
+        :rules="emailRules"
+        placeholder="E-mail"
+        outlined
+        required
+        prepend-icon="mdi-email"
+        >
+        </v-text-field>
+        <v-text-field
+        v-model="password"
+        :rules="passwordRules"
+        :counter="20"
+        :type="show1 ? 'text' : 'password'"
+        placeholder="비밀번호"
+        outlined
+        prepend-icon="mdi-lock-outline"
+        ></v-text-field>
+        <v-text-field
+        v-model="passwordcheck"
+        :rules="passwordcheckRules"
+        :counter="20"
+        :type="show1 ? 'text' : 'password'"
+        placeholder="비밀번호 확인"
+        outlined
+        prepend-icon="mdi-lock-outline"
+        ></v-text-field>
+        <v-text-field
+        v-model="signUpForm.name"
+        :counter="20"
+        :type="show1 ? 'text' : 'signUpForm.name'"
+        placeholder="이름"
+        outlined
+        required
+        prepend-icon="mdi-clipboard-account"
+        ></v-text-field>
+        <v-text-field
+        v-model="signUpForm.nickname"
+        :counter="10"
+        :type="show1 ? 'text' : 'signUpForm.nickname'"
+        placeholder="닉네임"
+        outlined
+        prepend-icon="mdi-clipboard-account"
+        ></v-text-field>
+         <v-select
+          v-model="signUpForm.location"
+          :items="Info.location"
+          label="location"
+          placeholder="지역"
+          prepend-icon="mdi-map-marker"
+          outlined
+        ></v-select>
+        <v-text-field
+          v-model="signUpForm.phone"
+          :type="show1 ? 'text' : 'signUpForm.nickname'"
+          placeholder="010-1234-1234"
+          outlined
+          prepend-icon="mdi-phone"
+        ></v-text-field>
+     <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :return-value.sync="signUpForm.birth"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="signUpForm.birth"
+            label="birthday"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker 
+        v-model="signUpForm.birth" no-title scrollable
+        :min=minDate
+        :max=maxDate
+        >
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu.save(signUpForm.birth)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+      <h1>여기 사진등록이 들어와야해요</h1>
+      <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
+        <v-select 
+        v-model="signUpForm.class1" 
+        name="class1" 
+        id="class1"
+        label="1학기 반 선택"
+        :items="Info.class1"
+        outlined>
+        </v-select>
+        <v-select 
+        v-model="signUpForm.class2" 
+        name="class2" 
+        id="class2"
+        label="2학기 반 선택"
+        :items="Info.class2"
+        outlined
+        >
+        </v-select>
+        <v-select 
+        v-model="signUpForm.grade" 
+        name="grade" 
+        id="grade"
+        label="기수 선택"
+        :items="Info.grade"
+        outlined
+        >
+        </v-select>
+        <v-select 
+        v-model="signUpForm.state" 
+        name="state" 
+        id="state"
+        label="상태 구분"
+        :items="Info.state"
+        outlined
+        >
+        </v-select>
     </div>
     <div v-else id='GeneralInfo'>
-        <label for="utype">타입 선택</label>
-        <select v-model="signUpForm.utype" name="utype" id="utype">
-            <option v-for="c in Info.utype" :key="c">{{ c }}</option>
-        </select>
+      <v-select 
+        v-model="signUpForm.utype" 
+        name="type" 
+        id="type"
+        label="타입 선택"
+        :items="Info.utype"
+        outlined
+        >
+        </v-select>
     </div>
-    <button @click="Join">제출하기</button>
-    <p>{{ signUpForm }}</p>
-</div>
-    
+      <div class="text-center">
+        <v-btn 
+        block
+        class="primary"
+        @click="Join">
+        회원가입
+        </v-btn>
+      </div>
+  </v-form>
+  </v-card>
+  </v-app>
+
 </template>
 
 <script>
- /* eslint-disable no-unused-vars */
-import PV from 'password-validator'
-import * as EmailValidator from 'email-validator'
-import UserApi from '../../apis/UserApi'
+import { mapState, mapActions } from 'vuex'
+// import UserApi from '../../apis/UserApi'
+
 
 export default {
-    created(){
-    this.component = this;
-    this.passwordSchema
-        .is().min(8)
-        .is().max(100)
-        .has().digits()
-        .has().letters();
-    },    
-    watch: {
-            password: function () {
-                this.checkForm();
-            },
-            passwordcheck: function(){
-                this.checkForm();
-            },
-            email: function (){
-                this.checkForm();
-            },
-            
-    },
-    
-    data: ()=>{
-        return {
-           signUpForm:{
-                birth: '',
+  data(){
+    return{
+      show1: false,
+      fromDateMenu: false,
+      menu: false,
+      
+      minDate: '1989-01-01',
+      maxDate: '1998-01-01',
+
+      signUpForm:{
+                birth: new Date().toISOString().substr(0, 10),
                 class1: '',
                 class2: '',
                 grade: '',
@@ -109,7 +187,8 @@ export default {
                 token: '',
                 utype: ''
             },
-            Info:{
+    
+    Info:{
                 class1 : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 class2 : [1, 2, 3, 4],
                 grade: [1, 2, 3],
@@ -117,85 +196,67 @@ export default {
                 state: ['수료','졸업','재학'],
                 utype: ['컨설턴트','프로','관리자'],
             },
-            password:'',
-            passwordcheck:'',
-            email:'',
-            passwordSchema: new PV(),
-            error: {
-            email: false,
-            passowrd: false,
-            passwordcheck: false,
-            },
-            component: this
+
+    password:'',
+    passwordcheck:'',
+
+    email:'',
+    emailRules:[
+        v => !!v || '이메일을 입력해주세요.',
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 형식을 지켜주세요'
+      ],
+    passwordRules:[
+      v => !!v || '비밀번호를 입력해주세요',
+      v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+    ],
+    passwordcheckRules:[
+      v => v == this.password ||'비밀번호를 확인해주세요',
+       v => !!v || '비밀번호확인은 필수항목입니다',
+    ]
+  }
+  },
+  computed:{
+    ...mapState({
+      hosturl:'user/hosturl',
+      seq:'user/seq',
+      togosite:'user/togosite',
+    })
+  },
+  methods:{
+    ...mapActions({
+      normalJoin:'user/Join',
+      SNSJoin:'user/SNSJoin',
+    }),
+    Join(){
+      this.signUpForm.id = this.email
+      this.signUpForm.password = this.password
+      var isrequired = true
+      var required = ['id', 'password', 'name', 'location', 'phone', 'birth']
+      for (var i in required){
+        if (this.signUpForm[required[i]] === ''){
+          isrequired = false
+          alert(`${required[i]}를 입력해주세요.`)
+          break
         }
-        
-    },
-    methods:{
-        Join(){
-            // require이 다 들어왔는지 확인하고, 채워지지 않았으면 경고 메시지를 띄워줌
-            this.signUpForm.id = this.email
-            this.signUpForm.password = this.password
-            var required = ['id', 'password', 'name', 'location', 'phone', 'birth']
-            var isrequired = true
-            for (var i in required){
-                if (required[i] === 'id'){
-                    if (EmailValidator.validate(this.email) === false){
-                    alert(`올바른 이메일을 입력해주세요.`)
-                    isrequired = false
-                    break
-                    }
-                }
-                if (required[i] === 'password'){
-                    if (this.passwordSchema.validate(this.password) === false){
-                        alert(`비밀번호는 영문,숫자 포함 8 자리이상이어야 합니다.`)
-                        isrequired = false
-                        break
-                    }
-                    if (this.signUpForm.password != this.passwordcheck){
-                        alert('동일한 비밀번호를 입력해 주세요.')
-                        isrequired = false
-                        break
-                    }
-                }
-                if (this.signUpForm[required[i]] === ''){
-                    alert(`${required[i]}를 입력해주세요.`)
-                    isrequired = false
-                    break
-                }
-            }
-            if (isrequired === true){
-                    UserApi.requestsignUp(this.signUpForm, 
-                        res => {
-                            if (res.state === "ok"){
-                                this.$router.push({name: 'Login'})
-                            }else{
-                                alert(res.data)
-                                }
-                            }
-                        ),error =>{
-                            console.log(error)
-                        }
-            }  
-        },
-
-        checkForm(){
-                if (this.email.length >= 0 && !EmailValidator.validate(this.email))
-                    this.error.email = "이메일 형식이 아닙니다."
-                else this.error.email = false;
-
-                if (this.password.length >= 0 && !this.passwordSchema.validate(this.password))
-                    this.error.password = '영문,숫자 포함 8 자리이상이어야 합니다.'
-                else
-                    this.error.password = false
-                if (this.passwordcheck != this.password)
-                    this.error.passwordcheck = '동일한 비밀번호를 입력해 주세요.'
-                else
-                    this.error.passwordcheck = false        
-
-            
+      }
+      if (isrequired === true){
+        console.log(this.togosite)
+        if (this.togosite === '' || this.togosite === undefined){
+          console.log('그냥 회원가입')
+          console.log(this.signUpForm)
+          this.normalJoin(this.signUpForm)
+        }else{
+          console.log('SNS가입 할 것임')
+          console.log(this.signUpForm)
+          this.SNSJoin(this.signUpForm)
         }
+      }  
     }
-  
+  },
+  created(){
+    console.log(this.$store)
+    console.log(this)
+  }
 }
 </script>
 

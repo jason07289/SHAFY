@@ -15,7 +15,6 @@ import com.ssafysns.model.dto.TabHashtag;
 
 @Repository
 public interface TabHashtagRepository extends JpaRepository<TabHashtag, Integer> {
-//	Optional<TabHashtag> findById(String id);
 
 	// delete, update 메서드 위에 @Modifying, @Transactional annotation 필수!
 	@Modifying
@@ -25,12 +24,17 @@ public interface TabHashtagRepository extends JpaRepository<TabHashtag, Integer>
 
 	@Modifying
 	@Transactional
-	@Query(value = "delete from tab_hashtag t where t.id = :id and t.hashtag = :hashtag")
-	void deleteByUserIdAndHashtag(@Param("id") String id, @Param("hashtag") String hashtag);
+	@Query(value = "update tab_hashtag t set t.hashtag = :hashtag where t.id = :id")
+	void updateByUserId(@Param("id") String id, @Param("hashtag") String hashtag);
 
-	@Query(value = "select t from tab_hashtag t where t.id = :id and t.hashtag = :hashtag")
-	Optional<TabHashtag> findByUserIdAndHashtag(@Param("id") String id, @Param("hashtag") String hashtag);
+//	@Modifying
+//	@Transactional
+//	@Query(value = "delete from tab_hashtag t where t.id = :id and t.hashtag = :hashtag")
+//	void deleteByUserIdAndHashtag(@Param("id") String id, @Param("hashtag") String hashtag);
+
+//	@Query(value = "select t from tab_hashtag t where t.id = :id and t.hashtag = :hashtag")
+//	Optional<TabHashtag> findByUserIdAndHashtag(@Param("id") String id, @Param("hashtag") String hashtag);
 
 	@Query(value = "select t from tab_hashtag t where t.id = :id")
-	List<TabHashtag> findByUserId(@Param("id") String id);
+	Optional<TabHashtag> findByUserId(@Param("id") String id);
 }

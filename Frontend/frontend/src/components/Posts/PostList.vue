@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div style="background-color:#fcfcfc;">
     <h1>포스트리스트</h1>
+    <!-- <div style="width:100%" v-for="post in posts" :key="post.id">
+      {{post}}
+    </div> -->
     <Post v-for="post in posts"
     :key="post.pno" :post="post"/>
   </div>
