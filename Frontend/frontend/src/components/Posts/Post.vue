@@ -239,60 +239,71 @@ function transferTime(time){
      //지나간 초
      var pastSecond = parseInt((now-today)/sc,10);
     //  console.log("지나간초:"+pastSecond)
+       var str = "";
     
+    if(pastSecond<60){
+      str='방금 전'
+    }else if(pastSecond<3600){
+      str = parseInt((pastSecond/60),10)+'분 전'
+    }else if(pastSecond<86400){
+      str = parseInt((pastSecond/3600),10)+'시간 전'
+    }else if(pastSecond<2592000){
+      str = parseInt((pastSecond/86400),10)+'달 전'
+    }else{
+      str = sYear+'/'+sMonth+'/'+sDate
+    }
 
 
     // 자세한 코드----------------------
-     var date;
-     var hour;
-     var min;
-     var str = "";
+    //  var date;
+    //  var hour;
+    //  var min;
  
-     var restSecond = 0;
-     if(pastSecond > 86400){
-      date = parseInt(pastSecond / 86400,10);
-      restSecond = pastSecond % 86400;
-      str = date + "일 ";
-      if(restSecond > 3600){
-       hour = parseInt(restSecond / 3600,10);
-       restSecond = restSecond % 3600;
-       str = str + hour + "시간 ";
-       if(restSecond > 60){
-        min = parseInt(restSecond / 60,10);
-        restSecond = restSecond % 60;
-        str = str + min + "분 " + restSecond + "초 전";
-       }else{
-        str = str + restSecond + "초 전";
-       }
-      }else if(restSecond > 60){
-       min = parseInt(restSecond / 60,10);
-       restSecond = restSecond % 60;
-       str = str + min + "분 " + restSecond + "초 전";
-      }else{
-       str = str + restSecond + "초 전";
-      }
-     }else if(pastSecond > 3600){
-      hour = parseInt(pastSecond / 3600,10);
-      restSecond = pastSecond % 3600;
-      str = str + hour + "시간 ";
-      if(restSecond > 60){
-       min = parseInt(restSecond / 60,10);
-       restSecond = restSecond % 60;
-       str = str + min + "분 " + restSecond + "초 전";
-      }else{
-       str = str + restSecond + "초 전";
-      }
-     }else if(pastSecond > 60){
-      min = parseInt(pastSecond / 60,10);
-      restSecond = pastSecond % 60;
-      str = str + min + "분 " + restSecond + "초 전";
-     }else{
-      str = pastSecond + "초 전";
-     }
+    //  var restSecond = 0;
+    //  if(pastSecond > 86400){
+    //   date = parseInt(pastSecond / 86400,10);
+    //   restSecond = pastSecond % 86400;
+    //   str = date + "일 ";
+    //   if(restSecond > 3600){
+    //    hour = parseInt(restSecond / 3600,10);
+    //    restSecond = restSecond % 3600;
+    //    str = str + hour + "시간 ";
+    //    if(restSecond > 60){
+    //     min = parseInt(restSecond / 60,10);
+    //     restSecond = restSecond % 60;
+    //     str = str + min + "분 " + restSecond + "초 전";
+    //    }else{
+    //     str = str + restSecond + "초 전";
+    //    }
+    //   }else if(restSecond > 60){
+    //    min = parseInt(restSecond / 60,10);
+    //    restSecond = restSecond % 60;
+    //    str = str + min + "분 " + restSecond + "초 전";
+    //   }else{
+    //    str = str + restSecond + "초 전";
+    //   }
+    //  }else if(pastSecond > 3600){
+    //   hour = parseInt(pastSecond / 3600,10);
+    //   restSecond = pastSecond % 3600;
+    //   str = str + hour + "시간 ";
+    //   if(restSecond > 60){
+    //    min = parseInt(restSecond / 60,10);
+    //    restSecond = restSecond % 60;
+    //    str = str + min + "분 " + restSecond + "초 전";
+    //   }else{
+    //    str = str + restSecond + "초 전";
+    //   }
+    //  }else if(pastSecond > 60){
+    //   min = parseInt(pastSecond / 60,10);
+    //   restSecond = pastSecond % 60;
+    //   str = str + min + "분 " + restSecond + "초 전";
+    //  }else{
+    //   str = pastSecond + "초 전";
+    //  }
  
-     if(str=="0초 전"){
-         str = "방금 전";
-     }
+    //  if(str=="0초 전"){
+    //      str = "방금 전";
+    //  }
      
      return str;
 }
