@@ -93,25 +93,72 @@
           <v-btn text color="primary" @click="$refs.menu.save(signUpForm.birth)">OK</v-btn>
         </v-date-picker>
       </v-menu>
-        <h1>여기 사진등록이 들어와야해요</h1>
-        <div class="text-center">
-          <v-btn 
-          block
-          class="primary"
-          @click="Join">
-          회원가입
-          </v-btn>
-        </div>
-    </v-form>
-    </v-card>
-    <h1>{{ signUpForm }}</h1>
+      <h1>여기 사진등록이 들어와야해요</h1>
+      <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
+        <v-select 
+        v-model="signUpForm.class1" 
+        name="class1" 
+        id="class1"
+        label="1학기 반 선택"
+        :items="Info.class1"
+        outlined>
+        </v-select>
+        <v-select 
+        v-model="signUpForm.class2" 
+        name="class2" 
+        id="class2"
+        label="2학기 반 선택"
+        :items="Info.class2"
+        outlined
+        >
+        </v-select>
+        <v-select 
+        v-model="signUpForm.grade" 
+        name="grade" 
+        id="grade"
+        label="기수 선택"
+        :items="Info.grade"
+        outlined
+        >
+        </v-select>
+        <v-select 
+        v-model="signUpForm.state" 
+        name="state" 
+        id="state"
+        label="상태 구분"
+        :items="Info.state"
+        outlined
+        >
+        </v-select>
+    </div>
+    <div v-else id='GeneralInfo'>
+      <v-select 
+        v-model="signUpForm.utype" 
+        name="type" 
+        id="type"
+        label="타입 선택"
+        :items="Info.utype"
+        outlined
+        >
+        </v-select>
+    </div>
+      <div class="text-center">
+        <v-btn 
+        block
+        class="primary"
+        @click="Join">
+        회원가입
+        </v-btn>
+      </div>
+  </v-form>
+  </v-card>
   </v-app>
 
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import UserApi from '../../apis/UserApi'
+import { mapState, mapActions } from 'vuex'
+// import UserApi from '../../apis/UserApi'
 
 
 export default {
@@ -171,9 +218,15 @@ export default {
   computed:{
     ...mapState({
       hosturl:'user/hosturl',
+      seq:'user/seq',
+      togosite:'user/togosite',
     })
   },
   methods:{
+    ...mapActions({
+      normalJoin:'user/Join',
+      SNSJoin:'user/SNSJoin',
+    }),
     Join(){
       this.signUpForm.id = this.email
       this.signUpForm.password = this.password
@@ -187,17 +240,19 @@ export default {
         }
       }
       if (isrequired === true){
-        console.log(this.signUpForm)
-        UserApi.requestSignup(this.signUpForm,
-        res=>{
-          console.log(res)
-          // 회원가입 되면, 로그인으로 다시 푸시하기
-        },err=>{
-          console.log(err)
-        })
-      }
-      
+        if (this.togosite !== ''){
+
+          console.log('SNS가입 할 것임')
+          console.log(this.signUpForm)
+          this.SNSJoin(this.signUpForm)
+        }else{
+          this.normalJoin(this.signUpForm)
+        }
+      }  
     }
+  },
+  created(){
+    console.log(this.$store)
   }
 }
 </script>
