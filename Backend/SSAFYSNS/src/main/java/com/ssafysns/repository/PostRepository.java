@@ -1,5 +1,6 @@
  package com.ssafysns.repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,14 +27,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query("update Post p set p.deleted = 1 where p.pno=:pno")
 	void updateDeleted(@Param("pno") int pno);
 
-	@Query("select p from Post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0")
-	List<Post> findByHashtag(@Param("hashtag") String hashtag);
+	@Query(value = "select * from Post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
+	List<Post> findByHashtag(@Param("hashtag") String hashtag, @Param("page") int page, @Param("limit") int limit);
 	
-	@Query("select p from Post p where p.pno in :pno_list and p.deleted=0")
-	List<Post> findByPnoList(@Param("pno_list") List<Integer> pno_list);
+	@Query(value = "select * from Post p where p.pno in :pno_list and p.deleted=0 limit :page, :limit", nativeQuery=true)
+	List<Post> findByPnoList(@Param("pno_list") List<Integer> pno_list, @Param("page") int page, @Param("limit") int limit);
 	
-	@Query("select p.pno from Post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0")
-	List<Integer> findPnoByHashtag(String hashtag);	
+	@Query(value = "select p.pno from Post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
+	List<Integer> findPnoByHashtag(String hashtag, int page, int limit);	
 	
 	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id) and p.deleted=0")
 	List<Integer> followHashPnoById(@Param("id") String id);

@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafysns.model.dto.Comment;
-import com.ssafysns.model.dto.CommentException;
 import com.ssafysns.model.dto.Likes;
 import com.ssafysns.model.dto.LikesException;
-import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.repository.CommentRepository;
 import com.ssafysns.repository.LikesRepository;
@@ -36,7 +34,7 @@ public class LikesServiceImpl implements LikesService {
 	// 댓글 좋아요
 	@Transactional
 	@Override
-	public void insert(Likes likes) {
+	public boolean insert(Likes likes) {
 		/**
 		 * 1. (pno에 해당하는 게시글에 cno번째의 댓글이 있는지 확인) 
 		 */
@@ -50,9 +48,11 @@ public class LikesServiceImpl implements LikesService {
 					} else {
 						likesRepository.save(likes);
 					}
+					return true;
 				} else {
 					System.out.println("좋아요를 취소합니다.");
 					delete(likes);
+					return false;
 				}			
 			} catch (LikesException le) {
 				throw new LikesException("좋아요를 누를 수 없습니다.");
@@ -70,7 +70,7 @@ public class LikesServiceImpl implements LikesService {
 	// 게시글 좋아요
 	@Transactional
 	@Override
-	public void insert(PostLikes postLikes) {
+	public boolean insert(PostLikes postLikes) {
 		/**
 		 * 1. 중복 체크
 		 */
@@ -78,9 +78,11 @@ public class LikesServiceImpl implements LikesService {
 			PostLikes temp = postLikesRepository.checkPostLikes(postLikes.getId(), postLikes.getPno());
 			if(temp==null) {
 				postLikesRepository.save(postLikes);
+				return true;
 			} else {
 				System.out.println("게시글 좋아요를 취소합니다.");
 				delete(postLikes);
+				return false;
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -24,9 +24,11 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void insert(String id, Post post) {
-		String nickname = userRepository.findById(id).get().getNickname();
-		post.setNickname(nickname);
+//		String nickname = userRepository.findById(id).get().getNickname();
+//		System.out.println("nickname: "+nickname);
+//		post.setNickname(nickname);
 		try {
+			System.out.println("등록됨!!!!!!!!");
 			postRepository.save(post);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -152,11 +154,11 @@ public class PostServiceImpl implements PostService {
 	// [뉴스피드]
 	// Follow하는 태그 리스트의 모든 글 가져오기
 	@Override
-	public List<Post> searchAllFollowList(List<Integer> pno_list) {
+	public List<Post> searchAllFollowList(List<Integer> pno_list, int page) {
 		List<Post> posts = null;
 		
 		try {
-			posts = postRepository.findByPnoList(pno_list);
+			posts = postRepository.findByPnoList(pno_list, page, 20);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new PostException("팔로우하는 모든 게시글 조회 중 오류가 발생했습니다.");
@@ -166,11 +168,10 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public List<Integer> searchPnoByHash(String hashtag) {
-		System.out.println("==============Pno List 출력==============");
+	public List<Integer> searchPnoByHash(String hashtag, int page) {
 		List<Integer> pno_list = null;		
 		try {
-			pno_list = postRepository.findPnoByHashtag(hashtag);
+			pno_list = postRepository.findPnoByHashtag(hashtag, page, 20);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -179,11 +180,11 @@ public class PostServiceImpl implements PostService {
 	
 	// [Tab] 탭 해시태그로 게시글 리스트 가져오기
 	@Override
-	public List<Post> search(String hashtag) {
+	public List<Post> search(String hashtag, int page) {
 		List<Post> posts = null;
 		
 		try {
-			posts = postRepository.findByHashtag(hashtag);
+			posts = postRepository.findByHashtag(hashtag, page, 20);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
