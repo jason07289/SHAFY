@@ -124,7 +124,7 @@ public class User {
 	private String nickname;
 
 	@Column(length = 20, nullable = false)
-	private String loacation;
+	private String location;
 
 	@Column(length = 10)
 	private String grade;
