@@ -6,21 +6,21 @@ import java.util.Optional;
 import com.ssafysns.model.dto.FollowHashtag;
 
 public interface FollowHashtagService {
-	public void insert(FollowHashtag followHashtag);
-
-	public void delete(int no);
-
-	public void deleteById(String id);
-
-	public void deleteByIdAndHashtag(String id, String hashtag);
-
 	public void update(FollowHashtag followHashtag);
 
-	public Optional<FollowHashtag> search(int no);
+	public Optional<FollowHashtag> searchById(String id);
 
-	public List<FollowHashtag> searchById(String id);
+// public void insert(FollowHashtag followHashtag);
 
-	public List<FollowHashtag> searchAll();
+// public void delete(int no);
 
-	public int count();
+//	public void deleteById(String id);
+
+//	public void deleteByIdAndHashtag(String id, String hashtag);
+
+//	public Optional<FollowHashtag> search(int no);
+
+//	public List<FollowHashtag> searchAll();
+
+//	public int count();
 }

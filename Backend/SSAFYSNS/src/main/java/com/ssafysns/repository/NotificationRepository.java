@@ -28,4 +28,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@Transactional
 	@Query(value = "update Notification set checked = :checked where no = :no", nativeQuery = true)
 	void updateByChecked(@Param("no") int no, @Param("checked") int checked);
+	
+	@Query(value = "select u.alarm from User u where u.id = :id")
+	int selectUserAlarm(@Param("id") String id);
+
 }
