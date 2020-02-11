@@ -8,7 +8,7 @@
       style="background-color:white;"
     >
 
-      <v-toolbar-title>#SHARFY</v-toolbar-title>
+      <v-toolbar-title>S#ARFY</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
