@@ -99,7 +99,7 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return handleFail("오류 발생", HttpStatus.OK);
+			return handleFail(e.toString(), HttpStatus.OK);
 		}
 	}
 	
@@ -170,8 +170,9 @@ public class UserController {
 	}
 	
 	@ApiOperation("닉네임 중복확인")
-	@GetMapping("/user/nickname/{nickname}")
-	public ResponseEntity<Map<String,Object>> nickNameCheck(@PathVariable String nickName){
+	@GetMapping("/user/checkNickname/{nickName}")
+	public ResponseEntity<Map<String,Object>> checkNickname(@PathVariable String nickName){
+		System.out.println("in Controller: "+nickName);
 		if(userService.nickNameCheck(nickName) ){
 			return handleSuccess("사용가능한 닉네임입니다.");
 		}else {
@@ -179,6 +180,16 @@ public class UserController {
 		}
 	}
 	
+	@ApiOperation("id 중복확인")
+	@GetMapping("/user/checkId/{id}")
+	public ResponseEntity<Map<String, Object>> checkId(@PathVariable String id){
+		if(userService.nickIdCheck(id) ){
+			return handleSuccess("사용가능한 아이디임입니다.");
+		}else {
+			return handleFail("이미 사용중인 아이디 입니다.",HttpStatus.OK);
+		}
+	}
+
 	@ApiOperation("회원 탈퇴. 비밀번호 확인 후 탈퇴로직 동작 회원탈퇴의 경우 DB에서 데이터만 수정이기 때문에 그냥 user/delete로 했습니다.")
 	@PutMapping("/user/delete")
 	public ResponseEntity<Map<String,Object>> signOut(@RequestBody User user){
@@ -221,7 +232,6 @@ public class UserController {
 		}
 	}
 	
-
 
 
 	
