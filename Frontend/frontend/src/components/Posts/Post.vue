@@ -9,13 +9,23 @@
     >
     <tagDialog :hashtag-name="dialogTagName"></tagDialog>
    </v-dialog>
+  <!-- PostLoader ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+  <v-skeleton-loader
+    v-if="loading"
+    height="94"
+    type="list-item-two-line"
+  >
+  </v-skeleton-loader>
 
   <!-- 카드시작 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-    <v-app id="vapp">
-    <v-card
-    max-width="344"
-    class="mx-auto"
-    outlined
+  <v-app id="vapp"
+    v-else
+  >
+  <v-card
+  max-width="344"
+  min-width="344"
+  class="mx-auto"
+  outlined
   >
 <!-- 작성자정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-list-item>
@@ -48,15 +58,17 @@
 
 
 <!-- 해시태그정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-
+<!--active-class="blue darken-1 white--text"-->
     <v-card-text style="padding-top:0px;padding-bottom:3px;">
       <v-chip-group
         v-model="selection"
-        active-class="blue darken-1 white--text"
         column
       >
         <v-chip v-for="tag in tag_list"  :key="tag"
-        @click.stop="clickTag(tag)" 
+        @click.stop="clickTag(tag)"
+        color="var(--button-off)"
+        text-color="#666666"
+        active-class="custom_active white--text"
         >
           #{{tag}}
         </v-chip>
@@ -78,16 +90,13 @@
 
   <!-- 본문텍스트 -->
 
-    <v-card-text style="padding-bottom:0px;color:black;transition-duration: 1s; 
-            transition-property: height;transition-timing-function: cubic-bezier(.24, .65, .82, -0.080)">
-      <span v-if="!content_show">   {{postdata_one_line}}<br> </span>
-      <span v-if="content_show"> {{postdata_full}}<br> </span>
+    <v-expand-transition>
+    <v-card-text style="padding-bottom:0px;color:black;">
+      <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
+      <span v-show="content_show"> {{postdata_full}}<br> </span>
     </v-card-text>
 
-    <v-expand-transition>
-      <div v-show="content_show">
-        
-      </div>
+      
     </v-expand-transition>
 
     <v-card-actions style="padding-top:0px;">
@@ -169,12 +178,14 @@ export default {
       dialogTagName:'',
       /*나중에 삭제할 변수*/
       selection: 1,
+      loading:true,
       /* 변환되어서 출력할 데이터들 */
       postdata_one_line : "게시글 내용 한줄만보여주는부분",
       postdata_full : "본문 전체 보여주는부분본문 전체 보여주는본문 전체 보여본문입니다",
       postdata_date : "언젠가",
       tag_list : [],
       tag:''
+
     }
   },
   methods: {
@@ -187,7 +198,7 @@ export default {
     setContent(){
       //한줄미리보기 해주는거
       var line_max = 3 //보여줄 글자 수(25자정도 넘으면 줄넘어갈듯?)
-      console.log('setContent()')
+      //console.log('setContent()')
       this.postdata_full = this.post.content;
       this.postdata_one_line = this.postdata_full.substring(0,line_max) + '...'
     },
@@ -203,10 +214,12 @@ export default {
     3. 보여줄 한 줄만 설정      => setContent()
     4. 태그리스트 생성
     */
-   console.log('시간받아온것 : '+this.post.datetime)
+   //console.log('시간받아온것 : '+this.post.datetime)
    this.postdata_date = transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
+   this.loading = false;
+   
 
   },
   props:{
@@ -270,6 +283,12 @@ function transferTime(time){
   height: fit-content;
   min-height: fit-content;
   padding-bottom:20px;
+}
+.custom_active{
+  background-color: var(--button-on) !important;
+}
+.custom_ {
+  background-color:var(--button-off);
 }
 
 

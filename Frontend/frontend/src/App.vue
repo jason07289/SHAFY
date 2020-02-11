@@ -24,6 +24,8 @@ import Appbar from '@/components/Appbar'
     --main-y : #f3c568;
     --main-y-dark :#574c37;
     --main-sb: #9fafc0;
+    --button-on : #90a9d2;
+    --button-off: #dddddd;
     /*
 
 색상표
