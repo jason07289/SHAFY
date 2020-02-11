@@ -55,18 +55,12 @@
         active-class="blue darken-1 white--text"
         column
       >
-        <v-chip>태그가 두개씩뜨는것은 무시</v-chip>
         <v-chip v-for="tag in tag_list"  :key="tag"
         @click.stop="clickTag(tag)" 
         >
           #{{tag}}
         </v-chip>
 
-        <v-chip v-for="tag in tag_list"  :key="tag"
-        @click.stop="clickTag(tag)" 
-        >
-          #{{tag}}
-        </v-chip>
 
 
       </v-chip-group>
@@ -84,15 +78,15 @@
 
   <!-- 본문텍스트 -->
 
-    <v-card-text v-if="!content_show" style="padding-bottom:0px;color:black;">
-      {{postdata_one_line}}<br>
+    <v-card-text style="padding-bottom:0px;color:black;transition-duration: 1s; 
+            transition-property: height;transition-timing-function: cubic-bezier(.24, .65, .82, -0.080)">
+      <span v-if="!content_show">   {{postdata_one_line}}<br> </span>
+      <span v-if="content_show"> {{postdata_full}}<br> </span>
     </v-card-text>
 
     <v-expand-transition>
       <div v-show="content_show">
-        <v-card-text style="">
-          {{postdata_full}}<br>
-        </v-card-text>
+        
       </div>
     </v-expand-transition>
 
@@ -213,6 +207,7 @@ export default {
    this.postdata_date = transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
+
   },
   props:{
     post: {
@@ -247,10 +242,12 @@ function transferTime(time){
     }else if(pastSecond<86400){
       str = parseInt((pastSecond/3600),10)+'시간 전'
     }else if(pastSecond<2592000){
-      str = parseInt((pastSecond/86400),10)+'달 전'
+      str = parseInt((pastSecond/86400),10)+'일 전'
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
     }
+
+
      
      return str;
 }
@@ -266,7 +263,7 @@ function transferTime(time){
   padding: 0px 20px 0px 20px;/* 위부터 시계방향 */
 }
 #vapp{
-  background-color:#fcfcfc;
+  background-color:var(--background-w);
   height:fit-content;
 }
 #vapp > div{

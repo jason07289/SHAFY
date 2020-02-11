@@ -1,6 +1,6 @@
 <template>
-  <div style="background-color:#fcfcfc;">
-    <h1>포스트리스트</h1>
+  <div style="background-color:var(--background-w);">
+    <span class = "overline" style="padding-left:40%;">{{tabName}}탭의 PostList </span>
     <!-- <div style="width:100%" v-for="post in posts" :key="post.id">
       {{post}}
     </div> -->
@@ -24,7 +24,9 @@ export default {
   }),
   created(){
     this.$store.dispatch('post/getAllPosts')
-  }
+  },
+  props: ['tabName']
+  
 }
 </script>
 

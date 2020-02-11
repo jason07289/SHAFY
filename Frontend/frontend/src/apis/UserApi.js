@@ -1,11 +1,11 @@
-/*
- User API 예시
+/*User API 예시
  */
+import properties from './properties'
 
 const axios = require('axios').default
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
-const hosturl = 'http://70.12.247.81:8080'
+const hosturl = properties.backendIP
 // const hosturl = 'http://i02a305.p.ssafy.io'
 const appname = '/user'
 
