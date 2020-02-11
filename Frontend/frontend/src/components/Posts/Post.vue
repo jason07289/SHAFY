@@ -213,7 +213,6 @@ export default {
    this.postdata_date = transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
-
   },
   props:{
     post: {
