@@ -1,8 +1,8 @@
 <template>
-<div style="height: 2600px;">
+<v-app>
   <h1>마이페이지</h1>
   <button @click="logout()">로그아웃</button>
-</div>
+</v-app>
 </template>
 
 <script>

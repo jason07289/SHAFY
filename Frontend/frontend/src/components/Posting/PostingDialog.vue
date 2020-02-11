@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center">
-<v-dialog v-model="dialog"  persistent max-width="444px" height="600px">
+  <div>
+
  <!-- 버튼부분 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->     
       <!-- <template v-slot:activator="{ on }"> -->
         <!-- <v-btn color="primary" dark v-on="on">Posting</v-btn> -->
@@ -49,14 +49,13 @@
 <!-- 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="dialog = false">close</v-btn>
+          <v-btn color="blue darken-1" text @click.stop="dialog = false">close</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Photo</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Done</v-btn>
+          <v-btn color="blue darken-1" text>Photo</v-btn>
+          <v-btn color="blue darken-1" text >Done</v-btn>
         </v-card-actions>
       </v-card>
-</v-dialog>
-  </v-row>
+  </div>
 </template>
  
 <script>
@@ -64,7 +63,6 @@ import presetData from './preset'
   export default {
     data () {
       return {
-        dialog: false,
         selectedTag:[],
         content: '',
         tags:[], /* keyword:'태그명', selected:false */
