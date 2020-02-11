@@ -1,7 +1,6 @@
 package com.ssafysns.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Likes;
-import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
-import com.ssafysns.model.service.PostService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -46,24 +43,29 @@ public class LikesController {
 	 * Likes CRUD
 	 */
 	// 게시글 좋아요 누르기
-	@ApiOperation(value = "게시글 좋아요 누르기")
-	@PostMapping("/add/{pno}")
+	@ApiOperation(value = "게시글 좋아요/취소")
+	@PostMapping("/{pno}")
 	public ResponseEntity<Map<String, Object>> insert(@PathVariable int pno) throws Exception {
 		/**
 		 * JWT 토큰 받아오기
 		 */
 //		Map<String, Object> jwt = jwtService.get("userid");
 //		String jwtId = jwt.get("userid").toString();
+		
 		System.out.println("게시글 좋아요 누르기_ id: "+jwtId+", pno: "+pno);
 		PostLikes post_likes = new PostLikes(jwtId, pno);
-		System.out.println("#_" + post_likes);
-		likesService.insert(post_likes);
-		return handleSuccess("게시글 좋아요를 눌렀습니다");
+		
+		boolean status = likesService.insert(post_likes);
+		if(status) {
+			return handleSuccess("게시글 좋아요를 눌렀습니다.");
+		} else {
+			return handleSuccess("게시글 좋아요를 취소합니다.");
+		}
 	}
 	
 	// 댓글 좋아요 누르기
-	@ApiOperation(value = "댓글 좋아요 누르기")
-	@PostMapping("/add/{pno}/{cno}")
+	@ApiOperation(value = "댓글 좋아요/취소")
+	@PostMapping("/{pno}/{cno}")
 	public ResponseEntity<Map<String, Object>> insert(@PathVariable int pno, @PathVariable int cno) throws Exception {
 		/**
 		 * JWT 토큰 받아오기
@@ -72,8 +74,13 @@ public class LikesController {
 //		String jwtId = jwt.get("userid").toString();
 		
 		Likes likes = new Likes(jwtId, pno, cno);
-		likesService.insert(likes);
-		return handleSuccess("댓글 좋아요를 눌렀습니다");
+		
+		boolean status = likesService.insert(likes);
+		if(status) {
+			return handleSuccess("게시글 좋아요를 눌렀습니다.");
+		} else {
+			return handleSuccess("게시글 좋아요를 취소합니다.");
+		}
 	}
 	
 	
