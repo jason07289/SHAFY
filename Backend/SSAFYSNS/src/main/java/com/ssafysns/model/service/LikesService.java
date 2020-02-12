@@ -9,8 +9,8 @@ import com.ssafysns.model.dto.PostLikes;
 
 public interface LikesService {
 	
-	public void insert(Likes likes);
-	public void insert(PostLikes likes);
+	public boolean insert(Likes likes);
+	public boolean insert(PostLikes likes);
 	
 	public void delete(Likes likes);	//댓글 좋아요 취소
 	void delete(PostLikes postLikes);	//게시글 좋아요 취소

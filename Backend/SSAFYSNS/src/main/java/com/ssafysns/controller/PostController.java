@@ -3,6 +3,7 @@ package com.ssafysns.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +23,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
-import com.ssafysns.model.dto.Likes;
+import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
-import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.LikesService;
+import com.ssafysns.model.service.NotificationService;
 import com.ssafysns.model.service.PostService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
@@ -60,9 +63,12 @@ public class PostController {
 	TabHashtagService tabService;
 	
 	@Autowired
+	NotificationService notificationService;
+	
+	@Autowired
 	JwtService jwtService;
 	
-	String jwtId = "kimssafy@gmail.com";
+//	String jwtId = "kimssafy@gmail.com";
 	
 
 	/**
@@ -70,13 +76,15 @@ public class PostController {
 	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
 	 */
 	@ApiOperation(value="[Tab] hashtag 하나에 해당하는 게시글들의 게시글+댓글+좋아요 전부 가져오기")
-	@GetMapping("/hashtag/tab/{hashtag}")
-	public ResponseEntity<List<Post>> getPostByOneHashtag(@PathVariable String hashtag) throws Exception {
+	@GetMapping("/tab/{hashtag}/{page}")
+	public ResponseEntity<List<Post>> getPostByOneHashtag(@PathVariable String hashtag, @PathVariable int page) throws Exception {
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
-		List<Post> post_list = searchPostByHash(hashtag);
-		List<Integer> pno_list = postService.searchPnoByHash(hashtag);
+		page = Integer.max(0, page*20-1);
+		
+		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
+		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
 		
 		post_list = returnPost(post_list, pno_list);
 		
@@ -88,17 +96,17 @@ public class PostController {
 	 * - 여러개의 Hashtag에 해당하는 Post와 그에 해당하는 Comment, Likes 조회
 	 */
 	@ApiOperation(value="[리얼-Follow] 여러개의 Hashtag에 해당하는 게시글 리스트와 게시글+댓글+좋아요 정보 반환")
-	@GetMapping("/hashtag/all")
-	public ResponseEntity<List<Post>> searchHashtagComment() throws Exception {
+	@GetMapping("/follow/{page}")
+	public ResponseEntity<List<Post>> searchHashtagComment(@PathVariable int page) throws Exception {
 		/**
 		 * JWT 토큰으로 받아오기
 		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-		
 		// Follow Hashtag를 가지고 있는 모든 게시글 리스트 가져오기
-		List<Integer> pno_by_all_hash = postService.followHashPno(jwtId);
-		List<Post> post_list = postService.searchAllFollowList(pno_by_all_hash);
+		page = Integer.max(0, page*20-1);
+		
+		String jwtId = jwtService.get("userid");
+		List<Integer> pno_by_all_hash = postService.followHashPno(jwtId);	//여기는 개수제한 X
+		List<Post> post_list = postService.searchAllFollowList(pno_by_all_hash, page);	// 개수 제한
 		
 		post_list = returnPost(post_list, pno_by_all_hash);
 		
@@ -108,8 +116,10 @@ public class PostController {
 	/**
 	 * [공통 코드]
 	 * - Comment, Likes 처리
+	 * @throws UnauthorizedException 
 	 */
-	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list){
+	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list) throws UnauthorizedException{
+		String jwtId = jwtService.get("userid");
 		
 		List<Post> post_list = posts;
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
@@ -128,6 +138,7 @@ public class PostController {
 				post.setLike_check(true);
 			}
 			post.setLike_count(post.getPostlike().size());
+			post.setPostlike(null);
 			
 			
 			/**
@@ -173,11 +184,14 @@ public class PostController {
 	 * - 내가 좋아요 누른 글 목록 가져오기
 	 */
 	@ApiOperation(value="내가 좋아요 누른 게시글 @번호 가져오기")
-	@PostMapping("/me")
-	public ResponseEntity<List<Post>> searchPostLikesById() throws Exception {
+	@PostMapping("/me/{page}")
+	public ResponseEntity<List<Post>> searchPostLikesById(@PathVariable int page) throws Exception {
 		
+		page = Integer.max(0, page*20-1);
+		
+		String jwtId = jwtService.get("userid");		
 		List<Integer> pno_list = likesService.selectPnoById(jwtId); //좋아요 누른 글 리스트 리스트 반환
-		List<Post> post_list = postService.searchAllFollowList(pno_list);
+		List<Post> post_list = postService.searchAllFollowList(pno_list, page);	//개수 제한
 		
 		for(int i = 0, size = post_list.size(); i<size; i++) {
 			Post post = post_list.get(i);
@@ -217,6 +231,8 @@ public class PostController {
 		String id = post.getId();
 		String hashtag = post.getHashtag();
 		
+		System.out.println("id: "+id+", hashtag: "+hashtag);
+		System.out.println(post.toString());
 //		User user = userService.MyInfo();
 //		String nickname = user.getNickname();
 		
@@ -229,7 +245,9 @@ public class PostController {
 		if(!id.equals("admin") && hashtag.startsWith("__공지사항__")) {
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
+			System.out.println("등록......");
 			postService.insert(id, post);
+			System.out.println("등록완료......");
 		}
 		return handleSuccess("Post 등록 완료");
 	}
@@ -241,11 +259,12 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
+		String jwtId = jwtService.get("userid");
 		
-		boolean msg = postService.delete(jwtId, pno);
-		if(msg) {
+		Post post = postService.search(pno).get();
+		
+		if(post.getId().equals(jwtId)) {
+			postService.delete(pno);
 			return handleSuccess("Post 삭제 완료");
 		} else {
 			return handleFail("게시글 삭제 권한이 없습니다.", HttpStatus.OK);
@@ -254,16 +273,17 @@ public class PostController {
 	
 	// Post 수정
 	@ApiOperation(value = "Post 수정")
-	@PutMapping("")
+	@PutMapping()
 	public ResponseEntity<Map<String, Object>> update(@RequestBody Post post) throws Exception {
 		/**
 		 * 작성자만 가능
 		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
 		
-		if(post.getId() == jwtId) {
-			postService.update(jwtId, post);
+		String jwtId = jwtService.get("userid");
+		System.out.println("ID: "+jwtId+" vs "+post.getId());
+		
+		if(post.getId().equals(jwtId)) {
+			postService.update(post);
 			return handleSuccess("게시글 수정 완료");
 		} else {
 			/**
@@ -279,7 +299,7 @@ public class PostController {
 	 * Pno로 게시글+댓글+좋아요 정보 조회
 	 */
 	@ApiOperation(value="{pno}에 해당하는 게시글, 댓글, 좋아요 조회")
-	@GetMapping("/post/{pno}")
+	@GetMapping("/{pno}")
 	public ResponseEntity<Post> searchByPno(@PathVariable int pno) throws Exception {
 		
 		Post post = search(pno);
@@ -297,6 +317,7 @@ public class PostController {
 		}
 		
 		// 로그인한 사용자가 누른 모든 좋아요 리스트 가져오기
+		String jwtId = jwtService.get("userid");
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		
@@ -315,7 +336,7 @@ public class PostController {
 			post.setLike_check(true);
 		} 
 		post.setLike_count(post.getPostlike().size());
-			
+		post.setPostlike(null);
 		
 		// 댓글마다 처리
 		for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
@@ -367,6 +388,8 @@ public class PostController {
 		List<Post> post_list = postService.searchAMonth();
 		List<Integer> pno_list = postService.searchPnoAMonth();
 		
+		System.out.println("Best 게시글 : " + post_list.size() + ", " + pno_list.size());
+		
 		for(int i = 0, size = post_list.size(); i<size; i++) {
 			Post post = post_list.get(i);
 			post.setLike_count(post.getPostlike().size());
@@ -381,23 +404,17 @@ public class PostController {
 			}
 		});
 		
-		post_list = post_list.subList(0, 20);
+		post_list = post_list.subList(0, Integer.min(20, post_list.size()));
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
 	}
 		
 	// 해시태그에 해당하는 Post 리스트 조회 (함수)
-	public List<Post> searchPostByHash(String hashtag) throws Exception {
-		List<Post> posts = postService.search(hashtag);
+	public List<Post> searchPostByHash(String hashtag, int page) throws Exception {
+		List<Post> posts = postService.search(hashtag, page);
 		return posts;
 	}
 	
-	// 해시태그에 해당하는 Comment 리스트 조회(함수)
-	@ApiOperation(value = "hashtag에 해당하는 Comment 조회")
-	public List<Comment> searchCommentByHash(String hashtag) throws Exception {
-		List<Comment> comments = commentService.joinPost(hashtag);
-		return comments;
-	}
 
 		
 	/**
@@ -405,24 +422,33 @@ public class PostController {
 	 */
 	// Comment 작성
 	@ApiOperation(value="Comment 작성")
-	@PostMapping("/comment/new")
+	@PostMapping("/comment")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-		
+		String jwtId = jwtService.get("userid");
 		commentService.insert(jwtId, comment);
+
+		// 댓글 알림 처리
+		String id = null;
+		if(comment.getParent() == -1) { //댓글일 경우 - 게시글 작성자에게 전송
+			id = postService.search(comment.getPno()).get().getId();
+		} else { //대댓글일 경우 - 댓글 작성자에게 전송
+			id = commentService.search(comment.getCno()).getId();
+		}
+		
+		Notification notification =  new Notification(id, new Date(), comment.getPno(), 2, 0);
+		notificationService.insert(notification);
+		
 		return handleSuccess("댓글 등록 완료");
 	}
 	
 	// Comment 수정
 	@ApiOperation(value="Comment update")
-	@PostMapping("/comment/update")
+	@PutMapping("/comment")
 	public ResponseEntity<Map<String, Object>> commentUpdate(@RequestBody Comment comment) throws Exception {
 		/**
 		 * 작성자만 가능
 		 */
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
+		String jwtId = jwtService.get("userid");
 		
 		if(comment.getId() == jwtId) {
 			commentService.update(comment);
@@ -434,14 +460,12 @@ public class PostController {
 	
 	// Comment 삭제
 	@ApiOperation(value="no로 Comments 삭제")
-	@GetMapping("/comment/delete/{no}")
+	@DeleteMapping("/comment/{no}")
 	public ResponseEntity<Map<String, Object>> DeleteComment(@PathVariable int no) throws Exception {
-//		Map<String, Object> jwt = jwtService.get("userid");
-//		String jwtId = jwt.get("userid").toString();
-
 		/**
 		 * 작성자만 가능
 		 */
+		String jwtId = jwtService.get("userid");
 		Boolean msg = commentService.delete(jwtId, no);
 		
 		if(msg == true) {
@@ -463,7 +487,6 @@ public class PostController {
 		return comments;
 	}
 
-	
 	
 	/**
 	 * ExceptionHandler
