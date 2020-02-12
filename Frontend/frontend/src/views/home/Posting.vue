@@ -66,6 +66,10 @@
   </div>
 </template>
  
+
+
+
+
 <script>
 import presetData from '../../assets/preset'
 import { mapActions, mapState } from 'vuex'
@@ -74,11 +78,10 @@ import { mapActions, mapState } from 'vuex'
     data () {
       return {
         dialog: false,
-        selectedTag:[],
-        content: '',
-        tags:[], /* keyword:'태그명', selected:false */
-        presets:presetData,
-        tagGroup:[],
+        selectedTag:[], /* 선택한 것들만 */
+        content: '',/* TextArea값 받아오는 곳*/
+        tags:[], /* Tags의 리턴값(chip에 뜨는 내용들)keyword:'태그명', active:true */
+        presets:presetData,/* 추천태그 js파일 */
         postingForm:{
           anonymous: 0,
           attachments: '',
@@ -111,7 +114,10 @@ import { mapActions, mapState } from 'vuex'
             }
           }
           if(flag){
-            tags.push(preset.keyword)
+            tags.push({
+              keyword: preset.keyword,
+              active : true
+            })
           }
         }
         //#으로 시작하는 태그가 있는지 검사
