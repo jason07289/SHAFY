@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>북마크한 글 들</h1>
+    <h1>알림창</h1>
   </div>
 </template>
 

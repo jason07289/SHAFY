@@ -31,25 +31,23 @@ public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
 
-/*
- * 1. comments와 like의 insert 시, controller에서 notification 발생시키기
-
-   - Controller에서
-
-   1. 상단에
-
-   ``` 
-   @Autowired
-   NotificationService notificationService;
-   ```
-
-   2. POST 메서드 안에서
-
-   ```
-   Notification notification =  new Notification(id, new Date(), pno/cno, 1좋아요/2댓글/3대댓글, 0);
-   notificationService.insert(notification);
-   ```
- * */
+	/*
+	 * 1. comments와 like의 insert 시, controller에서 notification 발생시키기
+	 * 
+	 * - Controller에서
+	 * 
+	 * 1. 상단에
+	 * 
+	 * ```
+	 * 
+	 * @Autowired NotificationService notificationService; ```
+	 * 
+	 * 2. POST 메서드 안에서
+	 * 
+	 * Notification 발생시킴
+	 * Notification notification = new Notification(likes.getId(), new Date(), cno OR pno, 좋아요: 1 OR 댓글: 2 OR 대댓글: 3, 0); 
+	 * notificationService.insert(notification);
+	 */
 
 	// 1. checked = true이고
 	// 2. datetime 이전이면(단, datetime을 일정시점(일단, 7일로 설정함) 이전으로 설정해야만 삭제할 수 있도록 함) 삭제
@@ -75,7 +73,7 @@ public class NotificationController {
 		return handleSuccess(notificationService.searchAll());
 	}
 
-	// 모든 Notification 조회
+	// 로그인한 사용자의 Notification 개수 조회
 	@ApiOperation(value = "로그인한 사용자의 Notification 개수 조회")
 	@GetMapping("/count")
 	public ResponseEntity<Map<String, Object>> count() throws Exception {
@@ -87,6 +85,20 @@ public class NotificationController {
 		String id = "";
 
 		return handleSuccess(notificationService.count(id));
+	}
+
+	// 로그인한 사용자의 알람 발생 여부 조회
+	@ApiOperation(value = "로그인한 사용자의 알람 발생 여부 조회")
+	@GetMapping("/user/alarm")
+	public ResponseEntity<Map<String, Object>> alarmcheck() throws Exception {
+		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
+//		Map<String, Object> uid = jwtService.get("userid");
+//		String id = uid.get("userid").toString();
+
+		// test시 직접 입력
+		String id = "";
+		boolean res = notificationService.userAlarmCheck(id); 
+		return handleSuccess(res ? "새로운 알람이 발생했습니다" : "새로운 알람이 발생하지 않았습니다.");
 	}
 
 	@ExceptionHandler
