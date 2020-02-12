@@ -426,9 +426,17 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
 		String jwtId = jwtService.get("userid");
 		commentService.insert(jwtId, comment);
+
+		// 댓글 알림 처리
+		String id = null;
+		if(comment.getParent() == -1) { //댓글일 경우 - 게시글 작성자에게 전송
+			id = postService.search(comment.getPno()).get().getId();
+		} else { //대댓글일 경우 - 댓글 작성자에게 전송
+			id = commentService.search(comment.getCno()).getId();
+		}
 		
-//		Notification notification =  new Notification(jwtId, new Date(), comment.getPno(), 2, 0);
-//		notificationService.insert(notification);
+		Notification notification =  new Notification(id, new Date(), comment.getPno(), 2, 0);
+		notificationService.insert(notification);
 		
 		return handleSuccess("댓글 등록 완료");
 	}
