@@ -32,16 +32,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 	}
 
 	@Override
-	public void delete(int no) {
-		try {
-			bookmarkRepository.deleteById(no);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BookmarkException("Bookmark 삭제 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
 	public void deleteById(String id) {
 		try {
 			bookmarkRepository.deleteByUserId(id);
@@ -62,26 +52,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 	}
 
 	@Override
-	public void update(Bookmark bookmark) {
-		try {
-			bookmarkRepository.save(bookmark);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BookmarkException("Bookmark 수정 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
-	public Optional<Bookmark> search(int no) {
-		try {
-			return bookmarkRepository.findById(no);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BookmarkException(no + "로 Bookmark 조회 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
 	public List<Bookmark> searchById(String id) {
 		try {
 			return bookmarkRepository.findByUserId(id);
@@ -91,24 +61,54 @@ public class BookmarkServiceImpl implements BookmarkService {
 		}
 	}
 
-	@Override
-	public List<Bookmark> searchAll() {
-		try {
-			return bookmarkRepository.findAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BookmarkException("Bookmark 목록 조회 중 오류가 발생했습니다.");
-		}
-	}
+//	@Override
+//	public void delete(int no) {
+//		try {
+//			bookmarkRepository.deleteById(no);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BookmarkException("Bookmark 삭제 중 오류가 발생했습니다.");
+//		}
+//	}
 
-	@Override
-	public int count() {
-		try {
-			return (int) bookmarkRepository.count();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new BookmarkException("Bookmark 개수 조회 중 오류가 발생했습니다.");
-		}
-	}
+//	@Override
+//	public void update(Bookmark bookmark) {
+//		try {
+//			bookmarkRepository.save(bookmark);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BookmarkException("Bookmark 수정 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public Optional<Bookmark> search(int no) {
+//		try {
+//			return bookmarkRepository.findById(no);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BookmarkException(no + "로 Bookmark 조회 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public List<Bookmark> searchAll() {
+//		try {
+//			return bookmarkRepository.findAll();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BookmarkException("Bookmark 목록 조회 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public int count() {
+//		try {
+//			return (int) bookmarkRepository.count();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new BookmarkException("Bookmark 개수 조회 중 오류가 발생했습니다.");
+//		}
+//	}
 
 }

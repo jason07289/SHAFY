@@ -235,3 +235,6 @@ https://antdev.tistory.com/36
 - ![image](https://user-images.githubusercontent.com/38865267/73898920-4f5a4400-48ce-11ea-8f21-5a26981a5e87.png)
 
 - ![image](https://user-images.githubusercontent.com/38865267/73898949-64cf6e00-48ce-11ea-9796-28367925a57b.png)
+
+### 전체 흐름
+- ![image](https://user-images.githubusercontent.com/38865267/74304395-39ea8b80-4da0-11ea-9454-d8b5649ce7e7.png)
