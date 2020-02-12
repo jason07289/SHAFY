@@ -33,7 +33,7 @@
 
 
     </v-bottom-navigation>
-    <v-dialog v-model="dialog"  max-width="444px" min-width="444px" height="600px">
+    <v-dialog v-model="dialog" width="fit-content">
       <posting/>
     </v-dialog>
 
