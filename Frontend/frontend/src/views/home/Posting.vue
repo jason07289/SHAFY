@@ -1,14 +1,7 @@
 <template>
   <div id="posting" style="width:100%;">
-  
- <!-- 버튼부분 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->     
-      <!-- <template v-slot:activator="{ on }"> -->
-        <!-- <v-btn color="primary" dark v-on="on">Posting</v-btn> -->
-      
-      <!-- </template> -->
 
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-    
       <v-card
         max-width="444"
         min-width="444"
@@ -16,33 +9,31 @@
     outlined
     style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
       >
-        <v-card-title>게시글 작성</v-card-title>
+        <v-card-title v-if="step==1">게시글 작성</v-card-title>
+        <v-card-title v-if="step==2">해시태그 선택</v-card-title>
         <v-divider></v-divider>
 
-<!-- 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
-<v-card-text  class="py-0"
-             
-              style="margin-top:10px;"
->
-  <span class="subheading" style="padding-left:10px;">#HashTags</span>
-  <v-chip-group
-        v-model="selectedTag"
-        multiple 
-        active-class="blue darken-1 white--text"
-        column
-      >
-        <v-chip
-          v-for="(tag, i) in Tags"
-          :key="i"
-          class="mr-2"
-          @click="clickTag(tag)"
-        >
-          {{ tag }}
-        </v-chip>
-  </v-chip-group>
-      </v-card-text>
+<v-window v-model="step">
 
-<!-- 텍스트필드ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+<v-window-item :value="1">
+<!-- [step:1] 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+  <v-card-text  
+    class="py-0"
+    style="margin-top:10px;"
+  >
+  <span class="subheading" style="padding-left:10px;">#HashTags</span>
+  <v-chip-group column >
+    <v-chip
+      v-for="(tag, i) in Tags"
+      :key="i"
+      class="mr-2"
+      :ripple="false"
+    >
+      {{ tag }}
+    </v-chip>
+  </v-chip-group>
+  </v-card-text>
+<!-- [step:1] 텍스트필드ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-container fluid style="padding-bottom:0px;">
           <v-textarea
            v-model="content"
@@ -53,18 +44,74 @@
             value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
           ></v-textarea>
         </v-container>
-
-<!-- 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+<!-- [step:1] 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">Photo</v-btn>
+          <v-btn color="blue darken-1" text @click="goStep2()">Next</v-btn>
+        </v-card-actions>
+</v-window-item>
+
+<!-- <step:2> 태그선택rㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+<v-window-item :value="2">
+<v-card-text  
+    class="py-0"
+    style="margin-top:10px;"
+>
+  <span class="subheading" style="padding-left:10px;">#HashTags</span>
+
+  <v-chip-group
+    v-model="selectedIndex"
+    column
+    style="padding-bottom:27px;"
+  >
+    <v-chip
+      v-for="(tag, i) in selectedTag"
+      :key="i"
+      class="mr-2 blue"
+      close
+      color="white"
+      text-color="white"
+      @click:close="selectedTag.splice(i,1)"
+    >
+      {{ tag }}
+    </v-chip>
+  </v-chip-group>
+  </v-card-text>
+
+  <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="step=1">back</v-btn>
+          <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
         </v-card-actions>
+</v-window-item>
+<v-window-item :value="3">
+  <v-card-actions style="padding-top:20px;padding-bottom:0px;">
+    <!-- <v-card-title style="position:center">
+    <v-icon size="50" color="green">mdi-emoticon-happy-outline</v-icon>
+    </v-card-title> -->
+  </v-card-actions>
+  <v-card-actions style="padding-top:0px;padding-bottom:20px;">
+    <v-spacer></v-spacer>
+    <v-card-title>게시글이 등록되었습니다</v-card-title>
+    <v-spacer></v-spacer>
+
+  </v-card-actions>
+  
+</v-window-item>
+
+
+
+</v-window>
       </v-card>
   </div>
 </template>
  
+
+
+
 <script>
 import presetData from '../../assets/preset'
 import { mapActions, mapState } from 'vuex'
@@ -72,11 +119,13 @@ import { mapActions, mapState } from 'vuex'
   export default {
     data () {
       return {
+        //---게시글 작성 관련 변수---
         dialog: false,
         selectedTag:[],
         content: '',
         tags:[], /* keyword:'태그명', selected:false */
         presets:presetData,
+        //---요청바디 관련 변수---
         postingForm:{
           anonymous: 0,
           attachments: '',
@@ -88,7 +137,10 @@ import { mapActions, mapState } from 'vuex'
           like_count:0,
           nickname:'',
           postlike:[],
-        }
+        },
+        //step2와 window stepper관련 변수
+        step:1,
+        selectedIndex:[],
       }
     },
 
@@ -128,28 +180,9 @@ import { mapActions, mapState } from 'vuex'
     },
 
     methods: {
-      printTag(){
-        console.log(this.selectedTag)
-      },
-      clickTag(tag){
-        
-        var now;
-        for(var i=0; i<this.selectedTag.length;i++){
-          now = this.selectedTag[i]
-          if(now == tag){
-            //console.log("들어오긴햇어")
-            this.selectedTag.splice(i,1);
-            this.printTag()
-            return
-          }
-            console.log("sel:"+now+", i:"+i+", length:"+this.selectedTag.length)
-        }
-        this.selectedTag.push(tag)
-        this.printTag()
-        return
-
-      },
+      
       doposting(){
+        this.step=3
         // content랑 해시태그 유효성 검증
         
         if (this.content === ''){
@@ -164,6 +197,11 @@ import { mapActions, mapState } from 'vuex'
         this.postingForm.hashtag = this.selectedTag.join('')
         this.posting(this.postingForm)
       },
+       goStep2(){
+         this.step=2;
+        this.selectedTag = JSON.parse(JSON.stringify( this.Tags ))
+
+      },
     ...mapActions({
       posting:'post/doposting',
       getUserInfo:'user/getUserInfo',
@@ -171,7 +209,9 @@ import { mapActions, mapState } from 'vuex'
     },
     created(){
       this.getUserInfo()
-    }
+    },
+    
+    
   }
 </script>
 <style scoped>
