@@ -74,6 +74,12 @@ public class JwtServiceImpl implements JwtService{
 	public String get(String key) throws UnauthorizedException {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		String jwtbearer = request.getHeader("Authorization");
+		
+		if(jwtbearer==null) {
+			throw new UnauthorizedException();
+			
+		}
+		
 		System.out.println("JWT getHeader: "+ jwtbearer);
 		
 		String[] strs=jwtbearer.split(" ");
