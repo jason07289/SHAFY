@@ -1,10 +1,12 @@
 <template>
     <div id="app">
         <Appbar/>
+        <v-app>
         <div style="width:100%; height:48px;"></div>
         <Navbar/>
         <router-view id="scroll-area-1"></router-view>
         <div style="width:100%;height:60px;"></div>
+        </v-app>
     </div>
 </template>
 <script>
