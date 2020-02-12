@@ -5,6 +5,8 @@
     <v-bottom-navigation
       hide-on-scroll
       fixed
+      background-color="var(--main-sb)"
+      color="#ffffff"
     >
 
 
@@ -24,14 +26,16 @@
         <v-icon>mdi-bell</v-icon>
       </v-btn>
 
-      <v-btn @click="routing('Posting')">
+      <v-btn @click="dialog=true">
         <v-icon>mdi-lead-pencil</v-icon> 
       </v-btn>
       
 
 
     </v-bottom-navigation>
-    
+    <v-dialog v-model="dialog"  max-width="444px" min-width="444px" height="600px">
+      <posting/>
+    </v-dialog>
 
 
     
@@ -39,6 +43,7 @@
 </template>
 
 <script>
+import posting from '../views/home/Posting'
 export default {
   name: 'Navbar',
   data:()=>{
@@ -46,6 +51,9 @@ export default {
       component: this,
       dialog:false,
     }
+  },
+  components:{
+    posting,
   },
   methods:{
     routing(routeName){
@@ -59,4 +67,8 @@ export default {
 }
 </script>
 <style scoped>
+.Navbar > div{
+  box-shadow: none !important;
+  /* border: 4px solid red !important; */
+}
 </style>

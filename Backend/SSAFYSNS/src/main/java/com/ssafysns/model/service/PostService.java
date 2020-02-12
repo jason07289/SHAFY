@@ -8,9 +8,9 @@ import com.ssafysns.model.dto.Post;
 public interface PostService {
 	public void insert(String id, Post post);
 
-	public Boolean delete(String id, int pno);
+	public Boolean delete(int pno);
 
-	public Boolean update(String id, Post post);
+	public Boolean update(Post post);
 
 	public Optional<Post> search(int pno);
 
@@ -21,11 +21,11 @@ public interface PostService {
 	
 	public List<Integer> followHashPno(String id); // [뉴스피드] follow하는 모든 pno 리스트 가져오기
 	
-	public List<Post> searchAllFollowList(List<Integer> pno_list); // [뉴스피드] follow하는 모든 게시글 리스트 가져오기
+	public List<Post> searchAllFollowList(List<Integer> pno_list, int page); // [뉴스피드] follow하는 모든 게시글 리스트 가져오기
 	
-	public List<Integer> searchPnoByHash(String hashtag); //[tab] hashtag를 가지는 pno 리스트로 불러오기
+	public List<Integer> searchPnoByHash(String hashtag, int page); //[tab] hashtag를 가지는 pno 리스트로 불러오기
 	
-	public List<Post> search(String hashtag);	//[tab] hashtag를 가지는 [tab] 리스트 불러오기
+	public List<Post> search(String hashtag, int page);	//[tab] hashtag를 가지는 [tab] 리스트 불러오기
 	
 	public int count();
 

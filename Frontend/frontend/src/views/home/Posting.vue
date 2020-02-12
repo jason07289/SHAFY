@@ -1,6 +1,6 @@
 <template>
   <div id="posting" style="width:100%;">
-      <v-app>
+  
  <!-- 버튼부분 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->     
       <!-- <template v-slot:activator="{ on }"> -->
         <!-- <v-btn color="primary" dark v-on="on">Posting</v-btn> -->
@@ -10,7 +10,8 @@
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     
       <v-card
-        max-width="344"
+        max-width="444"
+        min-width="444"
     class="mx-auto"
     outlined
     style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
@@ -25,7 +26,7 @@
 >
   <span class="subheading" style="padding-left:10px;">#HashTags</span>
   <v-chip-group
-        v-model="tags"
+        v-model="selectedTag"
         multiple 
         active-class="blue darken-1 white--text"
         column
@@ -61,14 +62,13 @@
           <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
         </v-card-actions>
       </v-card>
-      </v-app>
   </div>
 </template>
  
 <script>
 import presetData from '../../assets/preset'
 import { mapActions, mapState } from 'vuex'
-
+ 
   export default {
     data () {
       return {
@@ -77,7 +77,6 @@ import { mapActions, mapState } from 'vuex'
         content: '',
         tags:[], /* keyword:'태그명', selected:false */
         presets:presetData,
-        tagGroup:[],
         postingForm:{
           anonymous: 0,
           attachments: '',
