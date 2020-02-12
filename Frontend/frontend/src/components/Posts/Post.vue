@@ -134,9 +134,12 @@
       
     </v-card-actions>
 
-    <!-- 댓글입력창 -->
+    <!-- 댓글창, 입력창 -->
     <v-card-actions style="padding-top:0px;padding-bottom:11px;">
     <v-expand-transition>
+      <!-- 댓글 보는 부분 -->
+      
+      <!-- 입력부분 -->
       <div class="fit_BT" v-show="comment_show">
           <v-text-field
             v-model="description"
