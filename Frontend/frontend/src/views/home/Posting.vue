@@ -88,7 +88,18 @@
         </v-card-actions>
 </v-window-item>
 <v-window-item :value="3">
-  <v-card-title>게시글이 등록되었습니다</v-card-title>
+  <v-card-actions style="padding-top:20px;padding-bottom:0px;">
+    <!-- <v-card-title style="position:center">
+    <v-icon size="50" color="green">mdi-emoticon-happy-outline</v-icon>
+    </v-card-title> -->
+  </v-card-actions>
+  <v-card-actions style="padding-top:0px;padding-bottom:20px;">
+    <v-spacer></v-spacer>
+    <v-card-title>게시글이 등록되었습니다</v-card-title>
+    <v-spacer></v-spacer>
+
+  </v-card-actions>
+  
 </v-window-item>
 
 
@@ -163,7 +174,6 @@ import { mapActions, mapState } from 'vuex'
 
         return tags
       },
-     
      ...mapState({
         userInfo: state=> state.user.userInfo,
       })
@@ -200,6 +210,7 @@ import { mapActions, mapState } from 'vuex'
     created(){
       this.getUserInfo()
     },
+    
     
   }
 </script>
