@@ -32,7 +32,7 @@ const actions = {
     PostApi.requestPosting(data,
       res=>{
         if (res.data.state === 'ok'){
-          alert('게시글이 작성 되었습니다.')
+          //alert('게시글이 작성 되었습니다.')
           router.push({name:'Home'})
         }else{
           console.log(res)

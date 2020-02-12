@@ -26,15 +26,15 @@
         <v-icon>mdi-bell</v-icon>
       </v-btn>
 
-      <v-btn @click="dialog=true">
+      <v-btn @click="clickPosting">
         <v-icon>mdi-lead-pencil</v-icon> 
       </v-btn>
       
 
 
     </v-bottom-navigation>
-    <v-dialog v-model="dialog"  max-width="444px" min-width="444px" height="600px">
-      <posting/>
+    <v-dialog v-model="dialog" width="fit-content">
+      <component :is="dialog?'posting' : 'span'"/>
     </v-dialog>
 
 
@@ -61,7 +61,7 @@ export default {
     },
     clickPosting(){
       this.dialog = true;
-      console.log('뭐해......')
+      this.step=1;
     }
   }
 }
