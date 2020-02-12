@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.exception.AdminException;
 import com.ssafysns.exception.MyLoginException;
 import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
@@ -232,7 +233,28 @@ public class UserController {
 		}
 	}
 	
-
+	@ApiOperation("경고주기 - 3회 누적시 탈퇴처리")
+	@GetMapping("/user/UserBan/{id}")
+	public ResponseEntity<Map<String,Object>> UserBan(@PathVariable String id){
+		try {
+			
+			String msg=userService.userBan(id);
+			return handleSuccess(id+""+msg) ;
+			
+			
+		} catch (UnauthorizedException e) {
+			e.printStackTrace();
+			return handleFail("토큰 오류 발생", HttpStatus.OK);
+		} catch (AdminException e) {
+			e.printStackTrace();
+			return handleFail("계정 권한 오류 발생", HttpStatus.OK);
+		} catch (Exception e){
+			e.printStackTrace();
+			return handleFail("잘못된 id를 입력하셨습니다.", HttpStatus.OK);
+		}
+		
+		
+	}
 
 	
 }

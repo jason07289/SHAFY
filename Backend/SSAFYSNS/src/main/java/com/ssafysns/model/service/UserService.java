@@ -2,6 +2,8 @@ package com.ssafysns.model.service;
 
 import java.util.List;
 
+import com.ssafysns.exception.AdminException;
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 
 public interface UserService {
@@ -19,4 +21,5 @@ public interface UserService {
 	public User MyInfo()throws Exception;
 	public List<User> list() throws Exception;
 	public boolean nickIdCheck(String id);
+	public String userBan(String id) throws UnauthorizedException,AdminException;
 }
