@@ -22,11 +22,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
 	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
 	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
-	int countByIdAndNotChecked(@Param("id") String id);
+	long countByIdAndNotChecked(@Param("id") String id);
 
 	@Modifying
 	@Transactional
-	@Query(value = "update Notification set checked = :checked where no = :no", nativeQuery = true)
+	@Query(value = "update notification set checked = :checked where no = :no", nativeQuery = true)
 	void updateByChecked(@Param("no") int no, @Param("checked") int checked);
 	
 	@Query(value = "select u.alarm from User u where u.id = :id")
