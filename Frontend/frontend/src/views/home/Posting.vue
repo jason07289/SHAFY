@@ -45,6 +45,7 @@
         <v-container fluid style="padding-bottom:0px;">
           <v-textarea
            v-model="content"
+           :rules="[v => !!v|| '내용을 입력해주세요']"
             name="input-7-1"
             filled
             rows="9"
@@ -55,10 +56,9 @@
 <!-- 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="dialog = false">close</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">Photo</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Done</v-btn>
+          <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
         </v-card-actions>
       </v-card>
       </v-app>
@@ -67,6 +67,8 @@
  
 <script>
 import presetData from '../../assets/preset'
+import { mapActions, mapState } from 'vuex'
+
   export default {
     data () {
       return {
@@ -76,8 +78,19 @@ import presetData from '../../assets/preset'
         tags:[], /* keyword:'태그명', selected:false */
         presets:presetData,
         tagGroup:[],
+        postingForm:{
+          anonymous: 0,
+          attachments: '',
+          comment:[],
+          content:'',
+          hashtag:'',
+          id:'',
+          like_check:false,
+          like_count:0,
+          nickname:'',
+          postlike:[],
+        }
       }
-      
     },
 
     computed: {
@@ -108,12 +121,11 @@ import presetData from '../../assets/preset'
         tags = tags.concat(sharps)
          }
 
-
-
-
         return tags
       },
-
+     ...mapState({
+        userInfo: state=> state.user.userInfo,
+      })
     },
 
     methods: {
@@ -132,16 +144,35 @@ import presetData from '../../assets/preset'
             return
           }
             console.log("sel:"+now+", i:"+i+", length:"+this.selectedTag.length)
-          
         }
         this.selectedTag.push(tag)
         this.printTag()
         return
 
-      }
-
-
+      },
+      doposting(){
+        // content랑 해시태그 유효성 검증
+        
+        if (this.content === ''){
+          alert('게시글 내용을 입력 해 주세요')
+        }
+        if (this.selectedTag.length === 0){
+          alert('1개 이상의 tag를 선택 해 주세요')
+        }
+        console.log('선택',this.selectedTag)
+        this.postingForm.id = this.userInfo.id
+        this.postingForm.content = this.content
+        this.postingForm.hashtag = this.selectedTag.join('')
+        this.posting(this.postingForm)
+      },
+    ...mapActions({
+      posting:'post/doposting',
+      getUserInfo:'user/getUserInfo',
+      })
     },
+    created(){
+      this.getUserInfo()
+    }
   }
 </script>
 <style scoped>

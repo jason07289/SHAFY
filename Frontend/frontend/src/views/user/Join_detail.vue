@@ -219,7 +219,7 @@ export default {
     ...mapState({
       hosturl:'user/hosturl',
       seq:'user/seq',
-      togosite:'user/togosite',
+      togosite: state=> state.user.togosite,
     })
   },
   methods:{
@@ -240,7 +240,6 @@ export default {
         }
       }
       if (isrequired === true){
-        console.log(this.togosite)
         if (this.togosite === '' || this.togosite === undefined){
           console.log('그냥 회원가입')
           console.log(this.signUpForm)

@@ -94,4 +94,17 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
+	@Override
+	public boolean userAlarmCheck(String id) {
+		try {
+			int alarm = notificationRepository.selectUserAlarm(id);
+			if (alarm == 0)
+				return false;
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotificationException("로그인한 유저의 알람 발생 여부 조회 중 오류가 발생했습니다.");
+		}
+	}
+
 }

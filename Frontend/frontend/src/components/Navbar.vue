@@ -5,6 +5,8 @@
     <v-bottom-navigation
       hide-on-scroll
       fixed
+      background-color="var(--main-sb)"
+      color="#ffffff"
     >
 
 
@@ -48,10 +50,6 @@ export default {
     }
   },
   methods:{
-    logout(){
-      this.$store.dispatch('user/logout')
-      .then(()=>this.$router.push({name:'Login'}))
-    },
     routing(routeName){
       this.$router.push({ name: routeName})
     },
@@ -63,4 +61,8 @@ export default {
 }
 </script>
 <style scoped>
+.Navbar > div{
+  box-shadow: none !important;
+  /* border: 4px solid red !important; */
+}
 </style>
