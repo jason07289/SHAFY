@@ -1,6 +1,6 @@
  /* eslint-disable no-unused-vars */
 import HashTagApi from '@/apis/HashTagApi'
-import router from '../main'
+// import router from '../main'
 
 const state = {
   tabtags : [],
@@ -13,10 +13,9 @@ const actions = {
  getAllTab({ commit }){
   HashTagApi.getTabtag(res=>{
     if (res.data.state === 'ok'){
-      console.log(res.data.message)
       commit('setAllTab', res.data.message.hashtag.split('#'))
     }else{
-      console.log(res.data)
+      console.log(res)
     }
     },err=>{
       console.log(err)
@@ -29,6 +28,7 @@ const mutations = {
   setAllTab(state, data){
     const end = data.length
     state.tabtags = data.splice(1, end)
+    console.log('tab 설정 완료')
   }
   // setSNSseq(state, data){
   //   state.seq = data.seq

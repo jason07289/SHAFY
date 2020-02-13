@@ -1,8 +1,11 @@
 import properties from './properties'
-const axios = require('axios').default
-
+const axios = require('axios')
+// axios.create({
+//   headers: {
+//       'Authorization': 'Bearer ' + localStorage.getItem('JWT')
+//   }
+// })
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
-
 const hosturl = properties.backendIP
 
 /* eslint-disable no-unused-vars */
@@ -55,6 +58,7 @@ const putFollowtag  = (data,callback,errorCallback) => {
 }
 
 const getTabtag  = (callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+'/tabtag')
   .then(callback)
   .catch(errorCallback)

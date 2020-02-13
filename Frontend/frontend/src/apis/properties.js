@@ -7,7 +7,7 @@ const set = {
     FE_AWS:'http://i02a305.p.ssafy.io',
 }
 export default{
-    backendIP : set.AWS,
+    backendIP : set.PSJ,
     frontendIP : set.FE_LST
 }
 

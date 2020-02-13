@@ -1,5 +1,6 @@
 import properties from './properties'
-const axios = require('axios').default
+const axios = require('axios')
+
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
 // const hosturl = 'http://i02a305.p.ssafy.io'
@@ -10,14 +11,20 @@ const appname = '/post'
 // list 받아오기 
 const getPostlist = (params,callback,errorCallback) => {
   //백앤드와 로그인 통신하는 부분
-  console.log('Getpostlist')
   axios.get(hosturl+appname+'/list', params)
+  .then(callback)
+  .catch(errorCallback)
+}
+
+const getHomePost = (params, callback, errorCallback) => {
+  console.log('Getpostlist', params)
+  axios.get(hosturl+appname+`/follow/${params.page}`)
   .then(callback)
   .catch(errorCallback)
 }
 // 게시글 작성하기
 const requestPosting = (data,callback,errorCallback) => {
-  console.log(axios.defaults.headers)
+  console.log(localStorage.JWT)
   axios.post(hosturl+appname, data)
   .then(callback)
   .catch(errorCallback)
@@ -54,6 +61,7 @@ const deleteComment = (data, callback, errorCallback) => {
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
+  getHomePost:(params,callback,errorCallback)=>getHomePost(params,callback,errorCallback),
   requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
   requestComment:(data,callback,errorCallback)=>requestComment(data,callback,errorCallback),
   updatePosting:(data,callback,errorCallback)=>updatePosting(data,callback,errorCallback),

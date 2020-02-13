@@ -22,7 +22,11 @@
         v-for="item in Tabs"
         :key="item"
       >
-    <PostList :tab-name="item"></PostList>
+    <PostList
+    v-infinite-scroll="loadMore" 
+    infinite-scroll-disabled="busy" 
+    infinite-scroll-distance="10" 
+    :tab-name="item"></PostList>
         
       </v-tab-item>
     </v-tabs-items>
@@ -38,7 +42,9 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data () {
       return {
-        tab: null,
+          page: 1,
+          busy: false,
+          tab: null,
         // Tabs: [
         //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
         // ],
@@ -51,11 +57,20 @@ export default {
   methods:{
     ...mapActions({
       getAllTab: 'tags/getAllTab',
-    })
+      getAllPosts: 'post/getAllPosts',
+    }),
+    loadMore(){
+     this.busy = true
+     console.log(this.page)
+     console.log('읽어져라')
+     this.getAllPosts({page: this.page})
+    }
   },
   created(){
-    console.log(this.$store)
+    console.log(this.$store.state.tags.tabtags)
     this.getAllTab()
+    console.log(this.Tabs)
+    // this.getAllPosts({page: this.page})
   },
   computed:{
     ...mapState({
@@ -63,6 +78,7 @@ export default {
     })
   },
 }
+
 </script>
 
 <style>
