@@ -135,12 +135,38 @@
     </v-card-actions>
 
     <!-- 댓글창, 입력창 -->
-    <v-card-actions style="padding-top:0px;padding-bottom:11px;">
+    <v-card-actions style="padding-top:0px;padding-bottom:11px; width:100%;">
     <v-expand-transition>
+
+      <div class="fit_BT" v-show="comment_show" style="width:100%;">
       <!-- 댓글 보는 부분 -->
-      
+      <v-card-actions
+        v-for="comment in post.comment"
+        :key="comment.parent"
+        style="width:100%;"
+      >
+      <v-icon 
+        v-if="comment.parent!=comment.cno"
+        style="padding-right:5px;"
+      >
+        mdi-subdirectory-arrow-right
+      </v-icon>
+        <v-card
+        color="white"
+        outlined
+        style="width:100%;"
+        >
+          <span class="subtitle-2">{{comment.nickname}}</span>
+          <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
+          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
+          <v-icon class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
+          <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
+          <div class="caption" style="width:100%;">{{comment.content}}</div>
+          
+        </v-card>
+      </v-card-actions>
+
       <!-- 입력부분 -->
-      <div class="fit_BT" v-show="comment_show">
           <v-text-field
             v-model="description"
             :rules="rules"
@@ -208,6 +234,38 @@ export default {
     makeTagList(){
       this.tag_list = this.post.hashtag.replace(' ','').split('#')
       this.tag_list.splice(0,1)
+    },
+    transferTime(time){    
+     var now = new Date();
+     var sYear = time.substring(0,4);
+     var sMonth = time.substring(5,7)-1;
+     var sDate = time.substring(8,10);
+     var sHour = time.substring(11,13);
+     var sMin = time.substring(14,16);
+     var sSecond = time.substring(17,19);
+     var sc = 1000;
+ 
+     var today = new Date(sYear,sMonth,sDate,sHour,sMin,sSecond);
+     //지나간 초
+     var pastSecond = parseInt((now-today)/sc,10);
+    //  console.log("지나간초:"+pastSecond)
+       var str = "";
+    
+    if(pastSecond<60){
+      str='방금 전'
+    }else if(pastSecond<3600){
+      str = parseInt((pastSecond/60),10)+'분 전'
+    }else if(pastSecond<86400){
+      str = parseInt((pastSecond/3600),10)+'시간 전'
+    }else if(pastSecond<2592000){
+      str = parseInt((pastSecond/86400),10)+'일 전'
+    }else{
+      str = sYear+'/'+sMonth+'/'+sDate
+    }
+
+
+     
+     return str;
     }
   },
   mounted:function () {
@@ -222,6 +280,9 @@ export default {
    this.setContent()
    this.makeTagList()
    this.loading = false;
+   for(var i=0; i<this.post.comment.length; i++){
+     this.post.comment.datetime = transferTime(this.post.comment.datetime)
+   }
    
 
   },
@@ -293,6 +354,7 @@ function transferTime(time){
 .custom_ {
   background-color:var(--button-off);
 }
+
 
 
 </style>
