@@ -9,19 +9,19 @@ public interface BookmarkService {
 
 	public void insert(Bookmark bookmark);
 
-	public void delete(int no);
-
 	public void deleteById(String id);
 
 	public void deleteByIdAndPno(String id, int pno);
 
-	public void update(Bookmark bookmark);
-
-	public Optional<Bookmark> search(int no);
-
 	public List<Bookmark> searchById(String id);
 
-	public List<Bookmark> searchAll();
+//	public void delete(int no);
 
-	public int count();
+//	public void update(Bookmark bookmark);
+
+//	public Optional<Bookmark> search(int no);
+
+//	public List<Bookmark> searchAll();
+
+//	public int count();
 }

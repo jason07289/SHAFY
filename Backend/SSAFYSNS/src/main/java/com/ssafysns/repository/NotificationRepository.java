@@ -1,6 +1,7 @@
 package com.ssafysns.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,14 +23,16 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
 	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
 	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
-	int countByIdAndNotChecked(@Param("id") String id);
+	long countByIdAndNotChecked(@Param("id") String id);
 
 	@Modifying
 	@Transactional
-	@Query(value = "update Notification set checked = :checked where no = :no", nativeQuery = true)
-	void updateByChecked(@Param("no") int no, @Param("checked") int checked);
-	
+	@Query(value = "update notification set checked = 1 where no = :no", nativeQuery = true)
+	void updateByChecked(@Param("no") int no);
+
 	@Query(value = "select u.alarm from User u where u.id = :id")
 	int selectUserAlarm(@Param("id") String id);
 
+	@Query(value = "select n from Notification n where n.id = :id and n.checked = 0")
+	List<Notification> findAllByUserId(@Param("id") String id);
 }

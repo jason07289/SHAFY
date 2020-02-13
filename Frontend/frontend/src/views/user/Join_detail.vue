@@ -93,7 +93,13 @@
           <v-btn text color="primary" @click="$refs.menu.save(signUpForm.birth)">OK</v-btn>
         </v-date-picker>
       </v-menu>
-      <h1>여기 사진등록이 들어와야해요</h1>
+      <v-file-input 
+      accept="image/*" 
+      label="File input"
+      outlined
+      v-model="imageData"
+      @change="onUpload"
+      ></v-file-input>
       <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
         <v-select 
         v-model="signUpForm.class1" 
@@ -158,6 +164,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+const firebase = require('firebase/app')
+require('firebase/storage') 
 // import UserApi from '../../apis/UserApi'
 
 
@@ -170,7 +178,7 @@ export default {
       
       minDate: '1989-01-01',
       maxDate: '1998-01-01',
-
+      
       signUpForm:{
                 birth: new Date().toISOString().substr(0, 10),
                 class1: '',
@@ -212,7 +220,9 @@ export default {
     passwordcheckRules:[
       v => v == this.password ||'비밀번호를 확인해주세요',
        v => !!v || '비밀번호확인은 필수항목입니다',
-    ]
+    ],
+    imageData: null, 
+    uploadValue: 0
   }
   },
   computed:{
@@ -227,6 +237,19 @@ export default {
       normalJoin:'user/Join',
       SNSJoin:'user/SNSJoin',
     }),
+    onUpload(){
+        console.log('img object: ',this.imageData)
+        const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData)
+        storageRef.on(`state_changed`,snapshot=>{
+          this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        }, error=>{console.log(error.message)},
+        ()=>{this.uploadValue=100;
+          storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+            this.signUpForm.img =url;
+            console.log('url 저장 완료')
+          });
+        })
+    },
     Join(){
       this.signUpForm.id = this.email
       this.signUpForm.password = this.password

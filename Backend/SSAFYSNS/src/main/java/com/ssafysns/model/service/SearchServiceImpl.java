@@ -25,61 +25,70 @@ public class SearchServiceImpl implements SearchService {
 			throw new SearchException("Search 등록 중 오류가 발생했습니다.");
 		}
 	}
-
-	@Override
-	public void delete(int no) {
-		try {
-			searchRepository.deleteById(no);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SearchException("Search 삭제 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
-	public void deleteBySearchtime(Date datetime) {
-		try {
-			// datetime이 현재 날짜보다 7일 이상 이전일 경우에만 delete를 수행하도록 수정하기!!!
-			searchRepository.deleteBySearchtime(datetime);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SearchException("Search 삭제 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
-	public void update(Search search) {
-		try {
-			searchRepository.save(search);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SearchException("Search 수정 중 오류가 발생했습니다.");
-		}
-	}
-
-	@Override
-	public List<Search> searchAll() {
-		try {
-			return searchRepository.findAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SearchException("Search 목록 조회 중 오류가 발생했습니다.");
-		}
-	}
-
+	
 	@Override
 	public List<Search> searchBySearchtime() {
 		try {
-			return searchRepository.findBySearchtime();
+			List<Search> find = searchRepository.findBySearchtime();
+			String hashtag = "";
+			long cnt = 0;
+			for (Search f : find) {
+				hashtag = f.getHashtag();
+				cnt = searchRepository.findCntBySearchtime(hashtag);
+				f.setCnt(cnt);
+			}
+
+			return find;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new SearchException("7일 이내의 Search 목록 조회 중 오류가 발생했습니다.");
 		}
 	}
 
-	@Override
-	public int count() {
-		return (int)searchRepository.count();
-	}
+//	@Override
+//	public void delete(int no) {
+//		try {
+//			searchRepository.deleteById(no);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new SearchException("Search 삭제 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public void deleteBySearchtime(Date datetime) {
+//		try {
+//			// datetime이 현재 날짜보다 7일 이상 이전일 경우에만 delete를 수행하도록 수정하기!!!
+//			searchRepository.deleteBySearchtime(datetime);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new SearchException("Search 삭제 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public void update(Search search) {
+//		try {
+//			searchRepository.save(search);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new SearchException("Search 수정 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public List<Search> searchAll() {
+//		try {
+//			return searchRepository.findAll();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new SearchException("Search 목록 조회 중 오류가 발생했습니다.");
+//		}
+//	}
+
+//	@Override
+//	public int count() {
+//		return (int) searchRepository.count();
+//	}
 
 }
