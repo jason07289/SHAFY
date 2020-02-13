@@ -28,6 +28,7 @@ import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
+import com.ssafysns.model.dto.User;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
@@ -105,10 +106,22 @@ public class PostController {
 		page = Integer.max(0, page*20-1);
 		
 		String jwtId = jwtService.get("userid");
-		List<Integer> pno_by_all_hash = postService.followHashPno(jwtId);	//여기는 개수제한 X
-		List<Post> post_list = postService.searchAllFollowList(pno_by_all_hash, page);	// 개수 제한
 		
-		post_list = returnPost(post_list, pno_by_all_hash);
+		String follow_tag = followService.searchById(jwtId).get().getHashtag();
+		follow_tag = follow_tag.replace("#", "#|#");
+		follow_tag = follow_tag.substring(2)+"#";
+		
+		List<Post> temp = postService.followHash(follow_tag);
+		for(int i = 0; i<temp.size(); i++) {
+			System.out.println(temp.get(i).getHashtag().toString());
+		}
+		
+		/**
+		 * 여기 바꾸기
+		 */
+		List<Integer> pno_by_all_hash = postService.followHashPno(follow_tag);
+		List<Post> post_list = null;
+		post_list = returnPost(temp, pno_by_all_hash);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
 	}
@@ -173,6 +186,7 @@ public class PostController {
 						//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 						temp_comments.setNickname("익명");
 					}
+					temp_comments.setUser(null);
 				}
 			}
 		}
@@ -230,24 +244,21 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		String id = post.getId();
 		String hashtag = post.getHashtag();
-		
-		System.out.println("id: "+id+", hashtag: "+hashtag);
-		System.out.println(post.toString());
-//		User user = userService.MyInfo();
-//		String nickname = user.getNickname();
-		
-//		post.setNickname(nickname);
+		post.setHashtag(hashtag+"#");
+
+		// 닉네임 설정
+		User user = userService.MyInfo();
+		String nickname = user.getNickname();
+		post.setNickname(nickname);
 		
 		/**
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
 		 */
 		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
-		if(!id.equals("admin") && hashtag.startsWith("__공지사항__")) {
+		if(!user.getAuth().equals("관리자") && hashtag.startsWith("__공지사항__")) {
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
-			System.out.println("등록......");
 			postService.insert(id, post);
-			System.out.println("등록완료......");
 		}
 		return handleSuccess("Post 등록 완료");
 	}
@@ -260,7 +271,6 @@ public class PostController {
 		 * 작성자만 가능
 		 */
 		String jwtId = jwtService.get("userid");
-		
 		Post post = postService.search(pno).get();
 		
 		if(post.getId().equals(jwtId)) {
