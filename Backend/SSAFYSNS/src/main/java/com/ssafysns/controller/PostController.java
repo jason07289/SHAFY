@@ -244,6 +244,8 @@ public class PostController {
 		for(int i = 0, size = posts.size(); i<size; i++) {
 			Post post = posts.get(i);
 			post.setUser(null);
+			post.setPostlike(null);
+			
 			List<Comment> comment_list = post.getComment();
 			
 			for(int j = 0, jsize = comment_list.size(); j<jsize; j++) {
