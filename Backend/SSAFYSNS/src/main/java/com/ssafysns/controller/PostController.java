@@ -28,6 +28,7 @@ import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
+import com.ssafysns.model.dto.User;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
@@ -105,10 +106,22 @@ public class PostController {
 		page = Integer.max(0, page*20-1);
 		
 		String jwtId = jwtService.get("userid");
-		List<Integer> pno_by_all_hash = postService.followHashPno(jwtId);	//여기는 개수제한 X
-		List<Post> post_list = postService.searchAllFollowList(pno_by_all_hash, page);	// 개수 제한
 		
-		post_list = returnPost(post_list, pno_by_all_hash);
+		String follow_tag = followService.searchById(jwtId).get().getHashtag();
+		follow_tag = follow_tag.replace("#", "#|#");
+		follow_tag = follow_tag.substring(2)+"#";
+		
+		List<Post> temp = postService.followHash(follow_tag);
+		for(int i = 0; i<temp.size(); i++) {
+			System.out.println(temp.get(i).getHashtag().toString());
+		}
+		
+		/**
+		 * 여기 바꾸기
+		 */
+		List<Integer> pno_by_all_hash = postService.followHashPno(follow_tag);
+		List<Post> post_list = null;
+		post_list = returnPost(temp, pno_by_all_hash);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
 	}
@@ -150,34 +163,56 @@ public class PostController {
 			}
 			post.setUser(null);
 			
-			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
-			
 			// 해당 게시글(pno)에 달린 댓글 리스트
 			List<Comment> temp_comments_list = post.getComment();
+			// 내가 좋아요 누른 댓글 리스트
+			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
 			
-			if(temp_comments_list != null) {
-				for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
-					Comment temp_comments = temp_comments_list.get(j);
-					
-					// StackOverflow 방지
-					temp_comments.setLike_count(temp_comments.getLike().size());
-					temp_comments.setLike(null); 
-					if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
-						temp_comments.setLike_check(true);
-					}
-					
-					/**
-					 *  댓글 익명 처리
-					 */
-					if(temp_comments.getAnonymous() == 1) {
-						//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-						temp_comments.setNickname("익명");
-					}
-				}
-			}
+			temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+			
 		}
 		return post_list;
 	}
+	
+	/**
+	 * [공통 코드] 댓글 관리
+	 */
+	private List<Comment> funcComment(List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
+		
+		if(temp_comments_list != null) {
+			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
+				Comment temp_comments = temp_comments_list.get(j);
+				
+				// StackOverflow 방지
+				temp_comments.setLike_count(temp_comments.getLike().size());
+				temp_comments.setLike(null); 
+				if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
+					temp_comments.setLike_check(true);
+				}
+				
+				/**
+				 *  댓글 익명 처리
+				 */
+				if(temp_comments.getAnonymous() == 1) {
+					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
+					temp_comments.setNickname("익명");
+				}
+				temp_comments.setUser(null);
+			}
+		}
+		Collections.sort(temp_comments_list, new Comparator<Comment>() {
+			@Override
+			public int compare(Comment o1, Comment o2) {
+				if(o1.getParent()==o2.getParent()) {
+					return o1.getCno()-o2.getCno();
+				} else {
+					return o1.getParent()-o2.getParent();
+				}
+			}
+		});
+		return temp_comments_list;
+	}	
+	
 	
 	/**
 	 * [Me]
@@ -230,24 +265,21 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		String id = post.getId();
 		String hashtag = post.getHashtag();
-		
-		System.out.println("id: "+id+", hashtag: "+hashtag);
-		System.out.println(post.toString());
-//		User user = userService.MyInfo();
-//		String nickname = user.getNickname();
-		
-//		post.setNickname(nickname);
+		post.setHashtag(hashtag+"#");
+
+		// 닉네임 설정
+		User user = userService.MyInfo();
+		String nickname = user.getNickname();
+		post.setNickname(nickname);
 		
 		/**
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
 		 */
 		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
-		if(!id.equals("admin") && hashtag.startsWith("__공지사항__")) {
+		if(!user.getAuth().equals("관리자") && hashtag.startsWith("__공지사항__")) {
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
-			System.out.println("등록......");
 			postService.insert(id, post);
-			System.out.println("등록완료......");
 		}
 		return handleSuccess("Post 등록 완료");
 	}
@@ -260,7 +292,6 @@ public class PostController {
 		 * 작성자만 가능
 		 */
 		String jwtId = jwtService.get("userid");
-		
 		Post post = postService.search(pno).get();
 		
 		if(post.getId().equals(jwtId)) {
@@ -429,7 +460,7 @@ public class PostController {
 
 		// 댓글 알림 처리
 		String id = null;
-		if(comment.getParent() == -1) { //댓글일 경우 - 게시글 작성자에게 전송
+		if(comment.getParent() == comment.getCno()) { //댓글일 경우 - 게시글 작성자에게 전송
 			id = postService.search(comment.getPno()).get().getId();
 		} else { //대댓글일 경우 - 댓글 작성자에게 전송
 			id = commentService.search(comment.getCno()).getId();

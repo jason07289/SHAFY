@@ -31,5 +31,7 @@ public interface PostService {
 
 	public List<Post> searchBest20();	//베스트 게시글 20개 가져오기
 
+	public List<Post> followHash(String hashtag);
+	
 //	public Post searchById(int pno);
 }
