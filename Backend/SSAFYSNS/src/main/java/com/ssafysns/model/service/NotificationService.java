@@ -17,6 +17,5 @@ public interface NotificationService {
 	public long count(String id);
 
 	public boolean userAlarmCheck(String id);
-	
-	public void SSAFY(String id);
+
 }

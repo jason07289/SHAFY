@@ -73,11 +73,8 @@ public class NotificationController {
 	@ApiOperation(value = "모든 Notification 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
-		notificationService.SSAFY("aaa");
-		
-		
-		return handleSuccess("");
-//		return handleSuccess(notificationService.searchAll());
+
+		return handleSuccess(notificationService.searchAll());
 	}
 
 	// 로그인한 사용자의 Notification 개수 조회
