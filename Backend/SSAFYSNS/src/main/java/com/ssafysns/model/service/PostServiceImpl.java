@@ -131,10 +131,10 @@ public class PostServiceImpl implements PostService {
 	 */
 	// Follow 하는 Hashtag를 포함한 게시글 리스트 가져오기
 	@Override
-	public List<Integer> followHashPno(String id) {
+	public List<Integer> followHashPno(String hashtag) {
 		List<Integer> all_hash_pno_list = null;
 		try {
-			all_hash_pno_list  = postRepository.followHashPnoById(id);
+			all_hash_pno_list  = postRepository.followHashPno(hashtag);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -194,5 +194,20 @@ public class PostServiceImpl implements PostService {
 		}
 		return posts;
 	}
+
+	@Override
+	public List<Post> followHash(String hashtag) {
+		List<Post> post = null;
+		
+		try {
+			post = postRepository.followHash(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return post;
+	}
+	
+	
 
 }

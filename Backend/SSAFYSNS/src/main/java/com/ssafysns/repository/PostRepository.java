@@ -36,10 +36,16 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query(value = "select p.pno from post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
 	List<Integer> findPnoByHashtag(String hashtag, int page, int limit);	
 	
-	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id) and p.deleted=0")
-	List<Integer> followHashPnoById(@Param("id") String id);
+//	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id) and p.deleted=0")
+//	List<Integer> followHashPnoById(@Param("id") String id);
+
+	@Query(value = "select p.pno from post p where concat(p.hashtag, '#') regexp :hashtag", nativeQuery = true)
+	List<Integer> followHashPno(@Param("hashtag") String hashtag);
 	
 	@Query("select p from Post p where p.pno=:pno and p.deleted=0")
 	Post findByPno(@Param("pno") int pno);
+	
+	@Query(value = "select * from post p where concat(p.hashtag, '#') regexp :hashtag", nativeQuery=true)
+	List<Post> followHash(@Param("hashtag") String hashtag);
 
 }
