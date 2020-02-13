@@ -228,10 +228,6 @@ public class PostController {
 		List<Integer> pno_list = likesService.selectPnoById(jwtId); //좋아요 누른 글 리스트 리스트 반환
 		List<Post> post_list = postService.searchAllFollowList(pno_list, page);	//개수 제한
 		
-		for(int i = 0, size = post_list.size(); i<size; i++) {
-			Post post = post_list.get(i);
-			post.setComment(null);
-		}
 		returnPost(post_list, pno_list);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
@@ -248,6 +244,8 @@ public class PostController {
 		for(int i = 0, size = posts.size(); i<size; i++) {
 			Post post = posts.get(i);
 			post.setUser(null);
+			post.setPostlike(null);
+			
 			List<Comment> comment_list = post.getComment();
 			
 			for(int j = 0, jsize = comment_list.size(); j<jsize; j++) {
@@ -255,6 +253,17 @@ public class PostController {
 				comment.setLike(null);
 				comment.setUser(null);
 			}
+			
+			Collections.sort(comment_list, new Comparator<Comment>() {
+				@Override
+				public int compare(Comment o1, Comment o2) {
+					if(o1.getParent()==o2.getParent()) {
+						return o1.getCno()-o2.getCno();
+					} else {
+						return o1.getParent()-o2.getParent();
+					}
+				}
+			});
 		}
 		return handleSuccess(posts);
 	}
@@ -387,8 +396,19 @@ public class PostController {
 				//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 				temp_comments.setNickname("익명");
 			}
+			
 		}
-
+		Collections.sort(temp_comments_list, new Comparator<Comment>() {
+			@Override
+			public int compare(Comment o1, Comment o2) {
+				if(o1.getParent()==o2.getParent()) {
+					return o1.getCno()-o2.getCno();
+				} else {
+					return o1.getParent()-o2.getParent();
+				}
+			}
+		});
+		
 		post.setPostlike(null);	//StackOverFlow
 		
 		System.out.println("post is "+post.toString());
