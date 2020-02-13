@@ -168,7 +168,7 @@
 
       <!-- 입력부분 -->
           <v-text-field
-            v-model="description"
+            v-model="commentAreat"
             :rules="rules"
             counter
             maxlength="150"
@@ -213,7 +213,9 @@ export default {
       postdata_full : "본문 전체 보여주는부분본문 전체 보여주는본문 전체 보여본문입니다",
       postdata_date : "언젠가",
       tag_list : [],
-      tag:''
+      tag:'',
+      /* 댓글관련 */
+      commentArea:'',
 
     }
   },
