@@ -1,11 +1,10 @@
-package com.ssafysns.util;
+package com.ssafysns.model.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class SSAFYCertification {
-
-	public void check(String id) {
+public class SSAFYCertificationServiceImpl {
+	public boolean isPassed(String id) {
 		try {
 			// 1. 쿠키를 저장하고 csrf token 따기
 			String[] csrfExecute = { "/home/ubuntu/csrf.sh" }; // 쉘 파일에 cmd 명령어 넣고 쉘 파일을 실행 -> 여기서 _csrf 토큰 값 받아오기
@@ -61,15 +60,19 @@ public class SSAFYCertification {
 					isCertified = true;
 				}
 			}
-			if (isCertified)
+			if (isCertified) {
 				System.out.println("SSAFY인 인증 완료");
-			else
+			} else {
 				System.out.println("SSAFY인 인증 실패");
+			}
+
+			return isCertified;
 		} catch (Exception e) {
 
 			System.out.println(e);
 
 		}
-	}
+		return false;
 
+	}
 }

@@ -1,7 +1,6 @@
 package com.ssafysns.model.service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.NotificationException;
+import com.ssafysns.model.dto.NotificationResult;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.NotificationRepository;
 import com.ssafysns.repository.UserRepository;
@@ -45,24 +45,24 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
-	@Override
-	public void delete(Date datetime) {
-		// 1. checked = true이고
-		// 2. datetime 이전이면(단, datetime을 일정시점(일단, 7일로 설정함) 이전으로 설정해야만 삭제할 수 있도록 함) 삭제
-		try {
-			notificationRepository.deleteByDatetime(datetime);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new NotificationException(datetime + "이전 기간에 해당하는 Notification 삭제 중 오류가 발생했습니다.");
-		}
-	}
+//	@Override
+//	public void delete(Date datetime) {
+//		// 1. checked = true이고
+//		// 2. datetime 이전이면(단, datetime을 일정시점(일단, 7일로 설정함) 이전으로 설정해야만 삭제할 수 있도록 함) 삭제
+//		try {
+//			notificationRepository.deleteByDatetime(datetime);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new NotificationException(datetime + "이전 기간에 해당하는 Notification 삭제 중 오류가 발생했습니다.");
+//		}
+//	}
 
 	@Override
 	public void update(Notification notification) {
 		try {
 			// 1. 알람 페이지에서 해당 알람을 확인하면, checked = 1
 			int no = notification.getNo();
-			notificationRepository.updateByChecked(no, 1);
+			notificationRepository.updateByChecked(no);
 			// 2. -> 알람페이지에 들어왔으므로 무조건 User 테이블의 alarm 컬럼을 0(false)로 변경
 			String id = notification.getId();
 			Optional<User> find = userRepository.findById(id);
@@ -76,15 +76,15 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
-	@Override
-	public List<Notification> searchAll() {
-		try {
-			return notificationRepository.findAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new NotificationException("Notification 목록 조회 중 오류가 발생했습니다.");
-		}
-	}
+//	@Override
+//	public List<Notification> searchAll() {
+//		try {
+//			return notificationRepository.findAll();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new NotificationException("Notification 목록 조회 중 오류가 발생했습니다.");
+//		}
+//	}
 
 	@Override
 	public long count(String id) {
@@ -108,70 +108,66 @@ public class NotificationServiceImpl implements NotificationService {
 			throw new NotificationException("로그인한 유저의 알람 발생 여부 조회 중 오류가 발생했습니다.");
 		}
 	}
-	
-	public void SSAFY(String id) {
+
+	@Override
+	public List<Notification> searchAllByUserId(String id) {
 		try {
-			// 1. 쿠키를 저장하고 csrf token 따기
-			String[] csrfExecute = { "/home/ubuntu/csrf.sh" }; // 쉘 파일에 cmd 명령어 넣고 쉘 파일을 실행 -> 여기서 _csrf 토큰 값 받아오기 (String 쪼개서)
-			Process p = Runtime.getRuntime().exec(csrfExecute);
-			String userId = id;
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
-			String line = null;
-
-			String csrf = "";
-			boolean isEnd = true;
-			while ((line = br.readLine()) != null) {
-				if (line.contains("meta name=\"_csrf\"")) {
-
-					String tmp = line.substring(line.lastIndexOf("meta name=\"_csrf\""));
-					tmp = tmp.substring(tmp.lastIndexOf("content=\"") + "content=\"".length());
-					// csrf 값이 한 줄에 걸쳐 나오지 않고 다음 줄로 이어지면
-					if (!tmp.contains("/>")) {
-						isEnd = false;
-					}
-					// csrf 값이 한 줄에 끝나면
-					if (isEnd) {
-						csrf += tmp.substring(0, tmp.indexOf("\""));
-					}
-					// 다음 줄로 넘어가면
-					else {
-						csrf += tmp;
-					}
-//					System.out.println(csrf);
-				}
-				if (!isEnd) {
-					csrf += line.substring(0, line.indexOf("\""));
-				}
-
-				System.out.println(line);
-			}
-			System.out.println(csrf);
-			// 2. 저장한 csrf token과 쿠키를 이용해서 페이지 리턴 받기
-			// parameter1($1): userId,parameter2($2):csrf_token)
-			String[] authenticafionExecute = { "/home/ubuntu/authentication.sh", userId, csrf };
-			p = Runtime.getRuntime().exec(authenticafionExecute);
-
-			br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
-			line = null;
-
-			boolean isCertified = true;
-			while ((line = br.readLine()) != null) {
-				System.out.println(line);
-				if (line.contains("등록된 사용자 정보가 없습니다.")) {
-					isCertified = false;
-				} else if (line.contains("비밀번호가 일치하지 않습니다.")) {
-					isCertified = true;
-				}
-			}
-			if (isCertified)
-				System.out.println("SSAFY인 인증 완료");
-			else
-				System.out.println("SSAFY인 인증 실패");
+			return notificationRepository.findAllByUserId(id);
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotificationException("Notification 목록 조회 중 오류가 발생했습니다.");
+		}
+	}
 
-			System.out.println(e);
+	@Override
+	public List<NotificationResult> searchAll(String id) {
+		try {
+			List<NotificationResult> result = new ArrayList<NotificationResult>();
+			List<Notification> findAll = searchAllByUserId(id);
+			Notification notification;
 
+			int pno;
+			String notificationMessage = "";
+			String comment = "";
+			Date datetime;
+			int checked;
+			int state = -1;
+
+			int size = findAll.size();
+			for (int i = 0; i < size; ++i) {
+				notification = findAll.get(i);
+
+				pno = notification.getPno();
+				comment = notification.getComment();
+				datetime = notification.getDatetime();
+				checked = notification.getChecked();
+				state = notification.getState();
+
+				// notificationMessage
+				// 게시글 좋아요
+				if (state == 1) {
+					notificationMessage = "회원님의 게시물에 좋아요가 눌렸습니다.";
+				}
+				// 게시글 댓글
+				else if (state == 2) {
+					notificationMessage = "회원님의 게시물에 댓글이 달렸습니다. : " + comment;
+				}
+				// 댓글 좋아요
+				else if (state == 3) {
+					notificationMessage = "회원님의 댓글에 좋아요가 눌렸습니다.";
+				}
+				// 대댓글
+				else if (state == 4) {
+					notificationMessage = "회원님의 댓글에 대댓글이 달렸습니다. : " + comment;
+				}
+
+				result.add(new NotificationResult(pno, notificationMessage, comment, datetime, checked));
+			}
+
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotificationException("Notification 목록 조회 중 오류가 발생했습니다.");
 		}
 	}
 

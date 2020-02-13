@@ -217,6 +217,8 @@ public class UserController {
 		}
 		if(user==null) return handleFail("오류발생", HttpStatus.OK);
 		
+		user.setPassword(null);
+		
 		return handleSuccess(user);
 	}
 	
