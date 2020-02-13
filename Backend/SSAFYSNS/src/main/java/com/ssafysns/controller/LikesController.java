@@ -63,15 +63,14 @@ public class LikesController {
 		
 		Post post = postService.search(pno).get();
 		
-		Notification notification =  new Notification(post.getId(), new Date(), pno, 1, 0);
-		notificationService.insert(notification);
-		
-		
 		System.out.println("게시글 좋아요 누르기_ id: "+jwtId+", pno: "+pno);
 		PostLikes post_likes = new PostLikes(jwtId, pno);
 		
 		boolean status = likesService.insert(post_likes);
 		if(status) {
+			//게시글 좋아요 알림 전송			
+			Notification notification =  new Notification(post.getId(), new Date(), pno, 1, 0);
+			notificationService.insert(notification);
 			return handleSuccess("게시글 좋아요를 눌렀습니다.");
 		} else {
 			return handleSuccess("게시글 좋아요를 취소합니다.");
@@ -87,16 +86,14 @@ public class LikesController {
 		 */
 		// 알림 전송
 		Comment comment = commentService.search(cno);
-		Notification notification =  new Notification(comment.getId(), new Date(), pno, 1, 0);
-		notificationService.insert(notification);
-		
-		
 		String jwtId = jwtService.get("userid");
-		
 		Likes likes = new Likes(jwtId, pno, cno);
 		
 		boolean status = likesService.insert(likes);
 		if(status) {
+			//게시글 좋아요 알림 전송			
+			Notification notification =  new Notification(comment.getId(), new Date(), pno, 3, 0);
+			notificationService.insert(notification);
 			return handleSuccess("게시글 좋아요를 눌렀습니다.");
 		} else {
 			return handleSuccess("게시글 좋아요를 취소합니다.");
