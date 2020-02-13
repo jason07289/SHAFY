@@ -84,6 +84,10 @@ public class PostController {
 		 */
 		page = Integer.max(0, page*20-1);
 		
+		System.out.println(hashtag);
+		hashtag = "#"+hashtag+"#";
+		System.out.println(hashtag);
+		
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
 		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
 		
@@ -140,39 +144,46 @@ public class PostController {
 		// 게시글 중 내가 좋아요 눌렀는지 여부
 		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list);
 		
-		// 로그인한 사용자가 누른 모든 [댓글] 좋아요 리스트
+		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
+		
 		
 		for(int i = 0, post_size = post_list.size(); i<post_size; i++) {
 			Post post = post_list.get(i);
+			boolean check = post_boolean_list.get(i);
 			
-			// Like_Count, Like_Check 설정
-			if(post_boolean_list.get(i)) {
-				post.setLike_check(true);
-			}
-			post.setLike_count(post.getPostlike().size());
-			post.setPostlike(null);
-			
-			
-			/**
-			 *  게시글 익명 처리
-			 */
-			if(post.getAnonymous() == 1) {
-				//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-				post.setNickname("익명");
-			}
-			post.setUser(null);
-			
-			// 해당 게시글(pno)에 달린 댓글 리스트
-			List<Comment> temp_comments_list = post.getComment();
-			// 내가 좋아요 누른 댓글 리스트
-			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
-			
-			temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+			funcPost(post, check, my_like_comment);
 			
 		}
 		return post_list;
 	}
+	
+	private void funcPost(Post post, boolean check, List<Integer> my_like_comment) {
+		
+		// Like_Count, Like_Check 설정
+		if(check) {
+			post.setLike_check(true);
+		}
+		post.setLike_count(post.getPostlike().size());
+		post.setPostlike(null);
+		
+		/**
+		 *  게시글 익명 처리
+		 */
+		if(post.getAnonymous() == 1) {
+			//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
+			post.setNickname("익명");
+		}
+		post.setUser(null);
+		
+		// 해당 게시글(pno)에 달린 댓글 리스트
+		List<Comment> temp_comments_list = post.getComment();
+		// 내가 좋아요 누른 댓글 리스트
+		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
+		
+		temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+	}
+	
 	
 	/**
 	 * [공통 코드] 댓글 관리
@@ -272,6 +283,9 @@ public class PostController {
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
+		
+		System.out.println("게시물 등록 시작");
+		
 		String id = post.getId();
 		String hashtag = post.getHashtag();
 		post.setHashtag(hashtag+"#");
@@ -285,9 +299,17 @@ public class PostController {
 		 * post.getId()와  Id가 다를 때 비교 해야 하나?
 		 */
 		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
-		if(!user.getAuth().equals("관리자") && hashtag.startsWith("__공지사항__")) {
+		if((user.getAuth()==null 
+				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
+				&& post.getHashtag().startsWith("__공지사항__")) {
+			
+			System.out.println("공지사항 권한이 없습니다.");
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
+			post.setUser(null);
+			post.setPostlike(null);
+			post.setComment(null);
+			System.out.println("post = "+ post.toString());
 			postService.insert(id, post);
 		}
 		return handleSuccess("Post 등록 완료");
@@ -343,75 +365,16 @@ public class PostController {
 	public ResponseEntity<Post> searchByPno(@PathVariable int pno) throws Exception {
 		
 		Post post = search(pno);
-		/**
-		 * 1. 내가 게시글을 좋아요 눌렀는지
-		 * 2. 게시글에 달린 좋아요가 몇 개인지?
-		 */
-
-		post.setUser(null);
-
-		// 게시글 익명 처리
-		if(post.getAnonymous() == 1) {
-			//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-			post.setNickname("익명");
-		}
-		
-		// 로그인한 사용자가 누른 모든 좋아요 리스트 가져오기
-		String jwtId = jwtService.get("userid");
-		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
-		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
-		
-		// 해당 게시글(pno)에 달린 댓글 리스트
-		List<Comment> temp_comments_list = post.getComment();
-		System.out.println("댓글 사이즈: "+temp_comments_list.size());
-		
-		// 해당 게시글에 내가 좋아요 눌렀는지 안눌렀는지
 		List<Integer> pno_list = new ArrayList<Integer>();
 		pno_list.add(pno);
+		
+		String jwtId = jwtService.get("userid");
+		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
-		List<Boolean> like_boolean_comment = likesService.likeBooleanComment(my_like_comment, pno);
+		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
-		// 게시글 좋아요 개수 + 내가 눌렀는지 여부 체크
-		if(like_boolean_post.get(0)) {
-			post.setLike_check(true);
-		} 
-		post.setLike_count(post.getPostlike().size());
-		post.setPostlike(null);
-		
-		// 댓글마다 처리
-		for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
-			
-			Comment temp_comments = temp_comments_list.get(j);
-			temp_comments.setLike_count(temp_comments.getLike().size());
-			if(like_boolean_comment != null && like_boolean_comment.get(j)) {	//내가 좋아요를 누른 댓글일 경우
-				temp_comments.setLike_check(true);
-			}
-			
-			temp_comments.setPost(null); // StackOverflow 방지
-			temp_comments.setLike(null); // StackOverflow 방지
-			temp_comments.setUser(null);
+		funcPost(post, like_boolean_post.get(0), my_like_comment);
 
-			// 댓글 익명 처리
-			if(temp_comments.getAnonymous() == 1) {
-				//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-				temp_comments.setNickname("익명");
-			}
-			
-		}
-		Collections.sort(temp_comments_list, new Comparator<Comment>() {
-			@Override
-			public int compare(Comment o1, Comment o2) {
-				if(o1.getParent()==o2.getParent()) {
-					return o1.getCno()-o2.getCno();
-				} else {
-					return o1.getParent()-o2.getParent();
-				}
-			}
-		});
-		
-		post.setPostlike(null);	//StackOverFlow
-		
-		System.out.println("post is "+post.toString());
 		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 
@@ -466,7 +429,6 @@ public class PostController {
 		return posts;
 	}
 	
-
 		
 	/**
 	 * Comment
