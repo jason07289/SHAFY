@@ -9097,6 +9097,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   resolved "https://registry.npm.taobao.org/uuid/download/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha1-sj5DWK+oogL+ehAK8fX4g/AgB+4=
 
+v-infinite-scroll@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/v-infinite-scroll/-/v-infinite-scroll-1.0.4.tgz#56aad33b3d89759abd23702d7960763aeb8e0fc7"
+  integrity sha512-o2PeC0LNh3nSpsak+tcJEPRj9ENWWZTFvp1JdsraOom/d7lEbj7QfsJuF56AyrkqdSszaAwiVq2h4xTayl3RtQ==
+
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.npm.taobao.org/validate-npm-package-license/download/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
