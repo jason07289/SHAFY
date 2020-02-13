@@ -33,18 +33,12 @@ public class SearchController {
 	SearchService searchService;
 	@Autowired
 	JwtService jwtService;
-
-	// 모든 search 조회
-	@ApiOperation(value = "모든 search 목록 조회")
-	@GetMapping("/list")
-	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
-		return handleSuccess(searchService.searchAll());
-	}
-
+	
 	// 일주일 이내의 search 조회
 	@ApiOperation(value = "일주일 이내의 search 목록 조회")
 	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> search() throws Exception {
+		System.out.println(searchService.searchBySearchtime().toString());
 		return handleSuccess(searchService.searchBySearchtime());
 	}
 
@@ -54,29 +48,38 @@ public class SearchController {
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Search search) throws Exception {
 		// no는 auto-increment, id는 로그인한 유저의 id, hashtag만 param으로 받음
 
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
-//		Map<String, Object> uid = jwtService.get("userid");
-//		search.setId(uid.get("userid").toString());
+		// 1. id를 로그인한 유저의 id로 설정
+		String id = jwtService.get("userid");
+		search.setId(id);
 
 		searchService.insert(search);
 		return handleSuccess("search 등록 완료");
 	}
 
-	// no에 해당하는 Search 삭제
-	@ApiOperation(value = "no에 해당하는 Search 삭제")
-	@DeleteMapping("/{no}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable int no) throws Exception {
-		searchService.delete(no);
-		return handleSuccess("Search 삭제 완료");
-	}
 
-	// 기준날짜 datetime 이전에 해당하는 Search 삭제
-	@ApiOperation(value = "기준날짜 datetime 이전에 해당하는 Search 삭제")
-	@DeleteMapping("/{datetime}")
-	public ResponseEntity<Map<String, Object>> delete(@PathVariable Date datetime) throws Exception {
-		searchService.deleteBySearchtime(datetime);
-		return handleSuccess("Search 삭제 완료");
-	}
+//	// 모든 search 조회
+//	@ApiOperation(value = "모든 search 목록 조회")
+//	@GetMapping("/list")
+//	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
+//		return handleSuccess(searchService.searchAll());
+//	}
+
+
+//	// no에 해당하는 Search 삭제
+//	@ApiOperation(value = "no에 해당하는 Search 삭제")
+//	@DeleteMapping("/{no}")
+//	public ResponseEntity<Map<String, Object>> delete(@PathVariable int no) throws Exception {
+//		searchService.delete(no);
+//		return handleSuccess("Search 삭제 완료");
+//	}
+
+//	// 기준날짜 datetime 이전에 해당하는 Search 삭제
+//	@ApiOperation(value = "기준날짜 datetime 이전에 해당하는 Search 삭제")
+//	@DeleteMapping("/{datetime}")
+//	public ResponseEntity<Map<String, Object>> delete(@PathVariable Date datetime) throws Exception {
+//		searchService.deleteBySearchtime(datetime);
+//		return handleSuccess("Search 삭제 완료");
+//	}
 
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e) {

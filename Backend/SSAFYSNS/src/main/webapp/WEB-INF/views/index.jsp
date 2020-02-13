@@ -7,7 +7,6 @@
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	
 	<script src="https://unpkg.com/vue"></script>
-	
 	 
 <!-- 	구글 플랫폼 라이브러리-->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -10,7 +10,9 @@ import org.apache.ibatis.session.SqlSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.AdminException;
 import com.ssafysns.exception.MyLoginException;
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
@@ -70,10 +72,10 @@ public class UserServiceImpl implements UserService{
 			User user =userRepository.getOne(id);
 			AES256Util aes = new AES256Util();
 			if(user==null) {
-				throw new MyLoginException("등록되지 않은 회원입니다.");
+				throw new EntityNotFoundException("등록되지 않은 회원입니다.");
 			}else {
 				if(user.getDeleted()==1) {
-					throw new MyLoginException("등록되지 않은 회원입니다.");
+					throw new EntityNotFoundException("등록되지 않은 회원입니다.");
 				}else {
 					if(pw.equals(aes.decrypt(user.getPassword()))) {
 						String jwt =jwtService.create(user.getId(), user.getNickname(), user.getAuth());
@@ -253,7 +255,46 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<User> list() throws Exception{
 		
+		
+		
 		return userRepository.findByDeletedIs(0);
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public String userBan(String id) throws UnauthorizedException, AdminException {
+		
+		String adminId =jwtService.get("userid");
+		
+		
+		System.out.println("userID:  "+adminId);
+		User adminUser = userRepository.getOne(adminId);
+		if(adminUser.getAuth().equals("admin")||adminUser.getAuth().equals("관리자")) {
+			User user=userRepository.getOne(id);
+			int banned= user.getBanned();
+			user.setBanned(banned+1);
+			userRepository.save(user);
+			System.out.println("경고 횟수: "+user.getBanned());
+			if(user.getBanned()==3) {
+				user.setDeleted(1);
+				userRepository.save(user);
+				return "님이 3번의 경고로 삭제되었습니다.";
+			}else {
+				return "님의 경고가 누적되었습니다.";
+			}
+		}else {
+			throw new AdminException();
+		}
+		
+		
+		
 	}
 
 }

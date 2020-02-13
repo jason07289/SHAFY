@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.Notification;
+import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.NotificationService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,8 @@ import io.swagger.annotations.ApiOperation;
 public class NotificationController {
 	@Autowired
 	NotificationService notificationService;
+	@Autowired
+	JwtService jwtService;
 
 	/*
 	 * 1. comments와 like의 insert 시, controller에서 notification 발생시키기
@@ -44,8 +47,8 @@ public class NotificationController {
 	 * 
 	 * 2. POST 메서드 안에서
 	 * 
-	 * Notification 발생시킴
-	 * Notification notification = new Notification(likes.getId(), new Date(), cno OR pno, 좋아요: 1 OR 댓글: 2 OR 대댓글: 3, 0); 
+	 * Notification 발생시킴 Notification notification = new Notification(likes.getId(),
+	 * new Date(), cno OR pno, 좋아요: 1 OR 댓글: 2 OR 대댓글: 3, 0);
 	 * notificationService.insert(notification);
 	 */
 
@@ -55,7 +58,7 @@ public class NotificationController {
 	@DeleteMapping("/{datetime}")
 	public ResponseEntity<Map<String, Object>> delete(@PathVariable Date datetime) throws Exception {
 		notificationService.delete(datetime);
-		return handleSuccess("Bookmark 삭제 완료");
+		return handleSuccess("Notification 삭제 완료");
 	}
 
 	// checked=true로 수정
@@ -70,19 +73,19 @@ public class NotificationController {
 	@ApiOperation(value = "모든 Notification 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
-		return handleSuccess(notificationService.searchAll());
+		notificationService.SSAFY("aaa");
+		
+		
+		return handleSuccess("");
+//		return handleSuccess(notificationService.searchAll());
 	}
 
 	// 로그인한 사용자의 Notification 개수 조회
 	@ApiOperation(value = "로그인한 사용자의 Notification 개수 조회")
 	@GetMapping("/count")
 	public ResponseEntity<Map<String, Object>> count() throws Exception {
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
-//		Map<String, Object> uid = jwtService.get("userid");
-//		String id = uid.get("userid").toString();
-
-		// test시 직접 입력
-		String id = "";
+		/// 1. id를 로그인한 유저의 id로 설정
+		String id = jwtService.get("userid");
 
 		return handleSuccess(notificationService.count(id));
 	}
@@ -91,13 +94,9 @@ public class NotificationController {
 	@ApiOperation(value = "로그인한 사용자의 알람 발생 여부 조회")
 	@GetMapping("/user/alarm")
 	public ResponseEntity<Map<String, Object>> alarmcheck() throws Exception {
-		// 1. id를 로그인한 유저의 id로 설정 => 추후 주석 풀기!!!
-//		Map<String, Object> uid = jwtService.get("userid");
-//		String id = uid.get("userid").toString();
-
-		// test시 직접 입력
-		String id = "";
-		boolean res = notificationService.userAlarmCheck(id); 
+		// 1. id를 로그인한 유저의 id로 설정
+		String id = jwtService.get("userid");
+		boolean res = notificationService.userAlarmCheck(id);
 		return handleSuccess(res ? "새로운 알람이 발생했습니다" : "새로운 알람이 발생하지 않았습니다.");
 	}
 
