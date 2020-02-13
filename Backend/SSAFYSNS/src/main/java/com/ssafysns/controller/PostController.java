@@ -69,8 +69,6 @@ public class PostController {
 	@Autowired
 	JwtService jwtService;
 	
-//	String jwtId = "kimssafy@gmail.com";
-	
 
 	/**
 	 * [탭]
@@ -192,23 +190,27 @@ public class PostController {
 		
 		if(temp_comments_list != null) {
 			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
-				Comment temp_comments = temp_comments_list.get(j);
+				Comment temp_comment = temp_comments_list.get(j);
 				
 				// StackOverflow 방지
-				temp_comments.setLike_count(temp_comments.getLike().size());
-				temp_comments.setLike(null); 
+				temp_comment.setLike_count(temp_comment.getLike().size());
+				temp_comment.setLike(null); 
 				if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
-					temp_comments.setLike_check(true);
+					temp_comment.setLike_check(true);
 				}
 				
 				/**
 				 *  댓글 익명 처리
 				 */
-				if(temp_comments.getAnonymous() == 1) {
+				if(temp_comment.getAnonymous() == 1) {
 					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-					temp_comments.setNickname("익명");
+					temp_comment.setNickname("익명");
 				}
-				temp_comments.setUser(null);
+				temp_comment.setUser(null);
+				
+				if(temp_comment.getParent()==0) {
+					temp_comment.setParent(temp_comment.getCno());
+				}
 			}
 		}
 		Collections.sort(temp_comments_list, new Comparator<Comment>() {
@@ -263,6 +265,18 @@ public class PostController {
 				Comment comment = post.getComment().get(j);
 				comment.setLike(null);
 				comment.setUser(null);
+				
+				if(comment.getParent()==0) {
+					comment.setParent(comment.getCno());
+				}
+				
+				/**
+				 *  댓글 익명 처리
+				 */
+				if(comment.getAnonymous() == 1) {
+					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
+					comment.setNickname("익명");
+				}
 			}
 			
 			Collections.sort(comment_list, new Comparator<Comment>() {
@@ -306,10 +320,7 @@ public class PostController {
 			System.out.println("공지사항 권한이 없습니다.");
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
-			post.setUser(null);
-			post.setPostlike(null);
-			post.setComment(null);
-			System.out.println("post = "+ post.toString());
+			System.out.println("====== "+post.getContent()+", "+post.getHashtag());
 			postService.insert(id, post);
 		}
 		return handleSuccess("Post 등록 완료");
@@ -384,10 +395,22 @@ public class PostController {
 		return postService.search(pno).get();
 	}
 
-	// pno에 해당하는 CommentList 조회 (함수)
-	public List<Comment> searchComments(int pno) throws Exception {
+	@ApiOperation(value="{pno}에 해당하는 댓글, 좋아요 조회")
+	@GetMapping("/comment/{pno}")
+	// pno에 해당하는 CommentList 조회
+	public ResponseEntity<List<Comment>> searchComments(@PathVariable int pno) throws Exception {
 		List<Comment> comments = commentService.searchPno(pno);
-		return comments;
+		
+		String jwtId = jwtService.get("userid");
+		
+		// 내가 누른 모든 [댓글] 좋아요 리스트
+		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
+		// 내가 좋아요 누른 댓글 리스트
+		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, pno);
+		
+		funcComment(comments, like_boolean_list);
+				
+		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 	}
 	
 	
@@ -438,17 +461,21 @@ public class PostController {
 	@PostMapping("/comment")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
 		String jwtId = jwtService.get("userid");
+		
 		commentService.insert(jwtId, comment);
-
-		// 댓글 알림 처리
+		
 		String id = null;
-		if(comment.getParent() == comment.getCno()) { //댓글일 경우 - 게시글 작성자에게 전송
+		
+		// 댓글 알림 처리
+		Notification notification = null;
+		if(comment.getParent() == 0) { //댓글일 경우 - 게시글 작성자에게 전송
 			id = postService.search(comment.getPno()).get().getId();
+			notification =  new Notification(id, new Date(), comment.getPno(), 2, 0, comment.getContent());
 		} else { //대댓글일 경우 - 댓글 작성자에게 전송
 			id = commentService.search(comment.getCno()).getId();
+			notification =  new Notification(id, new Date(), comment.getPno(), 4, 0, comment.getContent());
 		}
 		
-		Notification notification =  new Notification(id, new Date(), comment.getPno(), 2, 0);
 		notificationService.insert(notification);
 		
 		return handleSuccess("댓글 등록 완료");

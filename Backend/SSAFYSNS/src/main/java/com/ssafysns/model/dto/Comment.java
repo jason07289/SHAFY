@@ -73,7 +73,7 @@ public class Comment {
 	
 	@Transient
 	private boolean like_check;
-
+	
 	 // 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pno", referencedColumnName="pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))
