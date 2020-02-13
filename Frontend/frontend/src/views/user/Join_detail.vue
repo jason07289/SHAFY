@@ -164,7 +164,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import firebase from 'firebase/app'
+const firebase = require('firebase/app')
+require('firebase/storage') 
 // import UserApi from '../../apis/UserApi'
 
 
