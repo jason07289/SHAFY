@@ -10,9 +10,6 @@ const state = {
   config : {},
   seq: 0,
   togosite:'',
-  // myurl:'http://70.12.246.84:8080',
-  // const myurl = 'http://i02a305.p.ssafy.io'
-  // hosturl:'http://70.12.246.122:8080',
 }
 
 // getters
