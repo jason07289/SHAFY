@@ -163,35 +163,56 @@ public class PostController {
 			}
 			post.setUser(null);
 			
-			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
-			
 			// 해당 게시글(pno)에 달린 댓글 리스트
 			List<Comment> temp_comments_list = post.getComment();
+			// 내가 좋아요 누른 댓글 리스트
+			List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
 			
-			if(temp_comments_list != null) {
-				for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
-					Comment temp_comments = temp_comments_list.get(j);
-					
-					// StackOverflow 방지
-					temp_comments.setLike_count(temp_comments.getLike().size());
-					temp_comments.setLike(null); 
-					if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
-						temp_comments.setLike_check(true);
-					}
-					
-					/**
-					 *  댓글 익명 처리
-					 */
-					if(temp_comments.getAnonymous() == 1) {
-						//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-						temp_comments.setNickname("익명");
-					}
-					temp_comments.setUser(null);
-				}
-			}
+			temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+			
 		}
 		return post_list;
 	}
+	
+	/**
+	 * [공통 코드] 댓글 관리
+	 */
+	private List<Comment> funcComment(List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
+		
+		if(temp_comments_list != null) {
+			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
+				Comment temp_comments = temp_comments_list.get(j);
+				
+				// StackOverflow 방지
+				temp_comments.setLike_count(temp_comments.getLike().size());
+				temp_comments.setLike(null); 
+				if(like_boolean_list != null && like_boolean_list.get(j)) {	//내가 좋아요를 누른 댓글일 경우
+					temp_comments.setLike_check(true);
+				}
+				
+				/**
+				 *  댓글 익명 처리
+				 */
+				if(temp_comments.getAnonymous() == 1) {
+					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
+					temp_comments.setNickname("익명");
+				}
+				temp_comments.setUser(null);
+			}
+		}
+		Collections.sort(temp_comments_list, new Comparator<Comment>() {
+			@Override
+			public int compare(Comment o1, Comment o2) {
+				if(o1.getParent()==o2.getParent()) {
+					return o1.getCno()-o2.getCno();
+				} else {
+					return o1.getParent()-o2.getParent();
+				}
+			}
+		});
+		return temp_comments_list;
+	}	
+	
 	
 	/**
 	 * [Me]
@@ -439,7 +460,7 @@ public class PostController {
 
 		// 댓글 알림 처리
 		String id = null;
-		if(comment.getParent() == -1) { //댓글일 경우 - 게시글 작성자에게 전송
+		if(comment.getParent() == comment.getCno()) { //댓글일 경우 - 게시글 작성자에게 전송
 			id = postService.search(comment.getPno()).get().getId();
 		} else { //대댓글일 경우 - 댓글 작성자에게 전송
 			id = commentService.search(comment.getCno()).getId();
