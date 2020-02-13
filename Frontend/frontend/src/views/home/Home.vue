@@ -33,21 +33,35 @@
 
 <script>
 import PostList from '../../components/Posts/PostList'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
       return {
         tab: null,
-        Tabs: [
-          '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
-        ],
+        // Tabs: [
+        //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
+        // ],
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       }
   },
   components:{
     PostList
   },
-
+  methods:{
+    ...mapActions({
+      getAllTab: 'tags/getAllTab',
+    })
+  },
+  created(){
+    console.log(this.$store)
+    this.getAllTab()
+  },
+  computed:{
+    ...mapState({
+      Tabs: state=> state.tags.tabtags,
+    })
+  },
 }
 </script>
 

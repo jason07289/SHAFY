@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.service.AdministratorService;
 import com.ssafysns.model.service.JwtService;
@@ -41,11 +41,12 @@ public class AdminController {
 	
 	@ApiOperation(value="[관리자] 전체 회원 조회")
 	@PostMapping()
-	public ResponseEntity<List<User>> searchAll() throws UnauthorizedException {
+	public ResponseEntity<List<User>> searchAll() throws Exception {
 		List<User> user = null;
-		String id = jwtService.get("userid");
+
+		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
 		
-		if(id.equals("forB@gmail.com")) {
+		if(myInfo.getAuth().equals("관리자")) {
 			user = adminService.searchAll();
 		} else {
 //			return handleFail("관리자 권한입니다.", HttpStatus.OK);
@@ -55,15 +56,15 @@ public class AdminController {
 	}
 	
 	@ApiOperation(value="[관리자] 회원 등급 조정")
-	@GetMapping("/auth/{user}")
-	public ResponseEntity<Map<String, Object>> updateUserAuth(@PathVariable User user) throws UnauthorizedException {
+	@PostMapping("/auth")
+	public ResponseEntity<Map<String, Object>> updateUserAuth(@RequestBody User user) throws Exception {
 		
-		String id = jwtService.get("userid");
+		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
 		
 		/**
 		 * id로 User를 받아와서 관리자 등급을 확인 후 관리자 등급으로 체크
 		 */
-		if(id.equals("admin")) {
+		if(myInfo.getAuth().equals("관리자")) {
 			userService.update(user);
 		} else {
 			return handleFail("등급 수정권한이 없습니다.", HttpStatus.OK);
@@ -73,15 +74,15 @@ public class AdminController {
 	}
 	
 	@ApiOperation(value="[관리자] 회원 경고 누적")
-	@GetMapping("/bann/{user}")
-	public ResponseEntity<Map<String, Object>> updateUserBann(@PathVariable User user) throws UnauthorizedException {
+	@PostMapping("/bann")
+	public ResponseEntity<Map<String, Object>> updateUserBann(@RequestBody User user) throws Exception {
 		
-		String id = jwtService.get("userid");
+		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
 		
 		/**
 		 * id로 User를 받아와서 관리자 등급을 확인 후 관리자 등급으로 체크
 		 */
-		if(id.equals("admin")) {
+		if(myInfo.getAuth().equals("관리자")) {
 			userService.update(user);
 		} else {
 			return handleFail("경고 수정권한이 없습니다.", HttpStatus.OK);
