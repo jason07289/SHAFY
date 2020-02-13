@@ -60,14 +60,26 @@ public class Notification {
 	// 알람 확인여부 0: false, 1: true
 	private int checked;
 
-	
-	public Notification( String id, Date datetime, int pno, int state, int checked) {
+	@Column(length = 300)
+	private String comment;
+
+	public Notification(String id, Date datetime, int pno, int state, int checked) {
 		super();
 		this.id = id;
 		this.datetime = datetime;
 		this.pno = pno;
 		this.state = state;
 		this.checked = checked;
+	}
+
+	public Notification(String id, Date datetime, int pno, int state, int checked, String comment) {
+		super();
+		this.id = id;
+		this.datetime = datetime;
+		this.pno = pno;
+		this.state = state;
+		this.checked = checked;
+		this.comment = comment;
 	}
 
 	// 외래키 설정
