@@ -65,6 +65,7 @@ const getTabtag  = (callback,errorCallback) => {
 }
 
 const putTabtag  = (data,callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.put(hosturl+'/tabtag', data)
   .then(callback)
   .catch(errorCallback)

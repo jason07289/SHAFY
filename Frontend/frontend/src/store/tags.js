@@ -7,11 +7,19 @@ const state = {
   followtags : [],
 }
 
-
+const getters = {
+  getTabtag(){
+    const list = state.tabtags.map((name, index)=> {
+      return {name, order: index + 1}
+    })
+    return list
+  } 
+} 
 // actions
 const actions = {
  getAllTab({ commit }){
   HashTagApi.getTabtag(res=>{
+    console.log('통신 확인',res)
     if (res.data.state === 'ok'){
       commit('setAllTab', res.data.message.hashtag.split('#'))
     }else{
@@ -21,6 +29,18 @@ const actions = {
       console.log(err)
     }
   )
+ },
+ updateTab({ commit },data){
+   console.log(data)
+   HashTagApi.putTabtag(data,res=>{
+     if (res.data.state === 'ok'){
+      commit('setAllTab', res.data.message.hashtag.split('#'))
+     }else{
+      console.log(res.data)
+     }
+   },err=>{
+     console.log(err)
+   })
  }
 }
 // mutations
@@ -40,6 +60,7 @@ const mutations = {
 
 export default {
   namespaced: true,
+  getters,
   state,
   actions,
   mutations

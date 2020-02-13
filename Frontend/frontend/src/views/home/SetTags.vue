@@ -100,7 +100,6 @@
             small 
             @click="addTag">추가</v-btn>
         </v-card-actions>
-        
       </v-card>
     </v-dialog>
   </div>
@@ -112,12 +111,10 @@
 
 <script>
 import draggable from "vuedraggable";
+import { mapActions, mapGetters } from 'vuex';
 
  export default {
    data: () => ({
-      list: message.map((name, index) => {
-        return { name, order: index + 1 };
-      }),
       editable: true,
       isDragging: false,
       delayedDragging: false,
@@ -129,6 +126,10 @@ import draggable from "vuedraggable";
     draggable
   },
     methods: {
+    ...mapActions({
+      getAllTab: 'tags/getAllTab',
+      updateTab: 'tags/updateTab',
+    }),
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -155,10 +156,15 @@ import draggable from "vuedraggable";
       this.addText = '';
     },
     editDone(){
+      console.log(this.returnStr)
+      this.updateTab({hashtag:this.returnStr})
       this.check = true
     }
   },
   computed: {
+    ...mapGetters({
+    list : 'tags/getTabtag'
+    }),
     dragOptions() {
       return {
         animation: 0,
@@ -188,18 +194,11 @@ import draggable from "vuedraggable";
         this.delayedDragging = false;
       });
     }
+  },
+  created(){
+    this.getAllTab()
+    }
   }
-  }
-  const message = [
-  "점심메뉴",
-  "서울3기",
-  "임베디드",
-  "2기3반5조",
-  "흑흑",
-  "어려워",
-  "뷰의신",
-  "집가고싶다"
-];
 </script>
 
 <style>
@@ -231,5 +230,4 @@ import draggable from "vuedraggable";
 .v-chip__content{
   width:100%;
 }
-
 </style>
