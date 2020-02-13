@@ -18,7 +18,7 @@ const appname = '/user'
 }
 
 const requestUpdateUser = (data, callback, errorCallback) => {
-    axios.put(hosturl+appname)
+    axios.put(hosturl+appname, data)
     .then(callback)
     .catch(errorCallback)
 }
@@ -45,6 +45,17 @@ const requestSignup = (data, callback, errorCallback) => {
     .catch(errorCallback)
 }
 
+const requestNicknameCheck = (params, callback, errorCallback) => {
+    axios.get(hosturl+appname+`/nickname`,params)
+    .then(callback)
+    .catch(errorCallback)
+}
+
+const requestIDCheck = (params, callback, errorCallback) => {
+    axios.get(hosturl+appname+`/nickname`,params)
+    .then(callback)
+    .catch(errorCallback)
+}
 // 닉네임 중복 확인
 const requestNicknameCheck = (params, callback, errorCallback) => {
     axios.get(hosturl+appname+`/nickname`,params)
@@ -72,6 +83,7 @@ const UserApi = {
     requestChangePw:(data,callback,errorCallback)=>requestChangePw(data,callback,errorCallback),
     requestUserDelete:(data,callback,errorCallback)=>requestUserDelete(data,callback,errorCallback),
     requestNicknameCheck: (data,callback,errorCallback)=>requestNicknameCheck(data,callback,errorCallback),
+    requestIDCheck: (data,callback,errorCallback)=>requestIDCheck(data,callback,errorCallback),
 }
 
 export default UserApi
