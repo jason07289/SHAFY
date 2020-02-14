@@ -27,7 +27,7 @@
 ### 토큰 인증
 
 - JwtService.isUsable(String jwt)
-![image](https://user-images.githubusercontent.com/38865267/73408621-240cad80-4340-11ea-9031-e54743d75094.png)
+- ![image](https://user-images.githubusercontent.com/38865267/73408621-240cad80-4340-11ea-9031-e54743d75094.png)
 
 - 토큰 인증을 담당하는 함수 jwt 파라메터에는 토큰값이 들어간다.
 - 아래의 UnauthorizedException은 토큰인증에 문제가 발생했을 때 예외처리를 해주는 부분이다.
