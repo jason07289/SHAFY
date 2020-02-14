@@ -7,9 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.LikesException;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Likes;
-import com.ssafysns.model.dto.LikesException;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.repository.CommentRepository;
 import com.ssafysns.repository.LikesRepository;

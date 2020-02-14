@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.FavoritesHashtagException;
+import com.ssafysns.exception.TabHashtagException;
 import com.ssafysns.model.dto.FavoritesHashtag;
-import com.ssafysns.model.dto.FavoritesHashtagException;
-import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.FavoritesHashtagRepository;
 
 @Service

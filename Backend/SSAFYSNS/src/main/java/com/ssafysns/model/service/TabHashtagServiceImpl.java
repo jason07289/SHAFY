@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.TabHashtagException;
 import com.ssafysns.model.dto.TabHashtag;
-import com.ssafysns.model.dto.TabHashtagException;
 import com.ssafysns.repository.TabHashtagRepository;
 
 @Service

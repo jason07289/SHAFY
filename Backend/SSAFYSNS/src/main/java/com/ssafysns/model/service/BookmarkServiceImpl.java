@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.BookmarkException;
 import com.ssafysns.model.dto.Bookmark;
-import com.ssafysns.model.dto.BookmarkException;
 import com.ssafysns.repository.BookmarkRepository;
 
 @Service

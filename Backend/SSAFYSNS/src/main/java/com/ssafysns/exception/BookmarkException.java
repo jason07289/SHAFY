@@ -1,4 +1,4 @@
-package com.ssafysns.model.dto;
+package com.ssafysns.exception;
 
 public class BookmarkException extends RuntimeException {
 	public BookmarkException() {
