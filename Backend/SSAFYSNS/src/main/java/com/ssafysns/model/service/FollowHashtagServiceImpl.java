@@ -21,21 +21,15 @@ public class FollowHashtagServiceImpl implements FollowHashtagService {
 	@Override
 	public void update(FollowHashtag followHashtag) {
 		try {
-			// 만약, hashtag의 길이가 0이면("") id에 해당하는 tabHashtag record를 삭제
-			if (followHashtag.getHashtag().length() == 0) {
-				followHashtagRepository.deleteByUserId(followHashtag.getId());
+			// FollowHashtag의 insert, delete, update가 모두 이루어짐.
+			String id = followHashtag.getId();
+			Optional<FollowHashtag> find = followHashtagRepository.findByUserId(id);
+			if (find.isPresent()) {
+				followHashtagRepository.updateByUserId(id, followHashtag.getHashtag());
+			} else {
+				followHashtagRepository.save(followHashtag);
 			}
-			// tabHashtag의 insert, delete, update가 모두 이루어짐.
-			else {
-				String id = followHashtag.getId();
-				Optional<FollowHashtag> find = followHashtagRepository.findByUserId(id);
-				if (find.isPresent()) {
-					followHashtagRepository.updateByUserId(id, followHashtag.getHashtag());
-				} else {
-					followHashtagRepository.save(followHashtag);
-				}
 
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new TabHashtagException("TabHashtag 수정 중 오류가 발생했습니다.");
