@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.SearchException;
 import com.ssafysns.model.dto.Search;
-import com.ssafysns.model.dto.SearchException;
 import com.ssafysns.repository.SearchRepository;
 
 @Service

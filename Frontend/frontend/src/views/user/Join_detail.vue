@@ -60,7 +60,7 @@
         ></v-select>
         <v-text-field
           v-model="signUpForm.phone"
-          :type="show1 ? 'text' : 'signUpForm.nickname'"
+          :type="show1 ? 'text' : 'signUpForm.phone'"
           placeholder="010-1234-1234"
           outlined
           prepend-icon="mdi-phone"

@@ -8,8 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.NotificationException;
 import com.ssafysns.model.dto.Notification;
-import com.ssafysns.model.dto.NotificationException;
 import com.ssafysns.model.dto.NotificationResult;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.repository.NotificationRepository;

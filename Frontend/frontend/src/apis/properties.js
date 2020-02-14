@@ -8,7 +8,6 @@ const set = {
 }
 export default{
     backendIP : set.LJH,
-    frontendIP : set.FE_LST
+    frontendIP : set.AWS
 }
-
 
