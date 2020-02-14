@@ -12,7 +12,7 @@ public class MailUtil {
  		String charSet ="utf-8";
 		String hostSMTP = "smtp.gmail.com";
 		
-		String hostSMTPid = "jason07289";//naverid
+		String hostSMTPid = "jason07289";//id
 		String hostSMTPpwd = "19923109a!";
 		
 		//보내는 이 설정
