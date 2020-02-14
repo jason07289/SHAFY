@@ -15,6 +15,8 @@ import com.ssafysns.repository.UserRepository;
 
 @Service
 public class PostServiceImpl implements PostService {
+	
+	static int limit = 3;
 
 	@Autowired
 	private PostRepository postRepository;
@@ -79,7 +81,7 @@ public class PostServiceImpl implements PostService {
 	public List<Post> search(List<Integer> pno_list, int page) {
 		List<Post> post_list = null;
 		try {
-			post_list = postRepository.findByPnoList(pno_list, page, 20);
+			post_list = postRepository.findByPnoList(pno_list, page, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -139,7 +141,7 @@ public class PostServiceImpl implements PostService {
 		List<Post> posts = null;
 		
 		try {
-			posts = postRepository.findByPnoList(pno_list, page, 20);
+			posts = postRepository.findByPnoList(pno_list, page, limit);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new PostException("팔로우하는 모든 게시글 조회 중 오류가 발생했습니다.");
@@ -166,7 +168,7 @@ public class PostServiceImpl implements PostService {
 		List<Post> posts = null;
 		
 		try {
-			posts = postRepository.findByHashtag(hashtag, page, 20);
+			posts = postRepository.findByHashtag(hashtag, page, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -203,7 +205,7 @@ public class PostServiceImpl implements PostService {
 	public Post isLastPage(String hashtag, int page) {
 		Post post = null;
 		try {
-			post = postRepository.isLastPage(hashtag, page+20);
+			post = postRepository.isLastPage(hashtag, page+limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -214,7 +216,7 @@ public class PostServiceImpl implements PostService {
 	public Post isLastPage(List<Integer> pno_list, int page) {
 		Post post = null;
 		try {
-			post = postRepository.isLastPage(pno_list, page+20);
+			post = postRepository.isLastPage(pno_list, page+limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

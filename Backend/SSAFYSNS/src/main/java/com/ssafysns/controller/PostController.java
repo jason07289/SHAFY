@@ -73,6 +73,7 @@ public class PostController {
 	@Autowired
 	JwtService jwtService;
 	
+	static int limit = 3;
 	
 	/**
 	 * 주소 분기
@@ -89,7 +90,9 @@ public class PostController {
 			result_map = getMyCommentedPost(result_map, page);
 		} else if(hashtag.startsWith("...post")) {
 			result_map = getMyPost(result_map, page);
-		} else {
+		} else if(hashtag.startsWith("...best")){
+			result_map = getBestPost(result_map, page);
+		}else {
 			result_map = getPostByOneHashtag(result_map, hashtag, page);
 		}
 		
@@ -102,7 +105,7 @@ public class PostController {
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		String jwtId = jwtService.get("userid");
 		
 		List<Integer> pno_list = bookmarkService.searchPnoById(jwtId);
@@ -127,7 +130,7 @@ public class PostController {
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		
 		String jwtId = jwtService.get("userid");
 		
@@ -154,7 +157,7 @@ public class PostController {
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		String jwtId = jwtService.get("userid");
 		
 		List<Integer> pno_list = commentService.searchMyComment(jwtId);
@@ -176,6 +179,36 @@ public class PostController {
 	
 
 	/**
+	 * 베스트 게시글
+	 */
+	public Map<String, Object> getBestPost(Map<String, Object> result_map, int page) throws Exception {
+		// 해시태그에 해당하는 게시글 리스트 가져오기
+		List<Post> post_list = postService.searchAMonth();
+		List<Integer> pno_list = postService.searchPnoAMonth();
+		
+		for(int i = 0, size = post_list.size(); i<size; i++) {
+			Post post = post_list.get(i);
+			post.setLike_count(post.getPostlike().size());
+		}
+		post_list = returnPost(post_list, pno_list);
+		
+		// 리스트 정렬
+		Collections.sort(post_list, new Comparator<Post>() {
+			@Override
+			public int compare(Post o1, Post o2) {
+				return o1.getLike_count()-o2.getLike_count();
+			}
+		});
+		
+		post_list = post_list.subList(0, Integer.min(20, post_list.size()));
+		
+		result_map.put("next", false);
+		result_map.put("post", post_list);
+		
+		return result_map;
+	}
+
+	/**
 	 * [탭]
 	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
 	 */	
@@ -183,7 +216,7 @@ public class PostController {
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		hashtag = "#"+hashtag+"#";
 		
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
@@ -200,8 +233,6 @@ public class PostController {
 		post_list = returnPost(post_list, pno_list);
 		result_map.put("post", post_list);
 		
-		
-		
 		return result_map;
 	}
 	
@@ -216,7 +247,7 @@ public class PostController {
 		 * JWT 토큰으로 받아오기
 		 */
 		// Follow Hashtag를 가지고 있는 모든 게시글 리스트 가져오기
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		
 		String jwtId = jwtService.get("userid");
 		
@@ -350,7 +381,7 @@ public class PostController {
 	@PostMapping("/me/{page}")
 	public ResponseEntity<List<Post>> searchPostLikesById(@PathVariable int page) throws Exception {
 		
-		page = Integer.max(0, page*20-1);
+		page = Integer.max(0, page*limit-1);
 		
 		String jwtId = jwtService.get("userid");		
 		List<Integer> pno_list = likesService.selectPnoById(jwtId); //좋아요 누른 글 리스트 리스트 반환
@@ -521,36 +552,6 @@ public class PostController {
 	}
 	
 	
-	
-	/**
-	 * 베스트 게시글
-	 */
-	@ApiOperation(value="[Best20] 최근 한 달 간 좋아요가 가장 높은 상위 20개 게시글 전부 가져오기")
-	@GetMapping("/best")
-	public ResponseEntity<List<Post>> bestPost() throws Exception {
-		// 해시태그에 해당하는 게시글 리스트 가져오기
-		List<Post> post_list = postService.searchAMonth();
-		List<Integer> pno_list = postService.searchPnoAMonth();
-		
-		for(int i = 0, size = post_list.size(); i<size; i++) {
-			Post post = post_list.get(i);
-			post.setLike_count(post.getPostlike().size());
-		}
-		post_list = returnPost(post_list, pno_list);
-		
-		// 리스트 정렬
-		Collections.sort(post_list, new Comparator<Post>() {
-			@Override
-			public int compare(Post o1, Post o2) {
-				return o1.getLike_count()-o2.getLike_count();
-			}
-		});
-		
-		post_list = post_list.subList(0, Integer.min(20, post_list.size()));
-		
-		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
-	}
-		
 	// 해시태그에 해당하는 Post 리스트 조회 (함수)
 	public List<Post> searchPostByHash(String hashtag, int page) throws Exception {
 		List<Post> posts = postService.search(hashtag, page);
