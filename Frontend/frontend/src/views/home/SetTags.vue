@@ -1,7 +1,7 @@
 <template>
   
   <div id="settags" style="width:100%;">
-    <v-app>
+    
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
     mt="400"
@@ -102,7 +102,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    </v-app>
   </div>
 </template>
 
@@ -152,7 +151,7 @@ import { mapActions, mapGetters } from 'vuex';
       }
       this.list.push({
         name: this.addText,
-        order: this.list.length
+        order: this.list.length+1
       })
       this.addText = '';
     },

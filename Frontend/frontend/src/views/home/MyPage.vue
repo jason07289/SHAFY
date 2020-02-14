@@ -20,7 +20,7 @@
       <v-list-item-subtitle>{{userInfo.location}} {{userInfo.grade}}기</v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action style="width:30%;">
-      <v-btn depressed class="ma-2 widfull" outlined color="success">
+      <v-btn @click="update=true" depressed class="ma-2 widfull" outlined color="success">
         <v-icon left>mdi-pencil</v-icon> 수정
       </v-btn>
       <v-btn depressed  @click="logout()" class="ma-2 widfull" outlined color="success">
@@ -40,7 +40,7 @@
   <v-list flat>
       <v-subheader>내 활동</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in activity" :key="item">
+        <v-list-item v-for="item in activity" :key="item" @click="activityClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -89,9 +89,138 @@
     </v-list>
   </v-card>
 
+<!-- 회원정보 수정 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
+  <v-dialog v-model="update">
+  <v-card>
+    <v-btn depressed outlined @click="update=false"><v-icon color="red">mdi-close</v-icon>이거누르면닫힘</v-btn>
+    여기는 회원정보 수정
+  <p>못바꾸는 애들은 p태그로 넣었어요</p>
+  <p>ID:{{ userInfo.id }}</p>
+  <p>이름 : {{ userInfo.name }}</p>
+  <v-text-field
+    v-model="userInfo.phone"
+    :type="show1 ? 'text' : 'userInfo.phone'"
+    :placeholder="userInfo.phone"
+    outlined
+    prepend-icon="mdi-phone"
+  ></v-text-field>
+  <v-menu
+    ref="menu"
+    v-model="menu"
+    :close-on-content-click="false"
+    :return-value.sync="userInfo.birth"
+    transition="scale-transition"
+    offset-y
+    min-width="290px"
+  >
+  <template v-slot:activator="{ on }">
+    <v-text-field
+      v-model="userInfo.birth"
+      label="birthday"
+      prepend-icon="mdi-calendar"
+      readonly
+      v-on="on"
+    ></v-text-field>
+  </template>
+  <v-date-picker 
+  v-model="userInfo.birth" no-title scrollable
+  :min=minDate
+  :max=maxDate
+  >
+    <v-spacer></v-spacer>
+    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+    <v-btn text color="primary" @click="$refs.menu.save(userInfo.birth)">OK</v-btn>
+  </v-date-picker>
+</v-menu>
+  <v-text-field
+  v-model="userInfo.nickname"
+  :counter="10"
+  :type="show1 ? 'text' : 'userInfo.nickname'"
+  outlined
+  prepend-icon="mdi-clipboard-account"
+  ></v-text-field>
+  <v-select
+    v-model="userInfo.location"
+    :items="Info.location"
+    label="location"
+    placeholder="지역"
+    prepend-icon="mdi-map-marker"
+    outlined
+  ></v-select>
+  <p>여기에 이미지 띄우고?바꾸도록?</p>
+  <v-file-input 
+    accept="image/*" 
+    label="File input"
+    outlined
+    v-model="imageData"
+    @change="onUpload"
+    ></v-file-input>
+  <div v-if="userInfo.utype==='student'" id='StudentInfo'>
+  <v-select 
+    v-model="userInfo.grade" 
+    name="grade" 
+    id="grade"
+    :label="serInfo.grade"
+    :items="Info.grade"
+    outlined
+    >
+    </v-select>
+    <v-select 
+      v-model="userInfo.class1" 
+      name="class1" 
+      id="class1"
+      :label="serInfo.class1"
+      :items="Info.class1"
+      outlined>
+      </v-select>
+      <v-select 
+      v-model="userInfo.class2" 
+      name="class2" 
+      id="class2"
+      :label="serInfo.class2"
+      :items="Info.class2"
+      outlined
+      ></v-select>
+    <v-select 
+      v-model="userInfo.state" 
+      name="state" 
+      id="state"
+      :label="userInfo.state"
+      :items="Info.state"
+      outlined
+      ></v-select>
+      </div>
+    <div v-else id='GeneralInfo'>
+      <v-select 
+        v-model="userInfo.utype" 
+        name="type" 
+        id="type"
+        :label="userInfo.utype"
+        :items="Info.utype"
+        outlined
+        >
+        </v-select>
+    </div>
+  <button @click="submit">회원정보 수정 날리기</button>
+  </v-card>
+  </v-dialog>
+
+<!-- 내 활동 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
+<v-dialog v-model="activityDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+
+      <v-card>
+        <v-toolbar flat dark color="primary">
+          <v-btn icon dark @click="activityDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <!-- 여기에 나중에 포스트리스트 띄우기 -->
+      </v-card>
+    </v-dialog>
 
 
-  
 </div>
 </template>
 
@@ -132,10 +261,12 @@ export default {
       ],
       extra:[
         {mdi:'pound',text:'커뮤니티이용규칙'},
-        {mdi:'pound',text:'개인정보처라방침'},
+        {mdi:'pound',text:'개인정보처리방침'},
         {mdi:'pound',text:'개발스택'},
         {mdi:'pound',text:'개발팀소개'}
-      ]
+      ],
+      activityDialog: false,
+      activityTitle:'',
     }
   },
   methods:{
@@ -173,6 +304,11 @@ export default {
           });
         })
     },
+    activityClick(activityItem){
+      this.activityDialog= true;
+      this.activityTitle = activityItem.text
+      console.log("on:"+activityItem)
+    }
   },
   computed:{
     ...mapState({
