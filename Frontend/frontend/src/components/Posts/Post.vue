@@ -155,9 +155,7 @@
         color="white"
         outlined
         style="width:100%;padding:3px;"
-        :class ="cancelAuth(comment)"
         >
-        {{ cancel }}
           <!-- <v-icon size="15" color="green" v-if="commentIcon(comment.cno)">mdi-check</v-icon> -->
           <v-progress-circular
           v-if="isWriting==comment.cno"
@@ -167,11 +165,11 @@
             style="margin-right:9px;"
           ></v-progress-circular>
           <span class="subtitle-2" >{{comment.nickname}}</span>
-          <!-- {{ comment }} -->
+          <!-- {{ comment.id }} -->
+          <!-- {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
           <v-icon size="15" color="red" 
-           v-if="cancel"
            @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-comment-remove</v-icon>
           <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
           <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
@@ -234,7 +232,6 @@ export default {
   data() {
     return {
       /* 확장 탭/다이얼로그 관련 변수*/
-      cancel : false,
       content_show: false,
       comment_show: false,
       tagDialog_show: false,
@@ -257,27 +254,14 @@ export default {
     }
   },
   methods: {
-    cancelAuth(comment){
-      // 익명이 아니라면 ? 
-      console.log(comment)
-      if (comment.user !== null){
-        console.log('들어오니ㅜㅜ')
-        if (comment.user.id === this.userInfo.id){
-          this.cancel = true
-          console.log(this.cancel)
-        }
-      }
-    },
     deleteComment(no, idx){
       // this.post.comment[idx].user.id = '알수없음'
-      this.post.comment[idx].content = '댓글이 삭제 되었습니다.'
       PostApi.deleteComment(
         {no:no},res=>{
-          console.log(res)
-          if (res.data.state ==='ok'){
-            console.log(res)
+          if (res.data.message === '댓글 삭제 완료'){
+            // console.log(res)
             console.log('댓글이 정상 삭제 되었습니다.')
-            this.cancel = false
+            this.post.comment[idx].content = '댓글이 삭제 되었습니다.'
           }
         },err=>{
           console.log(err)
@@ -319,7 +303,7 @@ export default {
       2. 댓글 다시 불러오기 (this.post.comment에 댓글배열 불러오기)
       3. 댓글 입력창 비우기
       */
-      
+
       var returnBody = 
       {
         "anonymous": this.anonymous,
