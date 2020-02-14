@@ -2,7 +2,7 @@
  */
 import properties from './properties'
 
-const axios = require('axios').default
+const axios = require('axios')
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
 const hosturl = properties.backendIP

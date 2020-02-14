@@ -1,5 +1,5 @@
 import properties from './properties'
-const axios = require('axios').default
+const axios = require('axios')
 
 const hosturl = properties.backendIP
 // const hosturl = 'http://i02a305.p.ssafy.io:8080'

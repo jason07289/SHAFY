@@ -8,6 +8,7 @@ import Vuetify from 'vuetify/lib'
 const firebase = require('firebase/app')
 require('firebase/storage') 
 import firebaseconfig from './plugins/firebaseconfig'
+import infiniteScroll from 'vue-infinite-scroll'
 // import ImageUploader from 'vue-image-upload-resize'
 
 Vue.config.productionTip = false
@@ -16,6 +17,7 @@ Vue.use(Router)
 Vue.use(Vuetify)
 // Vue.use(ImageUploader)
 firebase.initializeApp(firebaseconfig)
+Vue.use(infiniteScroll)
 
 
 const router = new Router({
