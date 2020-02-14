@@ -109,13 +109,22 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
+	public Notification searchByNo(int no) {
+		try {
+			return notificationRepository.findByNo(no);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NotificationException("no로 Notification 조회 중 오류가 발생했습니다.");
+		}
+	}
+
 	@Override
 	public List<Notification> searchAllByUserId(String id) {
 		try {
 			return notificationRepository.findAllByUserId(id);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new NotificationException("Notification 목록 조회 중 오류가 발생했습니다.");
+			throw new NotificationException("id로 Notification 목록 조회 중 오류가 발생했습니다.");
 		}
 	}
 
@@ -126,6 +135,7 @@ public class NotificationServiceImpl implements NotificationService {
 			List<Notification> findAll = searchAllByUserId(id);
 			Notification notification;
 
+			int no;
 			int pno;
 			String notificationMessage = "";
 			String comment = "";
@@ -137,6 +147,7 @@ public class NotificationServiceImpl implements NotificationService {
 			for (int i = 0; i < size; ++i) {
 				notification = findAll.get(i);
 
+				no = notification.getNo();
 				pno = notification.getPno();
 				comment = notification.getComment();
 				datetime = notification.getDatetime();
@@ -161,7 +172,7 @@ public class NotificationServiceImpl implements NotificationService {
 					notificationMessage = "회원님의 댓글에 대댓글이 달렸습니다. : " + comment;
 				}
 
-				result.add(new NotificationResult(pno, notificationMessage, comment, datetime, checked));
+				result.add(new NotificationResult(no, pno, notificationMessage, comment, datetime, checked));
 			}
 
 			return result;

@@ -2,6 +2,7 @@ package com.ssafysns.model.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.NotificationResult;
@@ -16,6 +17,8 @@ public interface NotificationService {
 	public void update(Notification notification);
 
 //	public List<Notification> searchAll();
+
+	public  Notification searchByNo(int no);
 
 	public List<Notification> searchAllByUserId(String id);
 
