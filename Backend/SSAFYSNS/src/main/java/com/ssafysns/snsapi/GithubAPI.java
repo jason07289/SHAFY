@@ -60,9 +60,9 @@ public class GithubAPI {
             }
             System.out.println("response body : " + result);
             String datas[] = result.split("=");
-            System.out.println(Arrays.toString(datas));
+//            System.out.println(Arrays.toString(datas));
             datas = datas[1].split("&");
-            System.out.println(datas[0]);
+//            System.out.println(datas[0]);
             
             access_Token=datas[0];
             br.close();

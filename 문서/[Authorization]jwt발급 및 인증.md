@@ -56,4 +56,28 @@
 ![image](https://user-images.githubusercontent.com/38865267/73409918-02adc080-4344-11ea-9d7c-83dcc1a92d30.png)
 
 - 호출 후 위와 같이 사용이 가능.
-- 현재는 header에 데이터를 넣어 테스트를 안해봐서 get이 정확히 동작하는지는 모르겠다.
+- 현재는 header에 데이터를 넣어 테스트 완료
+
+### swagger에서 헤더에 데이터 넣기
+
+- post, comment 등 사용자 인증이 요구되는 rest api가 존재하므로 swagger 상에서 간편하게 테스트를 해야할 필요성을 느꼈다.
+
+- ![image](https://user-images.githubusercontent.com/38865267/74490662-9bc80400-4f0c-11ea-9d82-db04142f7cd0.png)
+
+- 헤더이름을 Authorization으로 설정 (front와 맞춰야함) 후 .golbalOperationParameters로 설정한 파라미터를 추가했다.
+
+### swagger에서 토큰 생성 및 인증 테스트
+
+- ![image](https://user-images.githubusercontent.com/38865267/74491393-c2873a00-4f0e-11ea-8468-86f0debb3d36.png)
+
+- ![image](https://user-images.githubusercontent.com/38865267/74491445-e480bc80-4f0e-11ea-8172-54dee735f60e.png)
+
+- 토큰발급 완료
+
+- ![image](https://user-images.githubusercontent.com/38865267/74491520-31fd2980-4f0f-11ea-839b-1dbfd0ac42d2.png)
+
+- 발급받은 토큰으로 회원정보를 조회해 보았다.
+
+- ![image](https://user-images.githubusercontent.com/38865267/74491553-4ccf9e00-4f0f-11ea-8784-b222037de8ae.png)
+
+- 잘 반납된 것을 확인할 수 있다.
