@@ -76,7 +76,7 @@ public class PostController {
 	 */
 	@ApiOperation(value="[Tab] hashtag 하나에 해당하는 게시글들의 게시글+댓글+좋아요 전부 가져오기")
 	@GetMapping("/tab/{hashtag}/{page}")
-	public ResponseEntity<List<Post>> getPostByOneHashtag(@PathVariable String hashtag, @PathVariable int page) throws Exception {
+	public ResponseEntity<Map<String, Object>> getPostByOneHashtag(@PathVariable String hashtag, @PathVariable int page) throws Exception {
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
@@ -89,10 +89,21 @@ public class PostController {
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
 		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
 		
+		// 마지막페이지인지 확인
+		Post isLast = postService.isLastPage(hashtag, page);
+		Map<String, Object> result_map = new HashMap<String, Object>();
+
+		if(isLast == null) {
+			result_map.put("next", false);
+		} else {
+			result_map.put("next", true);
+		}
 		post_list = returnPost(post_list, pno_list);
+		result_map.put("post", post_list);
 		
-		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(result_map, HttpStatus.OK);
 	}
+	
 	
 	/**
 	 * [뉴스피드]
@@ -171,6 +182,8 @@ public class PostController {
 		if(post.getAnonymous() == 1) {
 			//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 			post.setNickname("익명");
+		} else {
+			post.setNickname(post.getUser().getNickname());
 		}
 		post.setUser(null);
 		
@@ -205,8 +218,11 @@ public class PostController {
 				if(temp_comment.getAnonymous() == 1) {
 					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 					temp_comment.setNickname("익명");
+				} else {
+					temp_comment.setNickname(temp_comment.getUser().getNickname());
 				}
 				temp_comment.setUser(null);
+				temp_comment.setPost(null);
 				
 				if(temp_comment.getParent()==0) {
 					temp_comment.setParent(temp_comment.getCno());
@@ -408,7 +424,7 @@ public class PostController {
 		// 내가 좋아요 누른 댓글 리스트
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, pno);
 		
-		funcComment(comments, like_boolean_list);
+		comments = funcComment(comments, like_boolean_list);
 				
 		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 	}
@@ -462,8 +478,10 @@ public class PostController {
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
 		String jwtId = jwtService.get("userid");
 		
+		comment.setDatetime(new Date());
+		comment.setId(jwtId);
 		commentService.insert(jwtId, comment);
-		
+
 		String id = null;
 		
 		// 댓글 알림 처리
@@ -526,7 +544,16 @@ public class PostController {
 		List<Comment> comments = commentService.searchAllCommenetList(pnolist);
 		return comments;
 	}
-
+	
+//	@ApiOperation("cno로 comment 조회")
+//	@GetMapping("/comment/one/{cno}")
+//	public ResponseEntity<Comment> SearchByCno(@PathVariable int cno) throws Exception {
+//		System.out.println("댓글 조회 시작");
+//		Comment comment = commentService.search(cno);
+//		System.out.println("댓글 조회 완료");
+//		System.out.println(comment.getUser().getNickname());
+//		return new ResponseEntity<Comment>(comment, HttpStatus.OK);
+//	}
 	
 	/**
 	 * ExceptionHandler

@@ -1,6 +1,7 @@
 package com.ssafysns.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -54,6 +55,9 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 	@Query("select c from comment c where c.pno=:pno and c.cno=:cno and c.deleted=0")
 	Comment checkComment(@Param("pno") int pno, @Param("cno") Integer cno);
+
+	@Query("select c from comment c where c.cno=:cno")
+	Comment findByCno(@Param("cno") int cno);
 
 
 }

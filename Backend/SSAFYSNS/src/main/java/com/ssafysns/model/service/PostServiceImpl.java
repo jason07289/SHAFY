@@ -207,6 +207,17 @@ public class PostServiceImpl implements PostService {
 		
 		return post;
 	}
+
+	@Override
+	public Post isLastPage(String hashtag, int page) {
+		Post post = null;
+		try {
+			post = postRepository.isLastPage(hashtag, page+20);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post;
+	}
 	
 	
 

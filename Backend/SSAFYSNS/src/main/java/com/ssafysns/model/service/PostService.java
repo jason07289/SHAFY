@@ -30,6 +30,8 @@ public interface PostService {
 	public int count();
 
 	public List<Post> searchBest20();	//베스트 게시글 20개 가져오기
+	
+	public Post isLastPage(String hashtag, int limit);
 
 	public List<Post> followHash(String hashtag);
 	

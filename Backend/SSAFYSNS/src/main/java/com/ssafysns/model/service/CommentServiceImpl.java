@@ -56,8 +56,8 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void insert(String id, Comment comment) {
 		
-		String nickname = userRepository.findById(id).get().getNickname();
-		comment.setNickname(nickname);
+//		String nickname = userRepository.findById(id).get().getNickname();
+//		comment.setNickname(nickname);
 		
 		try {
 			commentRepository.save(comment);
@@ -147,7 +147,8 @@ public class CommentServiceImpl implements CommentService {
 	public Comment search(int cno) {
 		 Comment comment = null;
 		 try {
-			comment = commentRepository.findById(cno).get();
+			System.out.println("cno is: "+cno);
+			comment = commentRepository.findByCno(cno);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
