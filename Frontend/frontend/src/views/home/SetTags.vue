@@ -100,6 +100,7 @@
             small 
             @click="addTag">추가</v-btn>
         </v-card-actions>
+        
       </v-card>
     </v-dialog>
   </div>
@@ -115,6 +116,9 @@ import { mapActions, mapGetters } from 'vuex';
 
  export default {
    data: () => ({
+      list: message.map((name, index) => {
+        return { name, order: index + 1 };
+      }),
       editable: true,
       isDragging: false,
       delayedDragging: false,
@@ -126,10 +130,11 @@ import { mapActions, mapGetters } from 'vuex';
     draggable
   },
     methods: {
-    ...mapActions({
+      ...mapActions({
       getAllTab: 'tags/getAllTab',
       updateTab: 'tags/updateTab',
     }),
+
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -156,15 +161,16 @@ import { mapActions, mapGetters } from 'vuex';
       this.addText = '';
     },
     editDone(){
-      console.log(this.returnStr)
-      this.updateTab({hashtag:this.returnStr})
       this.check = true
+      console.log("체크해")
+    console.log(this.listToStore)
     }
   },
   computed: {
     ...mapGetters({
-    list : 'tags/getTabtag'
+    listToStore : 'tags/getTabtag'
     }),
+
     dragOptions() {
       return {
         animation: 0,
@@ -184,6 +190,11 @@ import { mapActions, mapGetters } from 'vuex';
       return str;
     }
   },
+  mounted () {
+    this.message=this.listToStore;
+    console.log("체크해")
+    console.log(this.listToStore)
+  },
   watch: {
     isDragging(newValue) {
       if (newValue) {
@@ -194,11 +205,9 @@ import { mapActions, mapGetters } from 'vuex';
         this.delayedDragging = false;
       });
     }
-  },
-  created(){
-    this.getAllTab()
-    }
   }
+  }
+  const message = [];
 </script>
 
 <style>
@@ -230,4 +239,5 @@ import { mapActions, mapGetters } from 'vuex';
 .v-chip__content{
   width:100%;
 }
+
 </style>
