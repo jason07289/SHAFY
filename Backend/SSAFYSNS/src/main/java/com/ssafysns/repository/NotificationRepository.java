@@ -21,6 +21,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@Query(value = "delete from notification n where n.datetime <= date_add(now(), interval -1 week) and n.checked = 1 and n.datetime <= :datetime", nativeQuery = true)
 	void deleteByDatetime(@Param("datetime") Date datetime);
 
+	// no로 notification 조회
+	@Query(value = "select n from Notification n where n.no = :no")
+	Notification findByNo(@Param("no") int no);
+
 	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
 	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
 	long countByIdAndNotChecked(@Param("id") String id);

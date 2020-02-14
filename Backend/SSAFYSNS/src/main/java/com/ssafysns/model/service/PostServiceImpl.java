@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafysns.model.dto.NoticeException;
+import com.ssafysns.exception.NoticeException;
+import com.ssafysns.exception.PostException;
 import com.ssafysns.model.dto.Post;
-import com.ssafysns.model.dto.PostException;
 import com.ssafysns.repository.PostRepository;
 import com.ssafysns.repository.UserRepository;
 
