@@ -35,6 +35,7 @@
 import PostList from '../../components/Posts/PostList'
 import { mapActions, mapState } from 'vuex'
 
+
 export default {
   data () {
       return {
@@ -51,15 +52,17 @@ export default {
   methods:{
     ...mapActions({
       getAllTab: 'tags/getAllTab',
+      getUserInfo:'user/getUserInfo',
     })
   },
   created(){
-    console.log(this.$store)
     this.getAllTab()
+    this.getUserInfo()
   },
   computed:{
     ...mapState({
       Tabs: state=> state.tags.tabtags,
+      userInfo: state => state.user.userInfo,
     })
   },
 }

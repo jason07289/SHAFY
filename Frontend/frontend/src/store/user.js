@@ -52,7 +52,7 @@ const actions = {
     UserApi.requestUserInFo(res=>{
       // console.log('userInfoAPI',res)
       if (res.data.state === 'ok'){
-        console.log(router)
+        // console.log(router)
         commit('setUserInfo', res.data.message)
       }else{
         alert(res.data)
@@ -133,7 +133,7 @@ const mutations = {
   },
   setUserInfo(state, data){
     state.userInfo = data
-    console.log('성공', state.userInfo)
+    // console.log('성공', state.userInfo)
   },
   setSNSseq(state, data){
     state.seq = data.seq

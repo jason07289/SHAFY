@@ -25,7 +25,14 @@ const requestPosting = (data,callback,errorCallback) => {
 
 // 댓글 작성하기 
 const requestComment = (data,callback,errorCallback) => {
-  axios.post(hosturl+appname+`/${data.pno}/comment`, data)
+  axios.post(hosturl+appname+`/comment`, data)
+  .then(callback)
+  .catch(errorCallback)
+}
+
+// 댓글 불러오기 
+const getComment = (params,callback,errorCallback) => {
+  axios.get(hosturl+appname+`/comment/${params.pno}`)
   .then(callback)
   .catch(errorCallback)
 }
@@ -46,7 +53,7 @@ const deletePosting = (data, callback, errorCallback) => {
 
 // 댓글 삭제 
 const deleteComment = (data, callback, errorCallback) => {
-  axios.delete(hosturl+appname+`/${data.pno}/comment/${data.comment.no}`, data)
+  axios.delete(hosturl+appname+`/comment/${data.no}`, data)
   .then(callback)
   .catch(errorCallback)
 }
@@ -56,6 +63,7 @@ const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
   requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
   requestComment:(data,callback,errorCallback)=>requestComment(data,callback,errorCallback),
+  getComment:(params,callback,errorCallback) => getComment(params,callback,errorCallback),
   updatePosting:(data,callback,errorCallback)=>updatePosting(data,callback,errorCallback),
   deletePosting:(data,callback,errorCallback)=>deletePosting(data,callback,errorCallback),
   deleteComment:(data,callback,errorCallback)=>deleteComment(data,callback,errorCallback),
