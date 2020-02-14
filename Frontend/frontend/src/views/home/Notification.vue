@@ -1,6 +1,8 @@
 <template>
   <div>
     <h1>알림창</h1>
+    {{ nmofNotification }}
+    {{ newalarm }}
     <p v-for="noti in this.notices" :key="noti.pno">
       {{ noti.pno }}
       {{ noti.notificationMessage }}

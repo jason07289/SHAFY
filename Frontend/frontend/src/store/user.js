@@ -133,7 +133,7 @@ const mutations = {
   },
   setUserInfo(state, data){
     state.userInfo = data
-    console.log('성공', state.userInfo)
+    // console.log('성공', state.userInfo)
   },
   setSNSseq(state, data){
     state.seq = data.seq
