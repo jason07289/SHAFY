@@ -114,6 +114,17 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 	
+	@Override
+	public List<Post> search(List<Integer> pno_list, int page) {
+		List<Post> post_list = null;
+		try {
+			post_list = postRepository.findByPnoList(pno_list, page, 20);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post_list;
+	}
+	
 	
 	@Override
 	public int count() {
@@ -174,7 +185,9 @@ public class PostServiceImpl implements PostService {
 		List<Post> posts = null;
 		
 		try {
+			System.out.println("posts 조회 시작");
 			posts = postRepository.findByHashtag(hashtag, page, 20);
+			System.out.println("posts 사이즈 : "+posts);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -207,6 +220,17 @@ public class PostServiceImpl implements PostService {
 		
 		return post;
 	}
+	
+	@Override
+	public List<Integer> searchMyPost(String jwtId) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = postRepository.searchMyPost(jwtId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
+	}
 
 	@Override
 	public Post isLastPage(String hashtag, int page) {
@@ -219,6 +243,15 @@ public class PostServiceImpl implements PostService {
 		return post;
 	}
 	
-	
+	@Override
+	public Post isLastPage(List<Integer> pno_list, int page) {
+		Post post = null;
+		try {
+			post = postRepository.isLastPage(pno_list, page+20);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post;
+	}	
 
 }

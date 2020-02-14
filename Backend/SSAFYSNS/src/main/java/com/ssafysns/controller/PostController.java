@@ -29,6 +29,7 @@ import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.service.BookmarkService;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
 import com.ssafysns.model.service.JwtService;
@@ -58,6 +59,9 @@ public class PostController {
 	FollowHashtagService followService;
 	
 	@Autowired
+	BookmarkService bookmarkService;
+	
+	@Autowired
 	UserService userService;
 	
 	@Autowired
@@ -69,29 +73,43 @@ public class PostController {
 	@Autowired
 	JwtService jwtService;
 	
-
+	
 	/**
-	 * [탭]
-	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
+	 * 주소 분기
+	 * @throws Exception 
 	 */
-	@ApiOperation(value="[Tab] hashtag 하나에 해당하는 게시글들의 게시글+댓글+좋아요 전부 가져오기")
+	@ApiOperation(value="/tab/{hashtag}/{page} - 북마크/댓글단글/작성한 글/Tab")
 	@GetMapping("/tab/{hashtag}/{page}")
-	public ResponseEntity<Map<String, Object>> getPostByOneHashtag(@PathVariable String hashtag, @PathVariable int page) throws Exception {
-		/*
-		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
-		 */
+	public ResponseEntity<Map<String, Object>> allocation(@PathVariable String hashtag, @PathVariable int page) throws Exception {
+		Map<String, Object> result_map = new HashMap<String, Object>();
+		
+		if(hashtag.startsWith("...bookmark")) {
+			result_map = getBookmark(result_map, page);
+		} else if(hashtag.startsWith("...comment")) {
+			result_map = getMyCommentedPost(result_map, page);
+		} else if(hashtag.startsWith("...post")) {
+			result_map = getMyPost(result_map, page);
+		} else {
+			result_map = getPostByOneHashtag(result_map, hashtag, page);
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(result_map, HttpStatus.OK);
+	}
+	
+	/**
+	 * [Me]
+	 * 스크랩 한 글
+	 * @throws UnauthorizedException 
+	 */
+	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws UnauthorizedException {
 		page = Integer.max(0, page*20-1);
+		String jwtId = jwtService.get("userid");
 		
-		System.out.println(hashtag);
-		hashtag = "#"+hashtag+"#";
-		System.out.println(hashtag);
-		
-		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
-		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
+		List<Integer> pno_list = bookmarkService.searchPnoById(jwtId);
+		List<Post> post_list = postService.search(pno_list, page);
 		
 		// 마지막페이지인지 확인
-		Post isLast = postService.isLastPage(hashtag, page);
-		Map<String, Object> result_map = new HashMap<String, Object>();
+		Post isLast = postService.isLastPage(pno_list, page);
 
 		if(isLast == null) {
 			result_map.put("next", false);
@@ -101,9 +119,96 @@ public class PostController {
 		post_list = returnPost(post_list, pno_list);
 		result_map.put("post", post_list);
 		
-		return new ResponseEntity<Map<String, Object>>(result_map, HttpStatus.OK);
+		return result_map;
+	}
+	/**
+	 * [Me]
+	 * 내가 쓴 글
+	 * @throws UnauthorizedException 
+	 */
+	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+		page = Integer.max(0, page*20-1);
+		
+		String jwtId = jwtService.get("userid");
+		
+		List<Integer> pno_list = postService.searchMyPost(jwtId);
+		List<Post> post_list = postService.search(pno_list, page);
+		
+		// 마지막페이지인지 확인
+		Post isLast = postService.isLastPage(pno_list, page);
+
+		if(isLast == null) {
+			result_map.put("next", false);
+		} else {
+			result_map.put("next", true);
+		}
+		post_list = returnPost(post_list, pno_list);
+		result_map.put("post", post_list);
+		
+		return result_map;
 	}
 	
+	/**
+	 * [Me]
+	 * 댓글 남긴 글
+	 * @throws UnauthorizedException 
+	 */
+	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+		page = Integer.max(0, page*20-1);
+		String jwtId = jwtService.get("userid");
+		
+		List<Integer> pno_list = commentService.searchMyComment(jwtId);
+		List<Post> post_list = postService.search(pno_list, page);
+		
+		// 마지막페이지인지 확인
+		Post isLast = postService.isLastPage(pno_list, page);
+
+		if(isLast == null) {
+			result_map.put("next", false);
+		} else {
+			result_map.put("next", true);
+		}
+		post_list = returnPost(post_list, pno_list);
+		result_map.put("post", post_list);
+		
+		return result_map;
+	}
+	
+
+	/**
+	 * [탭]
+	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
+	 */	
+	public Map<String, Object> getPostByOneHashtag(Map<String, Object> result_map, String hashtag, int page) throws Exception {
+		/*
+		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
+		 */
+		page = Integer.max(0, page*20-1);
+		hashtag = "#"+hashtag+"#";
+		System.out.println(hashtag);
+		
+		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
+		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
+		
+		System.out.println();
+		System.out.println("사이즈!!: "+post_list.size());
+		System.out.println();
+		
+		// 마지막페이지인지 확인
+		Post isLast = postService.isLastPage(hashtag, page);
+
+		if(isLast == null) {
+			result_map.put("next", false);
+		} else {
+			result_map.put("next", true);
+		}
+		post_list = returnPost(post_list, pno_list);
+		result_map.put("post", post_list);
+		
+		
+		
+		return result_map;
+	}
 	
 	/**
 	 * [뉴스피드]
@@ -193,6 +298,8 @@ public class PostController {
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
 		
 		temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+		
+		post.setComment(null);
 	}
 	
 	
@@ -200,7 +307,7 @@ public class PostController {
 	 * [공통 코드] 댓글 관리
 	 */
 	private List<Comment> funcComment(List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
-		
+		System.out.println();
 		if(temp_comments_list != null) {
 			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
 				Comment temp_comment = temp_comments_list.get(j);
@@ -221,6 +328,7 @@ public class PostController {
 				} else {
 					temp_comment.setNickname(temp_comment.getUser().getNickname());
 				}
+				System.out.println(temp_comment.getNickname());
 				temp_comment.setUser(null);
 				temp_comment.setPost(null);
 				
@@ -240,7 +348,9 @@ public class PostController {
 			}
 		});
 		return temp_comments_list;
-	}	
+	}
+	
+	
 	
 	
 	/**
@@ -317,8 +427,6 @@ public class PostController {
 		System.out.println("게시물 등록 시작");
 		
 		String id = post.getId();
-		String hashtag = post.getHashtag();
-		post.setHashtag(hashtag+"#");
 
 		// 닉네임 설정
 		User user = userService.MyInfo();

@@ -12,7 +12,7 @@ public interface CommentService {
 	public void update(Comment comment);
 	public boolean  delete(String jwtId, int no);
 	
-	public Comment search(String id);
+	public List<Integer> searchMyComment(String id);
 	public Comment search(int cno);
 	public List<Comment> searchPno(int pno);//해당 게시글 댓글 조회
 	public List<Integer> searchCnoByPno(int pno); //해당 게시글 댓글번호 조회

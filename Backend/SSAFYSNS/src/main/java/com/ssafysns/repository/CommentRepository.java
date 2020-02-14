@@ -59,5 +59,8 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Query("select c from comment c where c.cno=:cno")
 	Comment findByCno(@Param("cno") int cno);
 
+	@Query("select c.pno from comment c where c.id=:id")
+	List<Integer> searchMyComment(@Param("id") String id);
+
 
 }
