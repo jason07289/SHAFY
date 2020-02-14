@@ -1,3 +1,8 @@
+/*
+1. computed에 fixed 데이터라는 drag 되지않는 v-chip 그룹을 만든다
+2. 수정하기 버튼을 눌렀을 때, data에 있는 this.list에 값을 깊은 복사 한다.
+3. 수정 완료를 눌렀을 때, this.list에 값을 store에 보낸다. 
+ */
 <template>
   
   <div id="settags" style="width:100%;">
@@ -79,7 +84,6 @@
       </v-chip>
     </v-card-actions>
   </v-card>
- 
 
  <v-dialog v-model="addTagDialog" max-width="400px">
       <v-card
@@ -102,6 +106,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    {{ tabtags }}
   </div>
 </template>
 
@@ -110,11 +115,32 @@
 
 
 <script>
+ /* eslint-disable no-unused-vars */
 import draggable from "vuedraggable";
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
+import store from '../../store'
 
+var message = [
+    "점심메뉴",
+    "서울3기",
+]
  export default {
    data: () => ({
+//       message : [
+//   "점심메뉴",
+//   "서울3기",
+//   "임베디드",
+//   "2기3반5조",
+//   "흑흑",
+//   "어려워",
+//   "뷰의신",
+//   "집가고싶다"
+// ], 
+      // message: this.tabtags,
+      // list: message.map((name, index) => {
+      // return { name, order: index + 1 };
+      // }),
+      list:[],
       editable: true,
       isDragging: false,
       delayedDragging: false,
@@ -130,6 +156,12 @@ import { mapActions, mapGetters } from 'vuex';
       getAllTab: 'tags/getAllTab',
       updateTab: 'tags/updateTab',
     }),
+      taginit(){
+      this.list = message.map((name, index) => {
+      return { name, order: index + 1 };
+      })
+      console.log(this.list)
+    },
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -159,11 +191,14 @@ import { mapActions, mapGetters } from 'vuex';
       console.log(this.returnStr)
       this.updateTab({hashtag:this.returnStr})
       this.check = true
-    }
+    },
+  },
+  updated:{
+      
   },
   computed: {
-    ...mapGetters({
-    list : 'tags/getTabtag'
+    ...mapState({
+      tabtags : state => state.tags.tabtags
     }),
     dragOptions() {
       return {
@@ -193,12 +228,31 @@ import { mapActions, mapGetters } from 'vuex';
       this.$nextTick(() => {
         this.delayedDragging = false;
       });
+    },
+  taginit2(){
+      this.$nextTick(()=>{
+        this.taginit()
+        console.log('yyyy',this.list)
+      })
     }
   },
   created(){
     this.getAllTab()
+    this.$nextTick(this.taginit())
+    console.log('언제..찍혀..',this.list)
     }
   }
+//   const message = [
+//   "점심메뉴",
+//   "서울3기",
+//   "임베디드",
+//   "2기3반5조",
+//   "흑흑",
+//   "어려워",
+//   "뷰의신",
+//   "집가고싶다"
+// ];
+
 </script>
 
 <style>

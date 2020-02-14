@@ -10,7 +10,6 @@
           background-color="var(--main-y)"
         >
           <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
-
           <v-tab v-for="item in Tabs" :key="item">
             <v-icon size="17">mdi-pound</v-icon>{{ item }}
           </v-tab>
