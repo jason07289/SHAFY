@@ -18,6 +18,7 @@ const appname = '/user'
 }
 
 const requestUpdateUser = (data, callback, errorCallback) => {
+    console.log(data)
     axios.put(hosturl+appname, data)
     .then(callback)
     .catch(errorCallback)
@@ -45,11 +46,6 @@ const requestSignup = (data, callback, errorCallback) => {
     .catch(errorCallback)
 }
 
-const requestNicknameCheck = (params, callback, errorCallback) => {
-    axios.get(hosturl+appname+`/nickname`,params)
-    .then(callback)
-    .catch(errorCallback)
-}
 
 const requestIDCheck = (params, callback, errorCallback) => {
     axios.get(hosturl+appname+`/nickname`,params)
