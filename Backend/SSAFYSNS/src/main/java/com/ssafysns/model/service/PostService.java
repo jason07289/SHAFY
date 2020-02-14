@@ -13,6 +13,8 @@ public interface PostService {
 	public Boolean update(Post post);
 
 	public Optional<Post> search(int pno);
+	
+	public List<Post> search(List<Integer> pno_list, int page);
 
 	public List<Post> searchAll();
 	
@@ -32,8 +34,12 @@ public interface PostService {
 	public List<Post> searchBest20();	//베스트 게시글 20개 가져오기
 	
 	public Post isLastPage(String hashtag, int limit);
+	
+	public Post isLastPage(List<Integer> pno_list, int page);
 
 	public List<Post> followHash(String hashtag);
+
+	public List<Integer> searchMyPost(String jwtId);	//내가 쓴 글
 	
 //	public Post searchById(int pno);
 }

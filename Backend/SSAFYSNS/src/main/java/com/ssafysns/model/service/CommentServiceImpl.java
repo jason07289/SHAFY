@@ -79,22 +79,32 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	public boolean delete(String jwtId, int no) {
 		
-		String id = commentRepository.findById(no).get().getUser().getId();
-		
-		if(id == jwtId) {
+		String id = commentRepository.findById(no).get().getId();
+		System.out.println("jwtId: "+jwtId+", id: "+id);
+		if(id.equals(jwtId)) {
 			try {
+				System.out.println("댓글 삭제중...");
 				commentRepository.updateDeleted(no);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("댓글 삭제 완료");
 			return true;
+		} else {
+			System.out.println("댓글 삭제 실패");
+			return false;		
 		}
-		return false;		
 	}
  
 	@Override
-	public Comment search(String id) {
-		return null;
+	public List<Integer> searchMyComment(String id) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = commentRepository.searchMyComment(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
 	}
 
 	@Override
