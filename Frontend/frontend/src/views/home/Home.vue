@@ -1,6 +1,5 @@
 <template>
   <v-app >
-    <template slot:extension >
         <v-tabs
           v-model="tab"
           align-with-title
@@ -14,8 +13,6 @@
           <v-tab v-for="item in Tabs" :key="item">
             <v-icon size="17">mdi-pound</v-icon>{{ item }}
           </v-tab>
-        </v-tabs>
-      </template>
 
       <v-tabs-items v-model="tab" >
       <v-tab-item
@@ -32,6 +29,7 @@
     </v-tabs-items>
 
 
+        </v-tabs>
   </v-app>
 </template>
 
