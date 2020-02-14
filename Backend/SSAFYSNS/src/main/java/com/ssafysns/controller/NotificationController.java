@@ -2,6 +2,7 @@ package com.ssafysns.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,8 +61,9 @@ public class NotificationController {
 
 	// checked=true로 수정
 	@ApiOperation(value = "Notification cheked=true로 수정")
-	@PutMapping
-	public ResponseEntity<Map<String, Object>> update(@RequestBody Notification notification) throws Exception {
+	@PutMapping("/{no}")
+	public ResponseEntity<Map<String, Object>> update(@PathVariable int no) throws Exception {
+		Notification notification = notificationService.searchByNo(no);
 		notification.setId(jwtService.get("userid"));
 		notificationService.update(notification);
 		return handleSuccess("Notification 수정 완료");
