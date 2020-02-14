@@ -233,8 +233,7 @@ https://antdev.tistory.com/36
 - 연동이 된 후에는 SNSLogin에서 else로 가게 되므로 소셜 로그인 -> 본 서비스 DB에 있는 아이디로 연동해서 로그인이 가능하며 jwt 토큰을 발급해준다.
 
 - ![image](https://user-images.githubusercontent.com/38865267/73898920-4f5a4400-48ce-11ea-8f21-5a26981a5e87.png)
-
-- ![image](https://user-images.githubusercontent.com/38865267/73898949-64cf6e00-48ce-11ea-9796-28367925a57b.png)
+![image](https://user-images.githubusercontent.com/38865267/73898949-64cf6e00-48ce-11ea-9796-28367925a57b.png)
 
 ### 전체 흐름
 

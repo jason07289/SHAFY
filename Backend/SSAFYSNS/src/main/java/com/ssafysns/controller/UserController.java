@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.exception.AdminException;
+import com.ssafysns.exception.IdException;
 import com.ssafysns.exception.MyLoginException;
 import com.ssafysns.exception.UnauthorizedException;
+import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserDto;
 import com.ssafysns.model.dto.UserForChangePW;
+import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
 
 //import com.ssafysns.model.service.UserService;
@@ -41,7 +45,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	
+	@Autowired
+	TabHashtagService tabHashtagService;
+
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -75,6 +81,8 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
 			if(userService.create(user)) {
+				tabHashtagService.update(new TabHashtag("", user.getId()));
+
 				return handleSuccess("회원가입에 성공하셨습니다.");
 			}else {
 				return handleFail("다시 확인해주세요", HttpStatus.OK);
@@ -121,7 +129,7 @@ public class UserController {
 //	@PostMapping("/api/user/logOut")
 //	public ResponseEntity<Map<String,Object>> logout(){
 //		
-//		return handleSuccess("로그인에 성공하셨습니다.");
+//		return handleSuccess("로그아웃에 성공하셨습니다.");
 //	}
 //	
 	
@@ -164,13 +172,25 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("id 중복확인")
-	@GetMapping("/user/checkId/{id}")
-	public ResponseEntity<Map<String, Object>> checkId(@PathVariable String id){
-		if(userService.nickIdCheck(id) ){
-			return handleSuccess("사용가능한 아이디임입니다.");
-		}else {
-			return handleFail("이미 사용중인 아이디 입니다.",HttpStatus.OK);
+	@ApiOperation("이메일 인증 코드 생성 (이메일 중복확인도 같이함) 팝업창으로 여기서 리턴해주는 값(string)과 사용자가 입력할 code(String)을 비교")
+	@GetMapping("/user/emailAuth/{id}")
+	public ResponseEntity<Map<String, Object>> emailAuth(@PathVariable String id){
+		String code=null; 
+		try {
+			code =userService.emailAuthCodeCreate(id);
+			if(code==null) {
+				return handleFail("이미 존재하는 ID 입니다.",HttpStatus.OK);
+			}
+			
+			return handleSuccess(code);
+			
+		} catch (IdException e) {
+			return handleFail("이미 존재하는 ID 입니다.",HttpStatus.OK);
+		} catch (EmailException e) {
+			e.printStackTrace();
+			return handleFail("이메일 전송에 실패하였습니다.",HttpStatus.OK);
+		} catch (Exception e) {
+			return handleFail("오류 발생",HttpStatus.OK);
 		}
 	}
 
@@ -237,9 +257,6 @@ public class UserController {
 			e.printStackTrace();
 			return handleFail("잘못된 id를 입력하셨습니다.", HttpStatus.OK);
 		}
-		
-		
 	}
 
-	
 }
