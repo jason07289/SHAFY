@@ -48,7 +48,11 @@ public class HashtagController {
 	@GetMapping("/tabtag")
 	public ResponseEntity<Map<String, Object>> searchTabHashtag() throws Exception {
 		// 1. id를 로그인한 유저의 id로 설정
+		System.out.println("아이디를 조회합니다");
+		
 		String id = jwtService.get("userid");
+		
+		System.out.println("아이디 조회 완료");
 
 		return handleSuccess(tabHashtagService.searchById(id));
 	}

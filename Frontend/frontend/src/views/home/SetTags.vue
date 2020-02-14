@@ -2,9 +2,9 @@
   
   <div id="settags" style="width:100%;">
     
-    <v-app>
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
+    mt="400"
     max-width="344"
     class="mx-auto"
     outlined
@@ -20,9 +20,8 @@
      </v-card-actions>
           <!-- 배열 확인용 -->
           <v-card-actions v-if="check">
-          <div class="list-group col-md-3">
-            <pre>{{listString}}</pre>
-          </div>
+            <div style="width:100%;">{{returnStr}}</div>
+            <div style="width:100%;">{{listString}}</div>
           </v-card-actions>
   
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
@@ -57,7 +56,7 @@
               <v-icon right
               @click="list.splice(index,1)"
               style="position:right;"
-              >mdi-close-circle-outline</v-icon>
+              >mdi-close</v-icon>
             </v-chip>
             </v-card-actions>
           </transition-group>
@@ -72,7 +71,7 @@
         v-if="list.length<10"
         label=""
         style="height:45px;width:100%;margin:0px 8px 10px 8px;"
-        @click="addTag"
+        @click="addTagDialog=true"
       >
         <v-spacer></v-spacer>
         <v-icon class="mr-1">mdi-plus</v-icon>
@@ -81,27 +80,56 @@
     </v-card-actions>
   </v-card>
  
-    </v-app>
+
+ <v-dialog v-model="addTagDialog" max-width="400px">
+      <v-card
+        outlined
+        style="padding: 10px 20px 10px 20px;"
+      >
+        <v-card-actions>
+            <v-icon color="grey">mdi-pound</v-icon>
+            <v-text-field
+            v-model="addText"
+            label="등록할 태그이름"
+            single-line
+            style="margin:12px 9px 0px 9px;"
+          ></v-text-field>
+          <v-btn 
+            class="custom_active white--text"
+            depressed 
+            small 
+            @click="addTag">추가</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
+
+
+
+
 <script>
 import draggable from "vuedraggable";
+import { mapActions, mapGetters } from 'vuex';
 
  export default {
    data: () => ({
-      list: message.map((name, index) => {
-        return { name, order: index + 1 };
-      }),
       editable: true,
       isDragging: false,
       delayedDragging: false,
-      check:false
+      check:false,
+      addTagDialog:false,
+      addText:'',
    }),
    components: {
     draggable
   },
     methods: {
+    ...mapActions({
+      getAllTab: 'tags/getAllTab',
+      updateTab: 'tags/updateTab',
+    }),
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -115,16 +143,28 @@ import draggable from "vuedraggable";
       );
     },
     addTag(){
+      this.addTagDialog = false;
+      var regExp = /([\w|ㄱ-힣])*[^#\s]/g
+      if(!regExp.test(this.addText)){
+        this.addText = '';
+        return;
+      }
       this.list.push({
-        name: (this.list.length+1)+"탭추가",
+        name: this.addText,
         order: this.list.length+1
       })
+      this.addText = '';
     },
     editDone(){
+      console.log(this.returnStr)
+      this.updateTab({hashtag:this.returnStr})
       this.check = true
     }
   },
   computed: {
+    ...mapGetters({
+    list : 'tags/getTabtag'
+    }),
     dragOptions() {
       return {
         animation: 0,
@@ -136,6 +176,13 @@ import draggable from "vuedraggable";
     listString() {
       return JSON.stringify(this.list, null, 2);
     },
+    returnStr(){
+      var str=''
+      for(var i=0; i<this.list.length; i++){
+        str += '#'+ this.list[i].name
+      }
+      return str;
+    }
   },
   watch: {
     isDragging(newValue) {
@@ -147,18 +194,11 @@ import draggable from "vuedraggable";
         this.delayedDragging = false;
       });
     }
+  },
+  created(){
+    this.getAllTab()
+    }
   }
-  }
-  const message = [
-  "점심메뉴",
-  "서울3기",
-  "임베디드",
-  "2기3반5조",
-  "흑흑",
-  "어려워",
-  "뷰의신",
-  "집가고싶다"
-];
 </script>
 
 <style>
@@ -190,5 +230,4 @@ import draggable from "vuedraggable";
 .v-chip__content{
   width:100%;
 }
-
 </style>

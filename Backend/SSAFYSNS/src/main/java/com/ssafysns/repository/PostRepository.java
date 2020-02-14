@@ -27,13 +27,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query("update Post p set p.deleted = 1 where p.pno=:pno")
 	void updateDeleted(@Param("pno") int pno);
 
-	@Query(value = "select * from post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
+	@Query(value = "select * from post p where concat(p.hashtag, '#') like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
 	List<Post> findByHashtag(@Param("hashtag") String hashtag, @Param("page") int page, @Param("limit") int limit);
 	
 	@Query(value = "select * from post p where p.pno in :pno_list and p.deleted=0 limit :page, :limit", nativeQuery=true)
 	List<Post> findByPnoList(@Param("pno_list") List<Integer> pno_list, @Param("page") int page, @Param("limit") int limit);
 	
-	@Query(value = "select p.pno from post p where p.hashtag like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
+	@Query(value = "select p.pno from post p where concat(p.hashtag, '#') like concat('%', :hashtag, '%') and p.deleted=0 limit :page, :limit", nativeQuery=true)
 	List<Integer> findPnoByHashtag(String hashtag, int page, int limit);	
 	
 //	@Query("select distinct(p.pno) from follow_hashtag f, Post p where p.hashtag like concat('%', f.hashtag, '%') and (f.id=:id) and p.deleted=0")

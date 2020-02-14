@@ -28,6 +28,8 @@ import Appbar from '@/components/Appbar'
     --main-sb: #9fafc0;
     --button-on : #90a9d2;
     --button-off: #dddddd;
+
+    
     /*
 
 색상표
@@ -41,9 +43,15 @@ import Appbar from '@/components/Appbar'
 
 
 */
+
 }
 #app{
     background-color : var(--background-w);
 }
-
+.custom_active{
+  background-color: var(--button-on) !important;
+}
+.custom_ {
+  background-color:var(--button-off);
+}
 </style>
