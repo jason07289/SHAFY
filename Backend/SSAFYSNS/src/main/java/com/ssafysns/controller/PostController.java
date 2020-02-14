@@ -185,14 +185,9 @@ public class PostController {
 		 */
 		page = Integer.max(0, page*20-1);
 		hashtag = "#"+hashtag+"#";
-		System.out.println(hashtag);
 		
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
-		List<Integer> pno_list = postService.searchPnoByHash(hashtag, page);	//개수 제한
-		
-		System.out.println();
-		System.out.println("사이즈!!: "+post_list.size());
-		System.out.println();
+		List<Integer> pno_list = postService.searchPnoByHash(hashtag);	//개수 제한
 		
 		// 마지막페이지인지 확인
 		Post isLast = postService.isLastPage(hashtag, page);
@@ -214,8 +209,8 @@ public class PostController {
 	 * [뉴스피드]
 	 * - 여러개의 Hashtag에 해당하는 Post와 그에 해당하는 Comment, Likes 조회
 	 */
-	@ApiOperation(value="[리얼-Follow] 여러개의 Hashtag에 해당하는 게시글 리스트와 게시글+댓글+좋아요 정보 반환")
-	@GetMapping("/follow/{page}")
+	@ApiOperation(value="[Newsfeed] 여러개의 Hashtag에 해당하는 게시글 리스트와 게시글+댓글+좋아요 정보 반환")
+	@GetMapping("/newsfeed/{page}")
 	public ResponseEntity<List<Post>> searchHashtagComment(@PathVariable int page) throws Exception {
 		/**
 		 * JWT 토큰으로 받아오기
@@ -229,17 +224,12 @@ public class PostController {
 		follow_tag = follow_tag.replace("#", "#|#");
 		follow_tag = follow_tag.substring(2)+"#";
 		
-		List<Post> temp = postService.followHash(follow_tag);
-		for(int i = 0; i<temp.size(); i++) {
-			System.out.println(temp.get(i).getHashtag().toString());
-		}
-		
+		List<Integer> pno_list = postService.followHash(follow_tag);
+		List<Post> post_list = postService.search(pno_list, page);
 		/**
 		 * 여기 바꾸기
 		 */
-		List<Integer> pno_by_all_hash = postService.followHashPno(follow_tag);
-		List<Post> post_list = null;
-		post_list = returnPost(temp, pno_by_all_hash);
+		post_list = returnPost(post_list, pno_list);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
 	}
@@ -307,7 +297,6 @@ public class PostController {
 	 * [공통 코드] 댓글 관리
 	 */
 	private List<Comment> funcComment(List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
-		System.out.println();
 		if(temp_comments_list != null) {
 			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
 				Comment temp_comment = temp_comments_list.get(j);
@@ -357,7 +346,7 @@ public class PostController {
 	 * [Me]
 	 * - 내가 좋아요 누른 글 목록 가져오기
 	 */
-	@ApiOperation(value="내가 좋아요 누른 게시글 @번호 가져오기")
+	@ApiOperation(value="내가 좋아요 누른 게시글 번호 가져오기")
 	@PostMapping("/me/{page}")
 	public ResponseEntity<List<Post>> searchPostLikesById(@PathVariable int page) throws Exception {
 		
@@ -424,8 +413,6 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
 		
-		System.out.println("게시물 등록 시작");
-		
 		String id = post.getId();
 
 		// 닉네임 설정
@@ -440,11 +427,9 @@ public class PostController {
 		if((user.getAuth()==null 
 				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
 				&& post.getHashtag().startsWith("__공지사항__")) {
-			
 			System.out.println("공지사항 권한이 없습니다.");
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
-			System.out.println("====== "+post.getContent()+", "+post.getHashtag());
 			postService.insert(id, post);
 		}
 		return handleSuccess("Post 등록 완료");
@@ -475,9 +460,7 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		
 		String jwtId = jwtService.get("userid");
-		System.out.println("ID: "+jwtId+" vs "+post.getId());
 		
 		if(post.getId().equals(jwtId)) {
 			postService.update(post);
@@ -548,8 +531,6 @@ public class PostController {
 		// 해시태그에 해당하는 게시글 리스트 가져오기
 		List<Post> post_list = postService.searchAMonth();
 		List<Integer> pno_list = postService.searchPnoAMonth();
-		
-		System.out.println("Best 게시글 : " + post_list.size() + ", " + pno_list.size());
 		
 		for(int i = 0, size = post_list.size(); i<size; i++) {
 			Post post = post_list.get(i);
