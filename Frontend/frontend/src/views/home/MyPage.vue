@@ -206,7 +206,11 @@
   </v-dialog>
 
 <!-- 내 활동 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
-<v-dialog v-model="activityDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+<v-dialog 
+v-model="activityDialog" 
+fullscreen hide-overlay 
+transition="dialog-bottom-transition"
+>
 
       <v-card>
         <v-toolbar flat dark color="primary">
@@ -216,8 +220,8 @@
           <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
-        <component v-bind:is="currentComponent" :tabName="activityTabName"></component>
         <!-- 여기에 나중에 포스트리스트 띄우기 -->
+        <component v-bind:is="activityDialog?currentComponent:'span'" :tabName="activityTabName"></component>
       </v-card>
     </v-dialog>
 
@@ -230,6 +234,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import UserApi from '../../apis/UserApi'
+import PostList from '../../components/Posts/PostList'
 const firebase = require('firebase/app')
 require('firebase/storage') 
 
@@ -253,8 +258,8 @@ export default {
       //이밑은 CSS관련
       activity: [
       {mdi:'star-box-multiple-outline',text:'북마크한 글',tab:'...bookmark'},
-      { mdi:'file-document-box-outline',text:'작성한 글',tab:'...comment'},
-      {mdi:'comment-outline',text:'댓글 단 글',tab:'...post'}
+      { mdi:'file-document-box-outline',text:'작성한 글',tab:'...post'},
+      {mdi:'comment-outline',text:'댓글 단 글',tab:'...comment'}
       ],
       account: [
         {mdi:'shield-star-outline',text:'SSAFY인증현황'},
@@ -321,7 +326,10 @@ export default {
   },
   created(){
     this.getUserInfo()
-  }
+  },
+  components:{
+    PostList
+  },
 
 }
 </script>
