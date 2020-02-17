@@ -28,6 +28,7 @@ import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.UserDto;
 import com.ssafysns.model.dto.UserForChangePW;
+import com.ssafysns.model.service.SSAFYCertificationService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
 
@@ -46,8 +47,10 @@ public class UserController {
 	private UserService userService;
 	
 	@Autowired
-	TabHashtagService tabHashtagService;
+	private TabHashtagService tabHashtagService;
 
+	@Autowired
+	private SSAFYCertificationService ssafyCertificationService;
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -80,9 +83,23 @@ public class UserController {
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
+			
+			// 회원가입 부분에서!
+			if(ssafyCertificationService.isPassed(id)){
+				// user의 ssafy 인증 컬럼값을 true로 바꿔줌
+				user.setApproval(1);
+				
+			}
+			
+			
+			
 			if(userService.create(user)) {
 				tabHashtagService.update(new TabHashtag("", user.getId()));
-
+				
+				
+				
+				
+				
 				return handleSuccess("회원가입에 성공하셨습니다.");
 			}else {
 				return handleFail("다시 확인해주세요", HttpStatus.OK);
