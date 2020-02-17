@@ -59,6 +59,9 @@ public class Post {
 	
 	@Column(nullable=false, length = 20)	//게시글 등록 시 직접 입력
 	private String nickname;
+	
+	@Transient
+	private boolean auth;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
