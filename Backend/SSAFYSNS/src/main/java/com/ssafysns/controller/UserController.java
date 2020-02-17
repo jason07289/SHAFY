@@ -85,7 +85,7 @@ public class UserController {
 		try {
 			
 			// 회원가입 부분에서!
-			if(ssafyCertificationService.isPassed(id)){
+			if(ssafyCertificationService.isPassed(user.getId())){
 				// user의 ssafy 인증 컬럼값을 true로 바꿔줌
 				user.setApproval(1);
 				
