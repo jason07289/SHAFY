@@ -7,7 +7,7 @@ const state = {
     posts : [],
     busy : false,
     page : 0,
-}
+  }
 
 // getters
 const getters = {
@@ -16,15 +16,23 @@ const getters = {
 
 // actions
 const actions = {
+  clearAll({ commit }){
+    commit('setClearAll')
+  },
   getTabposts({ commit }, tabName){
     state.busy = true
     PostApi.getTabPostlist({hashtag:tabName, page:state.page},res=>{
+      console.log('응답오고있는지',res)
       if (res.data.state === 'ok'){
-        commit('setPostlist', res.data.message)
+        commit('setPostlist', res.data.message.post)
+        if(res.data.message.next === false){
+          state.busy =true
+        }
       }else{
-        console.log(res)
+        state.busy = true
       }
     },err=>{
+      state.busy = true
       console.log(err)
     })
   },
@@ -48,7 +56,16 @@ const actions = {
 const mutations = {
 // postslist 업데이트 
   setPostlist(state, posts){
-    state.posts = posts
+    state.posts = state.posts.concat(posts)
+    state.page++
+    state.busy = false
+    console.log('store에서 확인',state.posts)
+  },
+  setClearAll(state){
+    state.posts = [],
+    state.busy = false,
+    state.page = 0
+    console.log('스테이트 초기화 함')
   }
 }
 

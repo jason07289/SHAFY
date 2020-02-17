@@ -28,46 +28,47 @@ export default {
   },
   data(){
     return{
-      // busy: false,
-      // page: 0,
+      posts:[],
+      busy : false,
+      page : 0,
     }
   },
   methods:{
-    // 현재 포스트를 받아오는 데
-    //  20개씩 추가 되도록 해야하고 
-    //  다음이 오면 그만 해야한다.
+    ...mapActions({
+      getTabposts: 'post/getTabposts',
+      clearAll: 'post/clearAll'
+    }),
     loadMore(){
-      console.log(this.page)
-      console.log(this.tabName)
       this.busy = true
-      PostApi.getTabPostlist({hashtag:this.tabName,page:this.page}
-      ,res=>{
-          console.log(res)
-        if (res.status === 200){
-          this.posts= this.posts.concat(res.data.post)
-          this.page++
-          this.busy = false
-          console.log(res.data.next)
-          if (res.data.next === false){
-            this.busy = true
-          }
+      PostApi.getTabPostlist({hashtag:this.tabName, page:this.page},res=>{
+      console.log('응답오고있는지',res)
+      if (res.data.state === 'ok'){
+        this.posts = this.posts.concat(res.data.message.post)
+        this.page++
+        this.busy = false
+        if(res.data.message.next === false){
+          this.busy =true
         }
-      },err=>{
-        console.log(err)
-      })
+      }else{
+        this.busy = true
+      }
+    },err=>{
+      this.busy = true
+      console.log(err)
+    })
     }
+    // loadMore(tabName){
+    //   console.log('포스트 새로 불러오기',this.tabName)
+    //   this.getTabposts(this.tabName)
+    // }
   },
   computed:{
     ...mapState({
-    posts: state => state.post.posts
+    posts: state => state.post.posts,
+    busy: state => state.post.busy,
   }),
   },
-  created(){
-    // console.log(this.tabName)
-
-  },
   props: ['tabName']
-  
 }
 </script>
 
