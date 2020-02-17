@@ -50,6 +50,7 @@ export default {
           this.busy =true
         }
       }else{
+        // 리스트가 하나도 없는경우도 포함 
         this.busy = true
       }
     },err=>{
