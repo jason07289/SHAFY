@@ -251,19 +251,19 @@ export default {
           },
       //이밑은 CSS관련
       activity: [
-      {mdi:'pound',text:'북마크한 글'},
-      { mdi:'pound',text:'작성한 글'},
-      {mdi:'pound',text:'댓글 단 글'}
+      {mdi:'star-box-multiple-outline',text:'북마크한 글'},
+      { mdi:'file-document-box-outline',text:'작성한 글'},
+      {mdi:'comment-outline',text:'댓글 단 글'}
       ],
       account: [
-        {mdi:'pound',text:'SSAFY인증현황'},
-        {mdi:'pound',text:'회원탈퇴'}
+        {mdi:'shield-star-outline',text:'SSAFY인증현황'},
+        {mdi:'account-arrow-right',text:'회원탈퇴'}
       ],
       extra:[
-        {mdi:'pound',text:'커뮤니티이용규칙'},
-        {mdi:'pound',text:'개인정보처리방침'},
-        {mdi:'pound',text:'개발스택'},
-        {mdi:'pound',text:'개발팀소개'}
+        {mdi:'check-decagram',text:'커뮤니티이용규칙'},
+        {mdi:'clipboard-account-outline',text:'개인정보처리방침'},
+        {mdi:'iframe-outline',text:'개발스택'},
+        {mdi:'podium',text:'개발팀소개'}
       ],
       activityDialog: false,
       activityTitle:'',

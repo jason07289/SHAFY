@@ -1,71 +1,113 @@
 <template>
-  <v-app id="inspire">
+  <div>
     <v-card class="mx-auto"
     max-width ="500"
     outlined
+    style="padding:12px 25px 35px 25px; margin-top:12px;"
     >
-    <h1>{{ this.$route.params.type}}</h1>
-    <v-form>
+    <v-card-title>{{ this.$route.params.type}} </v-card-title>
+    <v-card-title> 기본 정보 </v-card-title>
+    <v-form style="padding:0px 18px 0px 18px;">
+
+    <v-container fluid style="padding-bottom:0px;">
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="10" style="padding-bottom:0px;">
         <v-text-field
+        label="edu.ssafy.com 계정 이메일"
         v-model="email"
         :rules="emailRules"
+        :disabled="emailCertified"
         placeholder="E-mail"
-        outlined
         required
-        prepend-icon="mdi-email"
         >
         </v-text-field>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="2">
+          <v-btn v-if="!emailCertified" outlined :disabled="emailDisabled" @click="doEmail">인증</v-btn>
+          <span v-else ><v-icon size="33" color="green">mdi-check</v-icon></span>
+        </v-col>
+        </v-row>
+    </v-container>
+        <span class="overline" style="color:gray;width:100%;display:block;">* SSAFY 교육생/관계자 인증을 원한다면 정확한 이메일을 입력해 주세요</span>
+        <span class="overline" style="color:gray;width:100%;display:block;">* 별도의 인증이 필요한 경우 S#ARFY 운영진에 연락 바랍니다.</span>
+        <div style="width:100%;height:32px;"/>
+
+
         <v-text-field
+        label="비밀번호"
         v-model="password"
         :rules="passwordRules"
         :counter="20"
         :type="show1 ? 'text' : 'password'"
-        placeholder="비밀번호"
-        outlined
+        placeholder="비밀번호(글자,숫자를 포함한 8자리 이상)"
         prepend-icon="mdi-lock-outline"
         ></v-text-field>
         <v-text-field
         v-model="passwordcheck"
         :rules="passwordcheckRules"
-        :counter="20"
         :type="show1 ? 'text' : 'password'"
         placeholder="비밀번호 확인"
-        outlined
-        prepend-icon="mdi-lock-outline"
+        style="margin-left:31px;padding-top:0px;"
         ></v-text-field>
+        <div style="width:100%;height:20px;"/>
+
         <v-text-field
         v-model="signUpForm.name"
         :counter="20"
         :type="show1 ? 'text' : 'signUpForm.name'"
-        placeholder="이름"
-        outlined
+        placeholder="이름(실명)"
         required
         prepend-icon="mdi-clipboard-account"
         ></v-text-field>
+
+        <v-container fluid style="padding-bottom:0px;">
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
         <v-text-field
         v-model="signUpForm.nickname"
         :counter="10"
         :type="show1 ? 'text' : 'signUpForm.nickname'"
+        :disabled="nicknameChecked"
         placeholder="닉네임"
-        outlined
-        prepend-icon="mdi-clipboard-account"
+        style="margin-left:20px;padding-top:0px;"
         ></v-text-field>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3">
+          <v-btn v-if="!nicknameChecked" outlined @click="nicknameCheck">중복검사</v-btn>
+          <span v-else class="caption"><v-icon size="18">mdi-check</v-icon>사용가능</span>
+        </v-col>
+        </v-row>
+    </v-container>
+        
+
+
+    </v-form>
+    </v-card>
+
+
+    <v-card
+    class="mx-auto"
+    max-width ="500"
+    outlined
+    style="padding:12px 25px 35px 25px; margin-top:12px;"
+    >
+
+
+    <v-card-title>부가 정보</v-card-title>
+      <v-form style="padding:0px 18px 0px 18px;">
+        <v-container fluid>
+          <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="6">
          <v-select
           v-model="signUpForm.location"
           :items="Info.location"
-          label="location"
-          placeholder="지역"
-          prepend-icon="mdi-map-marker"
-          outlined
+          label="교육/관심 지역"
+          placeholder="SSAFY교육장위치"
+          append-icon="mdi-map-marker"
         ></v-select>
-        <v-text-field
-          v-model="signUpForm.phone"
-          :type="show1 ? 'text' : 'signUpForm.phone'"
-          placeholder="010-1234-1234"
-          outlined
-          prepend-icon="mdi-phone"
-        ></v-text-field>
-     <v-menu
+      </v-col>
+      <v-col class="d-flex" cols="12" sm="6">
+        <v-menu
         ref="menu"
         v-model="menu"
         :close-on-content-click="false"
@@ -77,8 +119,8 @@
         <template v-slot:activator="{ on }">
           <v-text-field
             v-model="signUpForm.birth"
-            label="birthday"
-            prepend-icon="mdi-calendar"
+            label="생년월일"
+            append-icon="mdi-calendar"
             readonly
             v-on="on"
           ></v-text-field>
@@ -93,31 +135,37 @@
           <v-btn text color="primary" @click="$refs.menu.save(signUpForm.birth)">OK</v-btn>
         </v-date-picker>
       </v-menu>
+      </v-col>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+        <v-text-field
+          label="전화번호"
+          v-model="signUpForm.phone"
+          :type="show1 ? 'text' : 'signUpForm.phone'"
+          placeholder="ex) 010-1234-1234"
+        ></v-text-field>
+        </v-card-actions>
+     <v-card-actions>
       <v-file-input 
       accept="image/*" 
-      label="File input"
-      outlined
+      label="프로필 사진"
       v-model="imageData"
       @change="onUpload"
       ></v-file-input>
+        </v-card-actions>
+
+      <div style="width:100%;height:25px;"/>
+      <v-divider class="mx-0"></v-divider>
+      <div style="width:100%;height:25px;"/>
+
       <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
-        <v-select 
-        v-model="signUpForm.class1" 
-        name="class1" 
-        id="class1"
-        label="1학기 반 선택"
-        :items="Info.class1"
-        outlined>
-        </v-select>
-        <v-select 
-        v-model="signUpForm.class2" 
-        name="class2" 
-        id="class2"
-        label="2학기 반 선택"
-        :items="Info.class2"
-        outlined
-        >
-        </v-select>
+
+      <v-card-subtitle>SSAFY 교육생 관련 정보</v-card-subtitle>
+        <v-container fluid>
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="4">
         <v-select 
         v-model="signUpForm.grade" 
         name="grade" 
@@ -125,9 +173,10 @@
         label="기수 선택"
         :items="Info.grade"
         outlined
-        >
-        </v-select>
-        <v-select 
+        ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="8">
+        <v-select
         v-model="signUpForm.state" 
         name="state" 
         id="state"
@@ -136,6 +185,30 @@
         outlined
         >
         </v-select>
+        </v-col>
+        </v-row>
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="6">
+        <v-select 
+        dense
+        v-model="signUpForm.class1" 
+        name="class1" 
+        id="class1"
+        label="1학기 반 선택"
+        :items="Info.class1"></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="6">
+        <v-select 
+        dense
+        v-model="signUpForm.class2" 
+        name="class2" 
+        id="class2"
+        label="2학기 반 선택"
+        :items="Info.class2"
+        ></v-select>
+        </v-col>
+        </v-row>
+        </v-container>
     </div>
     <div v-else id='GeneralInfo'>
       <v-select 
@@ -148,17 +221,64 @@
         >
         </v-select>
     </div>
-      <div class="text-center">
-        <v-btn 
-        block
-        class="primary"
-        @click="Join">
-        회원가입
-        </v-btn>
-      </div>
+      
   </v-form>
   </v-card>
-  </v-app>
+
+  <v-card
+  class="mx-auto"
+  @click="Join"
+  max-width ="500"
+    outlined
+    style="margin-top:12px;"
+  >
+  <v-row justify="center">
+      <v-card-title> 가입하기 </v-card-title>
+    </v-row>
+  </v-card>
+
+  <!-- 이메일 인증 다이얼로그 ----------------------------------->
+  <v-dialog
+      v-model="dialog"
+      max-width="350"
+    >
+      <v-card
+      style="padding:40px 30px 40px 30px;"
+      >
+      <v-text-field
+            label=""
+            placeholder="인증 코드(10자리)"
+            outlined
+            dense
+            style="height:44px;"
+          ></v-text-field> 
+      <v-container style="padding:0px;"><v-row>
+        <v-col cols="12" sm="9" style="padding-bottom:0px;text-aligh:right;">
+           <v-btn
+           class="grey--text"
+            text
+            @click="dialog = false"
+            style="position:right;align:right;"
+          >
+            이메일 재전송
+          </v-btn>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3" style="padding-left:0px;padding-bottom:0px;">
+          <v-btn
+            color="custom_active"
+            depressed
+            dark
+            @click="doCertify"
+          >
+            확인
+          </v-btn>
+        </v-col>
+        </v-row>
+      </v-container>
+
+      </v-card>
+    </v-dialog>
+  </div>
 
 </template>
 
@@ -222,7 +342,12 @@ export default {
        v => !!v || '비밀번호확인은 필수항목입니다',
     ],
     imageData: null, 
-    uploadValue: 0
+    uploadValue: 0,
+    //CSS관련----
+    dialog:false,
+    emailDisabled:true,
+    emailCertified:false,
+    nicknameChecked:false,
   }
   },
   computed:{
@@ -273,6 +398,21 @@ export default {
           this.SNSJoin(this.signUpForm)
         }
       }  
+    },
+    //CSS 관련---
+    doEmail(){
+      //이메일 인증 버튼을 누른 경우
+      this.dialog = true;
+    },
+    doCertify(){
+      //다이얼로그에서 인증 요청 버튼을 누르는 경우
+      this.emailCertified = true
+    },
+    nicknameCheck(){
+      //중복 체크 하는 코드 넣기
+
+      //CSS 변경
+      this.nicknameChecked = true
     }
   },
   created(){

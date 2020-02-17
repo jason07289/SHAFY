@@ -54,4 +54,7 @@ import Appbar from '@/components/Appbar'
 .custom_ {
   background-color:var(--button-off);
 }
+a {
+  text-decoration: none;
+}
 </style>

@@ -16,6 +16,16 @@ const getPostlist = (params,callback,errorCallback) => {
   .catch(errorCallback)
 }
 
+// 해시태그에 해당하는 list 받아오기
+
+const getTabPostlist = (params,callback,errorCallback) => {
+  //백앤드와 로그인 통신하는 부분
+  console.log(params)
+  axios.get(hosturl+appname+`/tab/${params.hashtag}/${params.page}`, params)
+  .then(callback)
+  .catch(errorCallback)
+}
+
 const getHomePost = (params, callback, errorCallback) => {
   console.log('Getpostlist', params)
   axios.get(hosturl+appname+`/follow/${params.page}`)
@@ -61,6 +71,7 @@ const deleteComment = (data, callback, errorCallback) => {
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
+  getTabPostlist:(params,callback,errorCallback)=>getTabPostlist(params,callback,errorCallback),
   getHomePost:(params,callback,errorCallback)=>getHomePost(params,callback,errorCallback),
   requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
   requestComment:(data,callback,errorCallback)=>requestComment(data,callback,errorCallback),

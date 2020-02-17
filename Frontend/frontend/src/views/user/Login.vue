@@ -1,20 +1,29 @@
 <template>
-    <v-app id="inspire">
+    <div>
     <v-card class="mx-auto"
     max-width="344"
-    outlined>
+    outlined
+    style="padding:30px;"
+    >
+        <div style="width:100%;height:40px;"></div>
         <v-img
         src="https://gitlab.com/Yoowoobin/img_tmp_wb/-/raw/master/Free_imgURL/%EC%83%A4%ED%94%BC%EB%A1%9C%EA%B3%A02.png">
         </v-img>
+        <div style="width:100%;height:40px;"></div>
         <div class="mx-3 mt-3">
         <v-form v-model="valid">
             <v-text-field
+            dense
+            id="idInput"
             v-model="email"
             :rules="emailRules"
             placeholder="E-mail"
             outlined
+            hide-details="true"
+            style="height:48px !important;"
             ></v-text-field>
             <v-text-field
+            dense
             v-model="password"
             :rules="passwordRules"
             :counter="20"
@@ -24,6 +33,9 @@
             ></v-text-field>
             <div class="text-center">
               <v-btn 
+              large
+              depressed
+              tile
               block
               class="primary"
               @click="login()">
@@ -31,18 +43,34 @@
               </v-btn>
             </div>
         </v-form>
-        <hr class="my-3">
+        <div style="width:100%;height:8px;"></div>
+        <hr class="my-3" color ="primary">
+        <div style="width:100%;height:8px;"></div>
       </div>
       <div style="text-align:right;padding-right:23px;">
         <router-link v-bind:to="{name:'FindPassword'}" class="text-center" >아이디를 잊으셨나요?</router-link><br>
         <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link><br>
-        <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a>
-        <a :href=link.google><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">구글로 로그인</a>
-        <a :href=link.kakao><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">카카오로 로그인</a>
-        <a :href=link.naver><img src="../../assets/Login/GitHub-Mark-32px.png" alt="">네이버로 로그인</a>
       </div>
+      <v-row justify="center">
+        <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
+        <v-btn depressed large :href=link.github dark color="black"
+        style="padding-top:25px;padding-bottom:25px;">
+          <img src="../../assets/Login/GitHub-Mark-Light-32px.png" alt="GithubMark" style="margin-right:5px;">
+          Github으로 로그인
+        </v-btn>
+      </v-row>
     </v-card>
-    </v-app>
+    <v-card class="mx-auto"
+    max-width="344"
+    outlined
+    style="margin-top:12px;"
+    @click="alert(hi);"
+    >
+    <v-row justify="center">
+      <v-card-title> 가입하기 </v-card-title>
+    </v-row>
+    </v-card>
+    </div>
 </template>
 
 <script>

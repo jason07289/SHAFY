@@ -121,14 +121,17 @@ public class UserServiceImpl implements UserService{
 			
 				System.out.println(find.toString());
 				find.setPassword(aes.encrypt(key));
-				System.out.println("save 직전");
-				userRepository.save(find);
-				System.out.println("save 직후");
+				
 			
 				String msg = sbuff.toString();
 			
-				mu.sendMail(userEmail, subject, msg);
-			
+				mu.sendMail(userEmail, subject, msg);//이메일인증이성공했을때만 저장으로 넘어가도록한다.
+				
+				
+				
+				System.out.println("save 직전");
+				userRepository.save(find);
+				System.out.println("save 직후");
 				return find;
 			}
 	}
