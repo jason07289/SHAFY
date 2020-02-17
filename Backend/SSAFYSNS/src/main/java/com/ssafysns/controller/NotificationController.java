@@ -104,7 +104,7 @@ public class NotificationController {
 		// 1. id를 로그인한 유저의 id로 설정
 		String id = jwtService.get("userid");
 		boolean res = notificationService.userAlarmCheck(id);
-		return handleSuccess(res ? "새로운 알람이 발생했습니다" : "새로운 알람이 발생하지 않았습니다.");
+		return handleSuccess(res ? "true" : "false");
 	}
 
 	@ExceptionHandler
