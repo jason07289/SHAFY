@@ -59,7 +59,7 @@
   <v-list flat>
       <v-subheader>계정</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in account" :key="item">
+        <v-list-item v-for="item in account" :key="item" @click="accountClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -262,8 +262,8 @@ export default {
       {mdi:'comment-outline',text:'댓글 단 글',tab:'...comment'}
       ],
       account: [
-        {mdi:'shield-star-outline',text:'SSAFY인증현황'},
-        {mdi:'account-arrow-right',text:'회원탈퇴'}
+        {mdi:'shield-star-outline',text:'SSAFY인증현황',value:'Certified'},
+        {mdi:'account-arrow-right',text:'회원탈퇴',value:'signOut'}
       ],
       extra:[
         {mdi:'check-decagram',text:'커뮤니티이용규칙'},
@@ -317,6 +317,11 @@ export default {
       this.activityDialog= true;
       this.activityTitle = activityItem.text
       this.activityTabName = activityItem.tab
+    },
+    accountClick(accountItem){
+      if(accountItem.value=='signOut'){
+        
+      }
     }
   },
   computed:{
