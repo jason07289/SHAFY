@@ -291,6 +291,8 @@ public class UserServiceImpl implements UserService{
 		user.setDeleted(0);
 		user.setBanned(0);
 		user.setAuth(null);
+		user.setCode(null);
+		
 		return user;
 		
 	}
