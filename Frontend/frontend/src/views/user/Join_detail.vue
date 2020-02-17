@@ -9,7 +9,9 @@
     <v-card-title> 기본 정보 </v-card-title>
     <v-form style="padding:0px 18px 0px 18px;">
 
-
+    <v-container fluid style="padding-bottom:0px;">
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="10" style="padding-bottom:0px;">
         <v-text-field
         label="edu.ssafy.com 계정 이메일"
         v-model="email"
@@ -18,6 +20,12 @@
         required
         >
         </v-text-field>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="2">
+          <v-btn outlined @click="doEmail">인증</v-btn>
+        </v-col>
+        </v-row>
+    </v-container>
         <span class="overline" style="color:gray;width:100%;display:block;">* SSAFY 교육생/관계자 인증을 원한다면 정확한 이메일을 입력해 주세요</span>
         <span class="overline" style="color:gray;width:100%;display:block;">* 별도의 인증이 필요한 경우 S#ARFY 운영진에 연락 바랍니다.</span>
         <div style="width:100%;height:32px;"/>
@@ -213,6 +221,38 @@
       <v-card-title> 가입하기 </v-card-title>
     </v-row>
   </v-card>
+
+  <!-- 이메일 인증 다이얼로그 ----------------------------------->
+  <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-text>
+          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Disagree
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            Agree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 
 </template>
@@ -277,7 +317,8 @@ export default {
        v => !!v || '비밀번호확인은 필수항목입니다',
     ],
     imageData: null, 
-    uploadValue: 0
+    uploadValue: 0,
+    dialog:false,
   }
   },
   computed:{
@@ -328,6 +369,9 @@ export default {
           this.SNSJoin(this.signUpForm)
         }
       }  
+    },
+    doEmail(){
+      this.dialog = true;
     }
   },
   created(){
