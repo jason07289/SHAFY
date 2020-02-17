@@ -57,7 +57,7 @@
   outlined
   >
   <v-list flat>
-      <v-subheader>내 활동</v-subheader>
+      <v-subheader>계정</v-subheader>
       <v-list-item-group>
         <v-list-item v-for="item in account" :key="item">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
@@ -77,7 +77,7 @@
   outlined
   >
   <v-list flat>
-      <v-subheader>내 활동</v-subheader>
+      <v-subheader>기타</v-subheader>
       <v-list-item-group>
         <v-list-item v-for="item in extra" :key="item">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
@@ -216,6 +216,7 @@
           <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
+        <component v-bind:is="currentComponent" :tabName="activityTabName"></component>
         <!-- 여기에 나중에 포스트리스트 띄우기 -->
       </v-card>
     </v-dialog>
@@ -251,9 +252,9 @@ export default {
           },
       //이밑은 CSS관련
       activity: [
-      {mdi:'star-box-multiple-outline',text:'북마크한 글'},
-      { mdi:'file-document-box-outline',text:'작성한 글'},
-      {mdi:'comment-outline',text:'댓글 단 글'}
+      {mdi:'star-box-multiple-outline',text:'북마크한 글',tab:'...bookmark'},
+      { mdi:'file-document-box-outline',text:'작성한 글',tab:'...comment'},
+      {mdi:'comment-outline',text:'댓글 단 글',tab:'...post'}
       ],
       account: [
         {mdi:'shield-star-outline',text:'SSAFY인증현황'},
@@ -266,7 +267,10 @@ export default {
         {mdi:'podium',text:'개발팀소개'}
       ],
       activityDialog: false,
+      
       activityTitle:'',
+      currentComponent:'PostList',
+      activityTabName:'',
     }
   },
   methods:{
@@ -307,7 +311,7 @@ export default {
     activityClick(activityItem){
       this.activityDialog= true;
       this.activityTitle = activityItem.text
-      console.log("on:"+activityItem)
+      this.activityTabName = activityItem.tab
     }
   },
   computed:{

@@ -1,8 +1,31 @@
 <template>
-    <div id="join-type" v-bind:style="selectDiv" @mouseover="doMouseOver" @mouseout="doMouseOut" @click="Join">
+    <div id="join-type" v-bind:style="selectDiv" >
+        <v-hover
+        v-slot:default="{ hover }"
+      >
+        <v-card
+         @click="Join"
+        id="joinCard"
+            class="mx-auto"
+            outlined
+            max-width="400px"
+            :elevation="hover ? 3 : 0"
+            :color="hover?'white':''"
+            >
+            <v-card-actions
+            style="margin-bottom:26px;"
+            >
+                <v-row justify="center">
+                <v-icon size="80"
+                    :color="hover?'var(--main-y)':'grey'"
+                >mdi-clipboard-account</v-icon>
+                </v-row>
+            </v-card-actions>
         <!-- 아이콘도 들어가야 함 -->
-            <h3>{{mainTitle}}</h3>
-            <h5>{{subTitle}}</h5>
+            <div class="title">{{mainTitle}}</div>
+            <div class="body-2">{{subTitle}}</div>
+        </v-card>
+        </v-hover>
         </div>
 </template>
 
@@ -10,13 +33,6 @@
     export default {
         data:function(){
             return{
-                selectDiv:{
-                backgroundColor:'#adadad',
-                width:'80%',
-                height:'300px',
-                textAlign:'center',
-                border:'3px' 
-                }
             }
             
         },
@@ -25,15 +41,17 @@
             Join(){
                 this.$router.push({name:'Join_detail', params:{type:this.type}})
             },
-            doMouseOver:function() {
-                this.selectDiv.backgroundColor='#ffffff'
-            },
-            doMouseOut:function(){
-                this.selectDiv.backgroundColor='#adadad'
-            }
         },
 
         
     }
 
 </script>
+
+<style scoped>
+#joinCard{
+    padding: 40px;
+    text-align: center;
+    margin:25px;
+}
+</style>
