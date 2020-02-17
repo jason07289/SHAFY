@@ -28,9 +28,8 @@ export default {
   },
   data(){
     return{
-      posts:[],
-      busy: false,
-      page: 0,
+      // busy: false,
+      // page: 0,
     }
   },
   methods:{
@@ -60,7 +59,7 @@ export default {
   },
   computed:{
     ...mapState({
-    // posts: state => state.post.posts
+    posts: state => state.post.posts
   }),
   },
   created(){

@@ -5,6 +5,8 @@ import PostApi from '../apis/PostApi'
 // initial state
 const state = {
     posts : [],
+    busy : false,
+    page : 0,
 }
 
 // getters
@@ -14,27 +16,10 @@ const getters = {
 
 // actions
 const actions = {
-  getAllPosts ({ commit }, data){
-    // console.log('여기서 찍힘',data)
-    PostApi.getHomePost(data,res=>{
-      // console.log(res)
+  getTabposts({ commit }, tabName){
+    state.busy = true
+    PostApi.getTabPostlist({hashtag:tabName, page:state.page},res=>{
       if (res.data.state === 'ok'){
-        // console.log(res)
-        commit('setPostlist', res.data.message)
-      }else{
-        // error 메시지를 브라우저 알림으로
-        console.log(res.data)
-      }
-    },err =>{
-      console.log(err)
-    })
-  },
-  getTabposts({ commit }, params){
-    console.log(params)
-    PostApi.getTabPostlist(params,res=>{
-      console.log(res)
-      if (res.data.state === 'ok'){
-        console.log('getTabposts: ',res)
         commit('setPostlist', res.data.message)
       }else{
         console.log(res)
