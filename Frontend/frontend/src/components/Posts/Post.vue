@@ -165,8 +165,8 @@
             style="margin-right:9px;"
           ></v-progress-circular>
           <span class="subtitle-2" >{{comment.nickname}}</span>
-          <!-- {{ comment.id }} -->
-          <!-- {{ userInfo.id  }} -->
+          <!-- {{ comment.id }}
+          {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
           <v-icon size="15" color="red" 

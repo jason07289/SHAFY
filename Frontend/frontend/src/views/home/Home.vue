@@ -9,7 +9,7 @@
     background-color="var(--main-y)"
     >
     <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
-      <v-tab v-for="item in Tabs" :key="item"  @click="pick(item)">
+      <v-tab v-for="item in Tabs" :key="item">
         <v-icon size="17">mdi-pound</v-icon>{{ item }}
       </v-tab>
      
@@ -17,8 +17,8 @@
         <v-tab-item
           v-for="item in Tabs"
           :key="item"
-        > 
-        <component v-bind:is="currentComponent" :tabName="tabName"></component>
+        >
+        <component v-bind:is="currentComponent" :tabName="item"></component>
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
