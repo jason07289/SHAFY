@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ssafysns.model.dto.UserForSNS;
 import com.ssafysns.model.service.JwtService;
+import com.ssafysns.model.service.SSAFYCertificationService;
 import com.ssafysns.model.service.UserSNSService;
 import com.ssafysns.snsapi.GithubAPI;
 import com.ssafysns.snsapi.GoogleAPI;
@@ -54,7 +55,8 @@ public class UserSNSController {
     @Autowired
     private GoogleAPI google;
     
-	
+	@Autowired
+	private SSAFYCertificationService ssafyCertificationService;
 //		
 //    @RequestMapping(value="/kakao/")
 //    public String index() {
@@ -104,6 +106,15 @@ public class UserSNSController {
 	public ResponseEntity<Map<String, Object>> signUpWithSeq(@RequestBody UserForSNS userForSNS){
 		
 		try {
+			
+			// 회원가입 부분에서!
+			if(ssafyCertificationService.isPassed(userForSNS.getId())){
+				// user의 ssafy 인증 컬럼값을 true로 바꿔줌
+				
+				userForSNS.setApproval(1);
+				
+			}
+			
 			userSNSService.signUpWithSeq(userForSNS);
 			
 			return handleSuccess("가입 성공");
