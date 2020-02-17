@@ -8,12 +8,6 @@ const state = {
 }
 
 const getters = {
-  getTabtag(){
-    const list = state.tabtags.map((name, index)=> {
-      return {name, order: index + 1}
-    })
-    return list
-  } 
 } 
 // actions
 const actions = {
