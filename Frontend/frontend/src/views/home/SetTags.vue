@@ -4,7 +4,6 @@
     
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
-    mt="400"
     max-width="344"
     class="mx-auto"
     outlined
@@ -16,19 +15,17 @@
 <!-- 버튼들 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="editDone">수정완료</v-btn>
+          <v-btn color="blue darken-1" text v-if="editmode===false" @click="makelist">수정하기</v-btn>
+          <v-btn color="blue darken-1" text v-if="editmode===true" @click="editDone">수정완료</v-btn>
      </v-card-actions>
-          <!-- 배열 확인용 -->
-          <v-card-actions v-if="check">
-            <div style="width:100%;">{{returnStr}}</div>
-            <div style="width:100%;">{{listString}}</div>
-          </v-card-actions>
+          
   
 <!-- 리스트 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->    
     <!-- 참고사이트 : https://github.com/David-Desmaisons/draggable-example -->
 
       
         <draggable
+          v-if="editmode"
           v-model="list" 
           v-bind="dragOptions" 
           :move="onMove" 
@@ -61,6 +58,24 @@
             </v-card-actions>
           </transition-group>
         </draggable>
+
+        <v-card-actions
+          v-else
+            v-for="name in message" 
+            :key="name"
+            style="padding:0px 16px 5px 16px;"
+            >
+            <v-chip 
+            label=""
+            outlined=""
+            style="height:45px;width:100%;"
+            >
+              <span class="badge"><v-icon color="grey" class="mr-1">mdi-pound</v-icon></span>
+              
+              {{name}}
+              <v-spacer></v-spacer>
+            </v-chip>
+            </v-card-actions>
       
 
 
@@ -68,7 +83,7 @@
 <!-- 탭추가 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
       <v-chip 
-        v-if="list.length<10"
+        v-if="list.length<10&&editmode"
         label=""
         style="height:45px;width:100%;margin:0px 8px 10px 8px;"
         @click="addTagDialog=true"
@@ -98,6 +113,7 @@
             class="custom_active white--text"
             depressed 
             small 
+            color="custom_active"
             @click="addTag">추가</v-btn>
         </v-card-actions>
       </v-card>
@@ -111,10 +127,12 @@
 
 <script>
 import draggable from "vuedraggable";
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
  export default {
    data: () => ({
+      list:[],
+      editmode: false,
       editable: true,
       isDragging: false,
       delayedDragging: false,
@@ -130,6 +148,12 @@ import { mapActions, mapGetters } from 'vuex';
       getAllTab: 'tags/getAllTab',
       updateTab: 'tags/updateTab',
     }),
+    makelist(){
+      this.editmode = true
+      this.list = this.message.map((name, index)=>{
+        return {name, order: index + 1 }
+      })
+    },
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -156,14 +180,19 @@ import { mapActions, mapGetters } from 'vuex';
       this.addText = '';
     },
     editDone(){
+      for(var i=0; i<this.list.length; i++){
+        this.message[i] = this.list[i].name
+      }
       console.log(this.returnStr)
       this.updateTab({hashtag:this.returnStr})
       this.check = true
+      this.editmode = false
+      
     }
   },
   computed: {
-    ...mapGetters({
-    list : 'tags/getTabtag'
+    ...mapState({
+    message : state => state.tags.tabtags
     }),
     dragOptions() {
       return {

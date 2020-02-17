@@ -23,42 +23,9 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	UserRepository userRepository;
-	
-	@Override
-	@Transactional
-	public List<Comment> joinPost(String hashtag) {
-		List<Comment> comments = null;
-		try {
-			System.out.println("In Service...hashtag is.." + hashtag);
-			comments = commentRepository.joinCustom(hashtag);
-			if(comments.size()==0)
-				System.out.println(hashtag + "번 게시글에 댓글이 존재하지 않습니다.");
-			else
-				System.out.println(comments.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return comments;
-	}
-	
-	@Override
-	public List<Comment> searchCommentList(String hashtag) {
-		List<Comment> comments = null;
-		try {
-			System.out.println("In Service... hashtag is.." + hashtag);
-			comments = commentRepository.joinCustomComment(hashtag);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return comments;
-	}
 
 	@Override
 	public void insert(String id, Comment comment) {
-		
-//		String nickname = userRepository.findById(id).get().getNickname();
-//		comment.setNickname(nickname);
-		
 		try {
 			commentRepository.save(comment);
 		} catch (Exception e) {
@@ -79,24 +46,36 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	public boolean delete(String jwtId, int no) {
 		
-		String id = commentRepository.findById(no).get().getUser().getId();
-		
-		if(id == jwtId) {
+		String id = commentRepository.findById(no).get().getId();
+		if(id.equals(jwtId)) {
 			try {
 				commentRepository.updateDeleted(no);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("댓글 삭제 완료");
 			return true;
+		} else {
+			System.out.println("댓글 삭제 실패");
+			return false;		
 		}
-		return false;		
 	}
- 
+	
+
+	//cno로 하나의 댓글 조회
 	@Override
-	public Comment search(String id) {
-		return null;
+	public Comment search(int cno) {
+		 Comment comment = null;
+		 try {
+			System.out.println("cno is: "+cno);
+			comment = commentRepository.findByCno(cno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comment;
 	}
 
+	//pno로 모든 Comment(댓글) 리스트 조회
 	@Override
 	public List<Comment> searchPno(int pno) {
 		List<Comment> comments = null;
@@ -107,7 +86,20 @@ public class CommentServiceImpl implements CommentService {
 		}
 		return comments;
 	}
+	
+	//pno로 모든 cno(댓글번호) 리스트 조회
+	@Override
+	public List<Integer> searchCnoByPno(int pno) {
+		List<Integer> cno_list = null;
+		try {
+			cno_list = commentRepository.searchCnoByPno(pno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cno_list;
+	}
 
+	//회원 별 댓글 리스트
 	@Override
 	public List<Comment> searchId(String id) {
 		List<Comment> comments = null;
@@ -117,8 +109,33 @@ public class CommentServiceImpl implements CommentService {
 			e.printStackTrace();
 		}
 		return comments;
+	}	
+
+	//내가 댓글 남긴 모든 글 번호(pno) 조회
+	@Override
+	public List<Integer> searchMyComment(String id) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = commentRepository.searchMyComment(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
+	}
+	
+	//해시태그에 해당하는 모든 글(deleted=1)의 댓글 리스트 가져오기
+	@Override
+	public List<Comment> searchCommentList(String hashtag) {
+		List<Comment> comments = null;
+		try {
+			comments = commentRepository.joinCustomComment(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comments;
 	}
 
+	//pno_list에 해당하는 모든 댓글 리스트 출력
 	@Override
 	public List<Comment> searchAllCommenetList(List<Integer> pno_list) {
 		List<Comment> comments = null;
@@ -131,29 +148,5 @@ public class CommentServiceImpl implements CommentService {
 		
 		return comments;
 	}
-
-	@Override
-	public List<Integer> searchCnoByPno(int pno) {
-		List<Integer> cno_list = null;
-		try {
-			cno_list = commentRepository.searchCnoByPno(pno);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return cno_list;
-	}
-
-	@Override
-	public Comment search(int cno) {
-		 Comment comment = null;
-		 try {
-			System.out.println("cno is: "+cno);
-			comment = commentRepository.findByCno(cno);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return comment;
-	}
-	
 	
 }

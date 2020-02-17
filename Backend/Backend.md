@@ -6,7 +6,7 @@
  &nbsp;Java Persistence API. 자바의 ORM(Object-Relational Mapping) 표준 기술이다. 즉 자바의 객체와 관계형 DB를 매핑하는 기술이다.
 <br/><br/>
 <b> Hibernate </b><br/>
- &nbsp;ORM Framework 중 하나로 MyBatis에 비해 코드가 훨씬 더 간결하며 객체지향적이다.
+ &nbsp;ORM Framework 중 하나로 MyBatis에 비해 코드가 훨씬 더 간결하며 객체지향적이다.<br/><br/>
 
     장점 - 생산성, 유지보수가 높다.
     단점 - 어렵다, 성능상 문제가 있을 수 있다.
@@ -67,7 +67,7 @@
         <b>※주의!</b> JPA에서 기본적으로 제공되는 함수 중에 findById()라는 메소드가 있는데 Id가 컬럼명이 아닌 Primary key로 찾겠다는 뜻이다. 즉, FAQ에서 no컬럼이 Primary key일 경우 <mark>findById()</mark> 로도 사용할 수 있다.
 <br/><br/><br/>
 
-1. <b>DTO</b><br/>
+1. <b>DTO</b><br/><br/>
     생성자 접근 권한은 PUBLIC, PROTECTED 외 다른 것들을 지정할 수 있다. 단, <mark>access = AccessLevel.PROTECTED</mark>를 설정할 경우 외부에서 해당 생성자에게 접근하는 것을 막을 수 있다.
     ```java
     @NoArgsConstructor(access = AccessLevel.PROTECTED) // 인자 없는 생성자
@@ -103,7 +103,7 @@
         private User user;
     }
     ```
-    <br/>그 외 Annotation
+    <br/>그 외 Annotation<br/>
     ```java
     /**
     * 객체 위에 사용하는 Annotation
@@ -122,7 +122,7 @@
     ```
 <br/><br/>
     
-2. <b>Update</b><br/>
+2. <b>Update</b><br/><br/>
   &nbsp;JPA에서는 EntityManager가 엔티티를 조회/저장/삭제/수정한다. 하지만 수정 API는 찾아볼 수 없는데 엔티티 매니저가 엔티티 변경이 일어나면 자동으로 감지하여 DB에 반영하기 때문이다. 이를 변경 감지라고 한다.<br/><br/>
   2-1. 변경 감지<br/>
   dfefdf<br/><br/>
@@ -148,7 +148,7 @@
 <br/><br/><br/>
 <h2>JPQL</h2>
 <b>&nbsp;[Java Persistence Query Language]</b> <br/>
-&nbsp;JPA의 일부로 정의된 플랫폼 독립적인 객체지향 쿼리 언어이다. SQL과 비슷한 문법을 가지지만 DB 테이블에 직접 연결되는 것이 아니라 **JPA 엔티티에 대해 동작**한다. 따라서 쿼리문에 테이블이 아닌 <b>엔티티의 컬럼명</b>을 사용해주어야 한다.<br/><br/>
+&nbsp;JPA의 일부로 정의된 플랫폼 독립적인 객체지향 쿼리 언어이다. SQL과 비슷한 문법을 가지지만 DB 테이블에 직접 연결되는 것이 아니라 <b>JPA 엔티티에 대해 동작</b>한다. 따라서 쿼리문에 테이블이 아닌 <b>엔티티의 컬럼명</b>을 사용해주어야 한다.<br/><br/>
 
 <b>사용법</b>
 JPQL에서는 객체(Entity)의 별칭을 필수적으로 명시해야 한다.
@@ -168,7 +168,7 @@ JPQL에서는 객체(Entity)의 별칭을 필수적으로 명시해야 한다.
  ```
 
   <br/>
- ※ 주의!! Param안의 이름과 함수의 매개변수 명이 같아야 한다.<br/>
+ ※ 주의!! Param안의 이름과 함수의 매개변수 명이 같아야 한다.<br/><br/>
 
  ```java
  //가능

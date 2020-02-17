@@ -5,7 +5,9 @@ import PostApi from '../apis/PostApi'
 // initial state
 const state = {
     posts : [],
-}
+    busy : false,
+    page : 0,
+  }
 
 // getters
 const getters = {
@@ -14,23 +16,27 @@ const getters = {
 
 // actions
 const actions = {
-  getAllPosts ({ commit }, data){
-    console.log('여기서 찍힘',data)
-    PostApi.getHomePost(data,res=>{
-      console.log(res)
+  clearAll({ commit }){
+    commit('setClearAll')
+  },
+  getTabposts({ commit }, tabName){
+    state.busy = true
+    PostApi.getTabPostlist({hashtag:tabName, page:state.page},res=>{
+      console.log('응답오고있는지',res)
       if (res.data.state === 'ok'){
-        console.log(res)
-        commit('setPostlist', res.data.message)
+        commit('setPostlist', res.data.message.post)
+        if(res.data.message.next === false){
+          state.busy =true
+        }
       }else{
-        // error 메시지를 브라우저 알림으로
-        console.log(res.data)
+        state.busy = true
       }
-    },err =>{
+    },err=>{
+      state.busy = true
       console.log(err)
     })
   },
   doposting({ commit }, data){
-    console.log('게시글 작성', data)
     PostApi.requestPosting(data,
       res=>{
         if (res.data.state === 'ok'){
@@ -50,7 +56,16 @@ const actions = {
 const mutations = {
 // postslist 업데이트 
   setPostlist(state, posts){
-    state.posts = posts
+    state.posts = state.posts.concat(posts)
+    state.page++
+    state.busy = false
+    console.log('store에서 확인',state.posts)
+  },
+  setClearAll(state){
+    state.posts = [],
+    state.busy = false,
+    state.page = 0
+    console.log('스테이트 초기화 함')
   }
 }
 
