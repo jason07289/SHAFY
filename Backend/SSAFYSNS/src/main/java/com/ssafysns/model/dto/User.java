@@ -106,7 +106,7 @@ public class User {
 	private String name;
 
 
-	@Column(length = 200)
+	@Column(length = 200, nullable = false)
 	private String password;
 
 //	@Getter

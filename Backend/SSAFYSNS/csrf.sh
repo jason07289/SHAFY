@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-curl -k -L -v -d -c, --cookie-jar cookie.txt "userId=ssafu@naver.com&userPwd=abcdefgh&idSave=on" -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded" -H "Origin: https://edu.ssafy.com"  --cacert cacert.pem --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" http://edu.ssafy.com/comm/login/SecurityLoginForm.do |grep csrf

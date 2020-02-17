@@ -17,10 +17,10 @@ import com.ssafysns.model.dto.TabHashtag;
 public interface TabHashtagRepository extends JpaRepository<TabHashtag, Integer> {
 
 	// delete, update 메서드 위에 @Modifying, @Transactional annotation 필수!
-	@Modifying
-	@Transactional
-	@Query(value = "delete from tab_hashtag t where t.id = :id")
-	void deleteByUserId(@Param("id") String id);
+//	@Modifying
+//	@Transactional
+//	@Query(value = "delete from tab_hashtag t where t.id = :id")
+//	void deleteByUserId(@Param("id") String id);
 
 	@Modifying
 	@Transactional

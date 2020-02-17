@@ -14,6 +14,8 @@ public interface BookmarkService {
 	public void deleteByIdAndPno(String id, int pno);
 
 	public List<Bookmark> searchById(String id);
+	
+	public List<Integer> searchPnoById(String id);
 
 //	public void delete(int no);
 

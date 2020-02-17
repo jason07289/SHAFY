@@ -2,7 +2,7 @@
  */
 import properties from './properties'
 
-const axios = require('axios').default
+const axios = require('axios')
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
 const hosturl = properties.backendIP
@@ -18,7 +18,8 @@ const appname = '/user'
 }
 
 const requestUpdateUser = (data, callback, errorCallback) => {
-    axios.put(hosturl+appname)
+    console.log(data)
+    axios.put(hosturl+appname, data)
     .then(callback)
     .catch(errorCallback)
 }
@@ -45,6 +46,12 @@ const requestSignup = (data, callback, errorCallback) => {
     .catch(errorCallback)
 }
 
+
+const requestIDCheck = (params, callback, errorCallback) => {
+    axios.get(hosturl+appname+`/nickname`,params)
+    .then(callback)
+    .catch(errorCallback)
+}
 // 닉네임 중복 확인
 const requestNicknameCheck = (params, callback, errorCallback) => {
     axios.get(hosturl+appname+`/nickname`,params)
@@ -72,6 +79,7 @@ const UserApi = {
     requestChangePw:(data,callback,errorCallback)=>requestChangePw(data,callback,errorCallback),
     requestUserDelete:(data,callback,errorCallback)=>requestUserDelete(data,callback,errorCallback),
     requestNicknameCheck: (data,callback,errorCallback)=>requestNicknameCheck(data,callback,errorCallback),
+    requestIDCheck: (data,callback,errorCallback)=>requestIDCheck(data,callback,errorCallback),
 }
 
 export default UserApi

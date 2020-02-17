@@ -1,13 +1,14 @@
 package com.ssafysns.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafysns.exception.BookmarkException;
 import com.ssafysns.model.dto.Bookmark;
-import com.ssafysns.model.dto.BookmarkException;
 import com.ssafysns.repository.BookmarkRepository;
 
 @Service
@@ -58,6 +59,16 @@ public class BookmarkServiceImpl implements BookmarkService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BookmarkException(id + "로 Bookmark 조회 중 오류가 발생했습니다.");
+		}
+	}
+
+	@Override
+	public List<Integer> searchPnoById(String id) {
+		try {
+			return bookmarkRepository.findPnoByUserId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BookmarkException(id + "로 Bookmark Pno 목록 조회 중 오류가 발생했습니다.");
 		}
 	}
 

@@ -52,7 +52,7 @@ public class Comment {
 	@Column(nullable = false, length = 30)
 	private String id;
 	
-	@Column(nullable = false, length = 20)	//게시글 등록 시 직접 입력
+	@Column(length = 20)	//게시글 등록 시 직접 입력
 	private String nickname;
 
 	@Column(nullable = false)
@@ -73,14 +73,14 @@ public class Comment {
 	
 	@Transient
 	private boolean like_check;
-
+	
 	 // 외래키 설정
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "pno", referencedColumnName="pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))
 	private Post post;
 
 	// 외래키 설정
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name = "id", referencedColumnName="id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_id"))
 	private User user;
 	

@@ -11,12 +11,16 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @ToString
 @Setter
 @Getter
@@ -35,6 +39,11 @@ public class TabHashtag {
 	// 2020.02.10 id를 unique로 수정함!
 	@Column(length = 30, nullable = false, unique = true)
 	private String id;
+	
+	public TabHashtag(String hashtag, String id) {
+		this.hashtag = hashtag;
+		this.id = id;
+	}
 
 	// 2020.02.10 @ManyToOne을 @OneToOne으로 수정함!
 	// 외래키 설정 (id는 User의 id를 참조함)

@@ -1,49 +1,51 @@
 <template>
-  <v-app >
-    <template slot:extension >
-        <v-tabs
-          v-model="tab"
-          align-with-title
-          dark
-          show-arrows
-          color="var(--main-y-dark)"
-          background-color="var(--main-y)"
-        >
-          <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
-
-          <v-tab v-for="item in Tabs" :key="item">
-            <v-icon size="17">mdi-pound</v-icon>{{ item }}
-          </v-tab>
-        </v-tabs>
-      </template>
-
+  <div>
+    <v-tabs
+    v-model="tab"
+    align-with-title
+    dark
+    show-arrows
+    color="var(--main-y-dark)"
+    background-color="var(--main-y)"
+    >
+    <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
+      <v-tab v-for="item in Tabs" :key="item"  @click="pick(item)">
+        <v-icon size="17">mdi-pound</v-icon>{{ item }}
+      </v-tab>
+     
       <v-tabs-items v-model="tab" >
-      <v-tab-item
-        v-for="item in Tabs"
-        :key="item"
-      >
-    <PostList :tab-name="item"></PostList>
-        
-      </v-tab-item>
-    </v-tabs-items>
-
-
-  </v-app>
+        <v-tab-item
+          v-for="item in Tabs"
+          :key="item"
+        > 
+        <component v-bind:is="currentComponent" :tabName="item"></component>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-tabs>
+    <!-- 여기에 탭 네임을 넘겨줘야해요 -->
+    <!-- <component v-bind:is="PostList" :tabName="currentTab"></component> -->
+    <!-- <PostList :tabName="tabName"/> -->
+    
+  </div>
 </template>
 
 <script>
+ /* eslint-disable no-unused-vars */
 import PostList from '../../components/Posts/PostList'
+import PostApi from '../../apis/PostApi'
 import { mapActions, mapState } from 'vuex'
 
 
 export default {
   data () {
       return {
-        tab: null,
+          currentComponent: 'PostList',
+          page: 0,
+          tab: null,
+          tabName: '테스트',
         // Tabs: [
         //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
         // ],
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       }
   },
   components:{
@@ -66,6 +68,7 @@ export default {
     })
   },
 }
+
 </script>
 
 <style>
