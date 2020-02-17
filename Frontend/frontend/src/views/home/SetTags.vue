@@ -114,6 +114,7 @@
             class="custom_active white--text"
             depressed 
             small 
+            color="custom_active"
             @click="addTag">추가</v-btn>
         </v-card-actions>
       </v-card>

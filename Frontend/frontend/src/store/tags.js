@@ -13,7 +13,7 @@ const getters = {
 const actions = {
  getAllTab({ commit }){
   HashTagApi.getTabtag(res=>{
-    console.log('통신 확인',res)
+    // console.log('통신 확인',res)
     if (res.data.state === 'ok'){
       commit('setAllTab', res.data.message.hashtag.split('#'))
     }else{
@@ -41,7 +41,7 @@ const actions = {
 const mutations = {
   setAllTab(state, data){
     const end = data.length
-    state.tabtags = data.splice(1, end)
+    state.tabtags = data.splice(1,end)
     console.log('tab 설정 완료')
   }
   // setSNSseq(state, data){

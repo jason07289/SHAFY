@@ -16,13 +16,15 @@
         label="edu.ssafy.com 계정 이메일"
         v-model="email"
         :rules="emailRules"
+        :disabled="emailCertified"
         placeholder="E-mail"
         required
         >
         </v-text-field>
         </v-col>
         <v-col class="d-flex" cols="12" sm="2">
-          <v-btn outlined @click="doEmail">인증</v-btn>
+          <v-btn v-if="!emailCertified" outlined :disabled="emailDisabled" @click="doEmail">인증</v-btn>
+          <span v-else ><v-icon size="33" color="green">mdi-check</v-icon></span>
         </v-col>
         </v-row>
     </v-container>
@@ -57,13 +59,26 @@
         required
         prepend-icon="mdi-clipboard-account"
         ></v-text-field>
+
+        <v-container fluid style="padding-bottom:0px;">
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
         <v-text-field
         v-model="signUpForm.nickname"
         :counter="10"
         :type="show1 ? 'text' : 'signUpForm.nickname'"
+        :disabled="nicknameChecked"
         placeholder="닉네임"
-        style="margin-left:31px;padding-top:0px;"
+        style="margin-left:20px;padding-top:0px;"
         ></v-text-field>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3">
+          <v-btn v-if="!nicknameChecked" outlined @click="nicknameCheck">중복검사</v-btn>
+          <span v-else class="caption"><v-icon size="18">mdi-check</v-icon>사용가능</span>
+        </v-col>
+        </v-row>
+    </v-container>
+        
 
 
     </v-form>
@@ -225,32 +240,42 @@
   <!-- 이메일 인증 다이얼로그 ----------------------------------->
   <v-dialog
       v-model="dialog"
-      max-width="290"
+      max-width="350"
     >
-      <v-card>
-        <v-card-text>
-          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="green darken-1"
+      <v-card
+      style="padding:40px 30px 40px 30px;"
+      >
+      <v-text-field
+            label=""
+            placeholder="인증 코드(10자리)"
+            outlined
+            dense
+            style="height:44px;"
+          ></v-text-field> 
+      <v-container style="padding:0px;"><v-row>
+        <v-col cols="12" sm="9" style="padding-bottom:0px;text-aligh:right;">
+           <v-btn
+           class="grey--text"
             text
             @click="dialog = false"
+            style="position:right;align:right;"
           >
-            Disagree
+            이메일 재전송
           </v-btn>
-
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3" style="padding-left:0px;padding-bottom:0px;">
           <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
+            color="custom_active"
+            depressed
+            dark
+            @click="doCertify"
           >
-            Agree
+            확인
           </v-btn>
-        </v-card-actions>
+        </v-col>
+        </v-row>
+      </v-container>
+
       </v-card>
     </v-dialog>
   </div>
@@ -318,7 +343,11 @@ export default {
     ],
     imageData: null, 
     uploadValue: 0,
+    //CSS관련----
     dialog:false,
+    emailDisabled:true,
+    emailCertified:false,
+    nicknameChecked:false,
   }
   },
   computed:{
@@ -370,8 +399,20 @@ export default {
         }
       }  
     },
+    //CSS 관련---
     doEmail(){
+      //이메일 인증 버튼을 누른 경우
       this.dialog = true;
+    },
+    doCertify(){
+      //다이얼로그에서 인증 요청 버튼을 누르는 경우
+      this.emailCertified = true
+    },
+    nicknameCheck(){
+      //중복 체크 하는 코드 넣기
+
+      //CSS 변경
+      this.nicknameChecked = true
     }
   },
   created(){
