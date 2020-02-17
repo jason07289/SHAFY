@@ -11,4 +11,3 @@ export default{
     backendIP : set.HLA,
     frontendIP : set.FE_LST
 }
-

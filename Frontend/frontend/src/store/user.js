@@ -52,7 +52,7 @@ const actions = {
     UserApi.requestUserInFo(res=>{
       // console.log('userInfoAPI',res)
       if (res.data.state === 'ok'){
-        console.log(router)
+        // console.log(router)
         commit('setUserInfo', res.data.message)
       }else{
         alert(res.data)
