@@ -4,7 +4,6 @@
     
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
-    mt="400"
     max-width="344"
     class="mx-auto"
     outlined

@@ -96,7 +96,13 @@ public class PostController {
 			result_map = getPostByOneHashtag(result_map, hashtag, page);
 		}
 		
-		return new ResponseEntity<Map<String, Object>>(result_map, HttpStatus.OK);
+		if(result_map.get("post")==null) {
+			return handleFail(result_map, HttpStatus.OK);
+		} else {
+			result_map.put("state", "ok");
+		}
+		return handleSuccess(result_map);
+//		return new ResponseEntity<Map<String, Object>>(result_map, HttpStatus.OK);
 	}
 	
 	/**
@@ -105,7 +111,7 @@ public class PostController {
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*limit-1);
+		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
 		List<Integer> pno_list = bookmarkService.searchPnoById(jwtId);
@@ -120,7 +126,11 @@ public class PostController {
 			result_map.put("next", true);
 		}
 		post_list = returnPost(post_list, pno_list);
-		result_map.put("post", post_list);
+		if(post_list.size()==0) {
+			result_map.put("post", null);
+		} else {
+			result_map.put("post", post_list);
+		}
 		
 		return result_map;
 	}
@@ -130,7 +140,8 @@ public class PostController {
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*limit-1);
+		System.out.println("GET MY POST");
+		page = Integer.max(0, page*limit);
 		
 		String jwtId = jwtService.get("userid");
 		
@@ -146,18 +157,26 @@ public class PostController {
 			result_map.put("next", true);
 		}
 		post_list = returnPost(post_list, pno_list);
-		result_map.put("post", post_list);
+		System.out.println();
+		System.out.println("size is: "+post_list.size());
+		System.out.println();
+		
+		if(post_list.size()==0) {
+			result_map.put("post", null);
+		} else {
+			result_map.put("post", post_list);
+		}
 		
 		return result_map;
 	}
 	
-	/**
+	/** 
 	 * [Me]
 	 * 댓글 남긴 글
 	 * @throws UnauthorizedException 
 	 */
 	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
-		page = Integer.max(0, page*limit-1);
+		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
 		List<Integer> pno_list = commentService.searchMyComment(jwtId);
@@ -172,7 +191,11 @@ public class PostController {
 			result_map.put("next", true);
 		}
 		post_list = returnPost(post_list, pno_list);
-		result_map.put("post", post_list);
+		if(post_list.size()==0) {
+			result_map.put("post", null);
+		} else {
+			result_map.put("post", post_list);
+		}
 		
 		return result_map;
 	}
@@ -203,7 +226,11 @@ public class PostController {
 		post_list = post_list.subList(0, Integer.min(20, post_list.size()));
 		
 		result_map.put("next", false);
-		result_map.put("post", post_list);
+		if(post_list.size()==0) {
+			result_map.put("post", null);
+		} else {
+			result_map.put("post", post_list);
+		}
 		
 		return result_map;
 	}
@@ -216,7 +243,7 @@ public class PostController {
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
-		page = Integer.max(0, page*limit-1);
+		page = Integer.max(0, page*limit);
 		hashtag = "#"+hashtag+"#";
 		
 		List<Post> post_list = searchPostByHash(hashtag, page);	//개수 제한
@@ -231,7 +258,11 @@ public class PostController {
 			result_map.put("next", true);
 		}
 		post_list = returnPost(post_list, pno_list);
-		result_map.put("post", post_list);
+		if(post_list.size()==0) {
+			result_map.put("post", null);
+		} else {
+			result_map.put("post", post_list);
+		}
 		
 		return result_map;
 	}
@@ -242,18 +273,24 @@ public class PostController {
 	 */
 	@ApiOperation(value="[Newsfeed] 여러개의 Hashtag에 해당하는 게시글 리스트와 게시글+댓글+좋아요 정보 반환")
 	@GetMapping("/newsfeed/{page}")
-	public ResponseEntity<List<Post>> searchHashtagComment(@PathVariable int page) throws Exception {
+	public ResponseEntity<Map<String, Object>> searchHashtagComment(@PathVariable int page) throws Exception {
 		/**
 		 * JWT 토큰으로 받아오기
 		 */
 		// Follow Hashtag를 가지고 있는 모든 게시글 리스트 가져오기
-		page = Integer.max(0, page*limit-1);
+		page = Integer.max(0, page*limit);
 		
 		String jwtId = jwtService.get("userid");
 		
 		String follow_tag = followService.searchById(jwtId).get().getHashtag();
-		follow_tag = follow_tag.replace("#", "#|#");
-		follow_tag = follow_tag.substring(2)+"#";
+		if(follow_tag == null) {
+			follow_tag = "__공지사항__";
+		} else {
+			follow_tag = follow_tag.replace("#", "#|#");
+			follow_tag = follow_tag.substring(2)+"#|__공지사항__";
+		}
+		
+		System.out.println("follow_tag: "+follow_tag);
 		
 		List<Integer> pno_list = postService.followHash(follow_tag);
 		List<Post> post_list = postService.search(pno_list, page);
@@ -262,7 +299,16 @@ public class PostController {
 		 */
 		post_list = returnPost(post_list, pno_list);
 		
-		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
+		Map<String, Object> result_map = new HashMap<String, Object>();
+		
+		if(post_list == null || post_list.size()==0) {
+			return handleFail(result_map, HttpStatus.OK);
+		} else {
+			result_map.put("post", post_list);
+		}
+		
+		return handleSuccess(result_map);
+		
 	}
 	
 	/**
@@ -281,7 +327,6 @@ public class PostController {
 		
 		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
-		
 		
 		for(int i = 0, post_size = post_list.size(); i<post_size; i++) {
 			Post post = post_list.get(i);
@@ -381,7 +426,7 @@ public class PostController {
 	@PostMapping("/me/{page}")
 	public ResponseEntity<List<Post>> searchPostLikesById(@PathVariable int page) throws Exception {
 		
-		page = Integer.max(0, page*limit-1);
+		page = Integer.max(0, page*limit);
 		
 		String jwtId = jwtService.get("userid");		
 		List<Integer> pno_list = likesService.selectPnoById(jwtId); //좋아요 누른 글 리스트 리스트 반환
@@ -511,11 +556,13 @@ public class PostController {
 	 */
 	@ApiOperation(value="{pno}에 해당하는 게시글, 댓글, 좋아요 조회")
 	@GetMapping("/{pno}")
-	public ResponseEntity<Post> searchByPno(@PathVariable int pno) throws Exception {
+	public ResponseEntity<Map<String, Object>> searchByPno(@PathVariable int pno) throws Exception {
 		
 		Post post = search(pno);
 		List<Integer> pno_list = new ArrayList<Integer>();
 		pno_list.add(pno);
+		
+		System.out.println("pno: "+pno+", size: "+pno_list.size());
 		
 		String jwtId = jwtService.get("userid");
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
@@ -524,7 +571,16 @@ public class PostController {
 		
 		funcPost(post, like_boolean_post.get(0), my_like_comment);
 
-		return new ResponseEntity<Post>(post, HttpStatus.OK);
+		Map<String, Object> return_map = new HashMap<String, Object>();
+		if(post == null) {
+			return_map.put("state", "fail");
+		} else {
+			return_map.put("state", "ok");
+			return_map.put("post", post);
+		}
+		
+		return handleSuccess(return_map);
+//		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 
 	// pno에 해당하는 Post 조회 (함수)
@@ -658,7 +714,7 @@ public class PostController {
 		resultMap.put("state", "ok");
 		resultMap.put("message", data);
 		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
-	}
+	} 
 
 	private ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus status) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();

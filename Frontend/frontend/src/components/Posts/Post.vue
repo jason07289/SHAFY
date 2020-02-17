@@ -154,27 +154,52 @@
         <v-card
         color="white"
         outlined
-        style="width:100%;"
+        style="width:100%;padding:3px;"
         >
-          <span class="subtitle-2">{{comment.nickname}}</span>
+          <!-- <v-icon size="15" color="green" v-if="commentIcon(comment.cno)">mdi-check</v-icon> -->
+          <v-progress-circular
+          v-if="isWriting==comment.cno"
+            :size="12"
+            color="blue"
+            indeterminate
+            style="margin-right:9px;"
+          ></v-progress-circular>
+          <span class="subtitle-2" >{{comment.nickname}}</span>
+          <!-- {{ comment.id }} -->
+          <!-- {{ userInfo.id  }} -->
+          <!--v-if="comment.user.id === userInfo.id"
+          user가 null값이면 안됨 -->
+          <v-icon size="15" color="red" 
+           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-comment-remove</v-icon>
           <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
           <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
-          <v-icon class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
+          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
           <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
           <div class="caption" style="width:100%;">{{comment.content}}</div>
           
         </v-card>
       </v-card-actions>
 
-      <!-- 입력부분 -->
+      <!-- 댓글입력부분 -->
+          <v-layout row>
           <v-text-field
-            v-model="commentAreat"
-            :rules="rules"
+            v-model="commentArea"
             counter
             maxlength="150"
-            placeholder="댓글창"
-            style="padding-top:0px;"
+            :placeholder="commentHolder"
+            @keyup.enter="commentEnter"
+            style="padding:4px 5px 5px 20px;width:70%;"
           ></v-text-field>
+          <span class="caption" style="padding-top:25px;">익명</span>
+          <v-checkbox
+              v-model="anonymous"
+              color="primary"
+              value=1
+              dense
+              hide-details
+              style="width:10%;margin-right:10px;"
+            ></v-checkbox>
+          </v-layout>
       </div>
     </v-expand-transition>
     </v-card-actions>
@@ -191,14 +216,20 @@
 
 <script>
 import tagDialog from "./TagDialog"
+import PostApi from "../../apis/PostApi"
+import { mapState } from 'vuex'
 
 export default {
   name: 'Post',
   components:{
     tagDialog,
   },
+  computed:{
+    ...mapState({
+      userInfo: state => state.user.userInfo,
+    })
+  },
   data() {
-    
     return {
       /* 확장 탭/다이얼로그 관련 변수*/
       content_show: false,
@@ -216,10 +247,27 @@ export default {
       tag:'',
       /* 댓글관련 */
       commentArea:'',
+      isWriting:-99,
+      commentHolder:'댓글을 입력하세요',
+      anonymous: 0,
 
     }
   },
   methods: {
+    deleteComment(no, idx){
+      // this.post.comment[idx].user.id = '알수없음'
+      PostApi.deleteComment(
+        {no:no},res=>{
+          if (res.data.message === '댓글 삭제 완료'){
+            // console.log(res)
+            console.log('댓글이 정상 삭제 되었습니다.')
+            this.post.comment[idx].content = '댓글이 삭제 되었습니다.'
+          }
+        },err=>{
+          console.log(err)
+        }
+      )
+    },
     clickTag(tagName) {  //태그 클릭해서 다이얼로그 띄우는 애
       console.log(">>클릭됨 : ",tagName)
       this.dialogTagName = tagName
@@ -237,6 +285,60 @@ export default {
       this.tag_list = this.post.hashtag.replace(' ','').split('#')
       this.tag_list.splice(0,1)
     },
+    getCommentList(){
+        PostApi.getComment({pno:this.post.pno},
+          res=>{
+            if(res.status===200){
+              this.post.comment = res.data
+            }else{
+              console.log(res,'댓글 불러오기 실패')
+            }
+          },err=>{  
+              console.log(err,'댓글 불러오기 실패')
+        })
+    },
+    commentEnter(){
+      /*여기서 해야할 일
+      1. 댓글 보내기 returnBody 보내주면 대..
+      2. 댓글 다시 불러오기 (this.post.comment에 댓글배열 불러오기)
+      3. 댓글 입력창 비우기
+      */
+
+      var returnBody = 
+      {
+        "anonymous": this.anonymous,
+        "content": this.commentArea,
+        // "id": '', //id채워조..
+        // "nickname": '', //닉네임 채워조..
+        "parent": this.isWriting==-99?'':this.isWriting, //일단 이렇게 보내보고 문제생기면 와조..
+        "pno": this.post.pno
+      }
+      PostApi.requestComment(returnBody, 
+      res=>{
+        if (res.data.state==="ok"){
+          this.getCommentList()
+        }else{
+          console.log(res.data, '댓글 작성 실패')
+        }
+      },err=>{
+          console.log(err, '댓글 작성 실패')
+      })
+      this.commentArea='' //댓글 입력창 비우기
+    },
+    subComment(cNo,cNicname){
+      if(this.isWriting==-99){
+        //대댓글달기
+        this.isWriting = cNo
+        this.commentHolder = cNicname + '님에게 답글달기'
+      }else{
+        //댓글달기
+        this.isWriting=-99
+        this.commentHolder = '댓글을 입력하세요'
+      }
+    },
+
+
+    //시간 설정 함수
     transferTime(time){    
      var now = new Date();
      var sYear = time.substring(0,4);
@@ -260,7 +362,7 @@ export default {
     }else if(pastSecond<86400){
       str = parseInt((pastSecond/3600),10)+'시간 전'
     }else if(pastSecond<2592000){
-      str = parseInt((pastSecond/86400),10)+'일 전'
+      str = parseInt((pastSecond/86400),10)+'일 전' //이 이후로 안함 걍..
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
     }
@@ -270,6 +372,7 @@ export default {
      return str;
     }
   },
+
   mounted:function () {
           /* 할 일들 
     1. 날짜 변경(방금 전 등)    => setDate()
@@ -285,7 +388,6 @@ export default {
    for(var i=0; i<this.post.comment.length; i++){
      this.post.comment.datetime = transferTime(this.post.comment.datetime)
    }
-   
 
   },
   props:{
@@ -324,10 +426,7 @@ function transferTime(time){
       str = parseInt((pastSecond/86400),10)+'일 전'
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
-    }
-
-
-     
+    }     
      return str;
 }
 </script>
@@ -339,7 +438,7 @@ function transferTime(time){
 }
 .fit_BT{
   width:100%;
-  padding: 0px 20px 0px 20px;/* 위부터 시계방향 */
+  padding: 0px 5px 0px 5px;/* 위부터 시계방향 */
 }
 #vapp{
   background-color:var(--background-w);

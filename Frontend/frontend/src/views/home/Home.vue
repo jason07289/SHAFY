@@ -35,6 +35,7 @@ import PostList from '../../components/Posts/PostList'
 import PostApi from '../../apis/PostApi'
 import { mapActions, mapState } from 'vuex'
 
+
 export default {
   data () {
       return {
@@ -53,24 +54,24 @@ export default {
   methods:{
     ...mapActions({
       getAllTab: 'tags/getAllTab',
-      clearAll: 'post/clearAll'
-    }),
-    pick(item){
-      // this.clearAll()
-      this.tabName=item
-    }
+      getUserInfo:'user/getUserInfo',
+    })
   },
   created(){
-    // console.log(this.$store.state.tags.tabtags)
     this.getAllTab()
+<<<<<<< HEAD
 <<<<<<< HEAD
     // this.getAllPosts({page: this.page})
 =======
 >>>>>>> 650f6a0684a45f0382fb23a90a2fabd0b11830e3
+=======
+    this.getUserInfo()
+>>>>>>> 5b9cb35271e548f35bc946a17a6bcadc22920a0d
   },
   computed:{
     ...mapState({
       Tabs: state=> state.tags.tabtags,
+      userInfo: state => state.user.userInfo,
     })
   },
 }
