@@ -16,7 +16,8 @@
 <!-- 버튼들 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="editDone">수정완료</v-btn>
+          <v-btn color="blue darken-1" text v-if="editmode===false" @click="makelist">수정하기</v-btn>
+          <v-btn color="blue darken-1" text v-if="editmode===true" @click="editDone">수정완료</v-btn>
      </v-card-actions>
           <!-- 배열 확인용 -->
           <v-card-actions v-if="check">
@@ -102,6 +103,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    {{ message }}
+    {{ list }}
   </div>
 </template>
 
@@ -111,10 +114,12 @@
 
 <script>
 import draggable from "vuedraggable";
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
  export default {
    data: () => ({
+      list:[],
+      editmode: false,
       editable: true,
       isDragging: false,
       delayedDragging: false,
@@ -130,6 +135,12 @@ import { mapActions, mapGetters } from 'vuex';
       getAllTab: 'tags/getAllTab',
       updateTab: 'tags/updateTab',
     }),
+    makelist(){
+      this.editmode = true
+      this.list = this.message.map((name, index)=>{
+        return {name, order: index + 1 }
+      })
+    },
     orderList() {
       this.list = this.list.sort((one, two) => {
         return one.order - two.order;
@@ -162,8 +173,8 @@ import { mapActions, mapGetters } from 'vuex';
     }
   },
   computed: {
-    ...mapGetters({
-    list : 'tags/getTabtag'
+    ...mapState({
+    message : state => state.tags.tabtags
     }),
     dragOptions() {
       return {
