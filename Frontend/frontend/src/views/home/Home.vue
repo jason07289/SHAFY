@@ -67,7 +67,6 @@ export default {
   created(){
     // console.log(this.$store.state.tags.tabtags)
     this.getAllTab()
-    console.log(this.Tabs)
     // this.getAllPosts({page: this.page})
   },
   computed:{
