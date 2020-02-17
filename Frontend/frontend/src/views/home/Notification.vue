@@ -66,7 +66,8 @@ export default {
   AlarmNotification(){
     NotificationApi.AlarmNotification(res=>{
       if (res.data.state==='ok'){
-          this.newalarm = true
+        console.log(res.data)
+        this.newalarm = res.data.message
       }else{
         console.log(res.data)
       }
