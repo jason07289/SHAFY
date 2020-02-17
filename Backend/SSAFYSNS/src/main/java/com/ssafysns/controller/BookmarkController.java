@@ -33,14 +33,24 @@ public class BookmarkController {
 	@Autowired
 	JwtService jwtService;
 
-	// id에 해당하는 Bookmark 목록 조회
-	@ApiOperation(value = "id에 해당하는 Bookmark 목록 조회")
-	@GetMapping
-	public ResponseEntity<Map<String, Object>> search() throws Exception {
+//	// id에 해당하는 Bookmark 목록 조회
+//	@ApiOperation(value = "로그인한 유저의 Bookmark 목록 조회")
+//	@GetMapping
+//	public ResponseEntity<Map<String, Object>> search() throws Exception {
+//		// 1. id를 로그인한 유저의 id로 설정
+//		String id = jwtService.get("userid");
+//
+//		return handleSuccess(bookmarkService.searchById(id));
+//	}
+
+	// 로그인한 유저의 Bookmark의 pno 목록 조회
+	@ApiOperation(value = "로그인한 유저의 Bookmark Pno 목록 조회")
+	@GetMapping()
+	public ResponseEntity<Map<String, Object>> searchPno() throws Exception {
 		// 1. id를 로그인한 유저의 id로 설정
 		String id = jwtService.get("userid");
-
-		return handleSuccess(bookmarkService.searchById(id));
+		
+		return handleSuccess(bookmarkService.searchPnoById(id));
 	}
 
 	// Bookmark 등록(no: Auto-increment, id: 로그인한 user의 id, pno: 입력 필수!!!)

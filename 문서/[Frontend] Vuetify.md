@@ -10,6 +10,8 @@ $ npm install vuetify --save
 $ npm install sass sass-loader fibers deepmerge -D
 $ npm install material-design-icons-iconfont --save
 $ npm install --save vuedraggable
+$ npm install --save firebase
+$ npm install vue-infinite-scroll --save
 ```
 
 #### 적용

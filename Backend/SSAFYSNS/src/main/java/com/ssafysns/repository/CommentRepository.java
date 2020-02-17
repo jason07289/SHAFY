@@ -36,7 +36,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	@Query("select c from comment c where c.pno in :plist and c.deleted=0")
 	List<Comment> customAllPno(@Param("plist") List<Integer> plist);
 
-	// 얘는 어따쓰는거?????
+	// Pno와 Cno에 해당하는 Comment가 있는지 확인하는 용도(외래키 제약조건 위배하는지)
 	@Query("select c from comment c where c.pno = :pno and c.cno=:cno and c.deleted=0")
 	Comment searchByPnoCno(@Param("pno") int pno, @Param("cno") int cno);
 
@@ -58,6 +58,9 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 	@Query("select c from comment c where c.cno=:cno")
 	Comment findByCno(@Param("cno") int cno);
+
+	@Query("select c.pno from comment c where c.id=:id")
+	List<Integer> searchMyComment(@Param("id") String id);
 
 
 }
