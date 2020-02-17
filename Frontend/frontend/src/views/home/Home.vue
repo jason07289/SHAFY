@@ -13,12 +13,12 @@
         <v-icon size="17">mdi-pound</v-icon>{{ item }}
       </v-tab>
      
-      <v-tabs-items v-model="tab" >
+      <v-tabs-items v-model="tab">
         <v-tab-item
           v-for="item in Tabs"
           :key="item"
         > 
-        <component v-bind:is="currentComponent" :tabName="item"></component>
+        <component v-bind:is="currentComponent" :tabName="tabName"></component>
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
@@ -42,7 +42,7 @@ export default {
           currentComponent: 'PostList',
           page: 0,
           tab: null,
-          tabName: '테스트',
+          tabName: '',
         // Tabs: [
         //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
         // ],

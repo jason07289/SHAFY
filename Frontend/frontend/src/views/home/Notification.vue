@@ -1,16 +1,16 @@
 <template>
   <div>
     <h1>알림창</h1>
-    {{ nmofNotification }}
-    {{ newalarm }}
-    <p v-for="noti in this.notices" :key="noti.pno">
+    알람 갯수: {{ nmofNotification }}
+    새로운 알람: {{ newalarm }}
+    <p v-for="noti in this.notices" :key="noti.no">
       {{ noti.pno }}
       {{ noti.notificationMessage }}
       {{ noti.datetime }}
       <!-- 달린 댓글 내용 -->
       {{ noti.comment }}
       {{ noti.checked }}
-      <button v-if="noti.checked === 0" @click="check(noti.pno)">읽음 표시</button>
+      <button v-if="noti.checked === 0" @click="check(noti.no)">읽음 표시</button>
     </p>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
     }
   },
   methods:{
-    getAllnotice(){
+    getAllNotification(){
       NotificationApi.getAllNotification(res=>{
         if (res.data.state==='ok'){
           this.notices = res.data.message
@@ -39,11 +39,18 @@ export default {
         console.log(err)
       })
   },
-  check(pno){
-    
-    // this.notices.pno.checked = 1
-    console.log(this.notices)
-
+  check(no){
+    NotificationApi.ReadNotification({no}, res=>{
+      if (res.data.state === 'ok'){
+        console.log(res.data.message)
+        // 다시 빌려오기
+      this.getNmofNotification()
+      this.getAllNotification()
+      this.AlarmNotification()
+      }
+    },err=>{
+      console.log(err)
+    })
   },
   getNmofNotification(){
     NotificationApi.CountNotification(res=>{
@@ -59,7 +66,8 @@ export default {
   AlarmNotification(){
     NotificationApi.AlarmNotification(res=>{
       if (res.data.state==='ok'){
-          this.newalarm = true
+        console.log(res.data)
+        this.newalarm = res.data.message
       }else{
         console.log(res.data)
       }
@@ -69,7 +77,7 @@ export default {
   }
 },
 created(){
-  this.getAllnotice()
+  this.getNmofNotification()
   this.getAllNotification()
   this.AlarmNotification()
 }
