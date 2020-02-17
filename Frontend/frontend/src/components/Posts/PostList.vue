@@ -4,29 +4,72 @@
     <!-- <div style="width:100%" v-for="post in posts" :key="post.id">
       {{post}}
     </div> -->
+    <div
+      v-infinite-scroll="loadMore" 
+      infinite-scroll-disabled="busy"
+      infinite-scroll-distance="100"
+      >
     <Post v-for="post in posts"
     :key="post.pno" :post="post"/>
+    </div>
   </div>
 </template>
 
 <script>
+ /* eslint-disable no-unused-vars */
 import Post from './Post'
-import { mapState } from 'vuex'
+import PostApi from '../../apis/PostApi'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'PostList',
   components:{
     Post,
   },
-  computed:
-    mapState({
-    posts: state => state.post.posts
+  data(){
+    return{
+      posts:[],
+      busy : false,
+      page : 0,
+    }
+  },
+  methods:{
+    ...mapActions({
+      getTabposts: 'post/getTabposts',
+      clearAll: 'post/clearAll'
+    }),
+    loadMore(){
+      this.busy = true
+      PostApi.getTabPostlist({hashtag:this.tabName, page:this.page},res=>{
+      console.log('응답오고있는지',res)
+      if (res.data.state === 'ok'){
+        this.posts = this.posts.concat(res.data.message.post)
+        this.page++
+        this.busy = false
+        if(res.data.message.next === false){
+          this.busy =true
+        }
+      }else{
+        // 리스트가 하나도 없는경우도 포함 
+        this.busy = true
+      }
+    },err=>{
+      this.busy = true
+      console.log(err)
+    })
+    }
+    // loadMore(tabName){
+    //   console.log('포스트 새로 불러오기',this.tabName)
+    //   this.getTabposts(this.tabName)
+    // }
+  },
+  computed:{
+    ...mapState({
+    posts: state => state.post.posts,
+    busy: state => state.post.busy,
   }),
-  created(){
-    this.$store.dispatch('post/getAllPosts')
   },
   props: ['tabName']
-  
 }
 </script>
 
