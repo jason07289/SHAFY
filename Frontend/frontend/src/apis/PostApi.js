@@ -75,6 +75,11 @@ const deleteComment = (data, callback, errorCallback) => {
   .catch(errorCallback)
 }
 
+const like = (data, callback, errorCallback) =>{
+  axios.post(`/likes/${data.pno}`)
+  .then(callback)
+  .catch(errorCallback)
+}
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
@@ -86,6 +91,7 @@ const PostApi = {
   updatePosting:(data,callback,errorCallback)=>updatePosting(data,callback,errorCallback),
   deletePosting:(data,callback,errorCallback)=>deletePosting(data,callback,errorCallback),
   deleteComment:(data,callback,errorCallback)=>deleteComment(data,callback,errorCallback),
+  like:(data,callback,errorCallback)=>like(data,callback,errorCallback),
 }
 
 export default PostApi
