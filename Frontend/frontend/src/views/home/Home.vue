@@ -1,14 +1,5 @@
 <template>
   <div>
-    <v-btn
-      fab
-      dark
-      color="var(--main-y)"
-      bottom
-      right
-      fixed
-      @click="gotop()"
-    ><v-icon>mdi-chevron-up</v-icon></v-btn>
     <v-tabs
     v-model="tab"
     align-with-title
@@ -18,11 +9,17 @@
     background-color="var(--main-y)"
     >
     <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
+      <v-tab>
+        <v-icon size="17">mdi-home</v-icon>HOME
+      </v-tab>
       <v-tab v-for="item in Tabs" :key="item">
         <v-icon size="17">mdi-pound</v-icon>{{ item }}
       </v-tab>
      
       <v-tabs-items v-model="tab">
+        <v-tab-item>
+        <component v-bind:is="currentComponent" tabName="...home"></component>
+        </v-tab-item>
         <v-tab-item
           v-for="item in Tabs"
           :key="item"
@@ -64,6 +61,7 @@ export default {
     ...mapActions({
       getAllTab: 'tags/getAllTab',
       getUserInfo:'user/getUserInfo',
+      getMyfollowing: 'tags/getMyfollowing',
     }),
     gotop(){
        document.documentElement.scrollTop = 0;
@@ -73,6 +71,7 @@ export default {
   created(){
     this.getAllTab()
     this.getUserInfo()
+    this.getMyfollowing()
   },
   computed:{
     ...mapState({

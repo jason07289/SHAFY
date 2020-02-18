@@ -45,14 +45,14 @@ const getAllfavoritestag  = (params,callback,errorCallback) => {
   .catch(errorCallback)
 }
 
-const getFollowtag  = (params,callback,errorCallback) => {
-  axios.get(hosturl+'/followtag', params)
+const getFollowtag  = (callback,errorCallback) => {
+  axios.get(hosturl+'/followtag')
   .then(callback)
   .catch(errorCallback)
 }
 
 const putFollowtag  = (data,callback,errorCallback) => {
-  axios.put(hosturl+'/favoritestag/list', data)
+  axios.put(hosturl+'/followtag', data)
   .then(callback)
   .catch(errorCallback)
 }

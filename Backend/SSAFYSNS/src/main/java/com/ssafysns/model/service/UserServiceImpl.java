@@ -299,9 +299,6 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<User> list() throws Exception{
-		
-		
-		
 		return userRepository.findByDeletedIs(0);
 	}
 
