@@ -74,6 +74,9 @@ public class Comment {
 	@Transient
 	private boolean like_check;
 	
+	@Transient
+	private boolean auth;
+	
 	 // 외래키 설정
 	@ManyToOne()
 	@JoinColumn(name = "pno", referencedColumnName="pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_comment_pno"))

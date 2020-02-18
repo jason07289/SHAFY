@@ -85,12 +85,16 @@ public class PostController {
 		Map<String, Object> result_map = new HashMap<String, Object>();
 		
 		if(hashtag.startsWith("...bookmark")) {
+			System.out.println("스크랩 게시글");
 			result_map = getBookmark(result_map, page);
 		} else if(hashtag.startsWith("...comment")) {
+			System.out.println("댓글 쓴 게시글");
 			result_map = getMyCommentedPost(result_map, page);
 		} else if(hashtag.startsWith("...post")) {
+			System.out.println("내가 쓴 게시글");
 			result_map = getMyPost(result_map, page);
 		} else if(hashtag.startsWith("...best")){
+			System.out.println("베스트 게시글");
 			result_map = getBestPost(result_map, page);
 		}else {
 			result_map = getPostByOneHashtag(result_map, hashtag, page);
@@ -157,9 +161,6 @@ public class PostController {
 			result_map.put("next", true);
 		}
 		post_list = returnPost(post_list, pno_list);
-		System.out.println();
-		System.out.println("size is: "+post_list.size());
-		System.out.println();
 		
 		if(post_list.size()==0) {
 			result_map.put("post", null);
@@ -290,7 +291,7 @@ public class PostController {
 			follow_tag = follow_tag.substring(2)+"#|__공지사항__";
 		}
 		
-		System.out.println("follow_tag: "+follow_tag);
+//		System.out.println("follow_tag: "+follow_tag);
 		
 		List<Integer> pno_list = postService.followHash(follow_tag);
 		List<Post> post_list = postService.search(pno_list, page);
@@ -332,13 +333,13 @@ public class PostController {
 			Post post = post_list.get(i);
 			boolean check = post_boolean_list.get(i);
 			
-			funcPost(post, check, my_like_comment);
+			funcPost(jwtId, post, check, my_like_comment);
 			
 		}
 		return post_list;
 	}
 	
-	private void funcPost(Post post, boolean check, List<Integer> my_like_comment) {
+	private void funcPost(String jwtId, Post post, boolean check, List<Integer> my_like_comment) {
 		
 		// Like_Count, Like_Check 설정
 		if(check) {
@@ -350,9 +351,12 @@ public class PostController {
 		/**
 		 *  게시글 익명 처리
 		 */
+		if(post.getId().equals(jwtId)) {
+			post.setAuth(true);
+		}
 		if(post.getAnonymous() == 1) {
-			//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
 			post.setNickname("익명");
+			post.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 		} else {
 			post.setNickname(post.getUser().getNickname());
 		}
@@ -363,16 +367,15 @@ public class PostController {
 		// 내가 좋아요 누른 댓글 리스트
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
 		
-		temp_comments_list = funcComment(temp_comments_list, like_boolean_list);
+		temp_comments_list = funcComment(jwtId, temp_comments_list, like_boolean_list);
 		
-		post.setComment(null);
 	}
 	
 	
 	/**
 	 * [공통 코드] 댓글 관리
 	 */
-	private List<Comment> funcComment(List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
+	private List<Comment> funcComment(String jwtId, List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
 		if(temp_comments_list != null) {
 			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
 				Comment temp_comment = temp_comments_list.get(j);
@@ -387,13 +390,16 @@ public class PostController {
 				/**
 				 *  댓글 익명 처리
 				 */
+				if(temp_comment.getId().equals(jwtId)) {
+					temp_comment.setAuth(true);
+				}
 				if(temp_comment.getAnonymous() == 1) {
-					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
+					temp_comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 					temp_comment.setNickname("익명");
 				} else {
 					temp_comment.setNickname(temp_comment.getUser().getNickname());
 				}
-				System.out.println(temp_comment.getNickname());
+//				System.out.println(temp_comment.getNickname());
 				temp_comment.setUser(null);
 				temp_comment.setPost(null);
 				
@@ -445,6 +451,9 @@ public class PostController {
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
 		List<Post> posts = postService.searchAll();
+		
+		String jwtId = jwtService.get("userid");
+		
 		for(int i = 0, size = posts.size(); i<size; i++) {
 			Post post = posts.get(i);
 			post.setUser(null);
@@ -455,7 +464,6 @@ public class PostController {
 			for(int j = 0, jsize = comment_list.size(); j<jsize; j++) {
 				Comment comment = post.getComment().get(j);
 				comment.setLike(null);
-				comment.setUser(null);
 				
 				if(comment.getParent()==0) {
 					comment.setParent(comment.getCno());
@@ -464,10 +472,16 @@ public class PostController {
 				/**
 				 *  댓글 익명 처리
 				 */
-				if(comment.getAnonymous() == 1) {
-					//post.setId("익명");			// 나중에 개인 식별 코드 컬럼으로 대체
-					comment.setNickname("익명");
+				if(comment.getId().equals(jwtId)) {
+					comment.setAuth(true);
 				}
+				if(comment.getAnonymous() == 1) {
+					comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
+					comment.setNickname("익명");
+				} else {
+					comment.setNickname(comment.getUser().getNickname());
+				}
+				comment.setUser(null);
 			}
 			
 			Collections.sort(comment_list, new Comparator<Comment>() {
@@ -562,14 +576,14 @@ public class PostController {
 		List<Integer> pno_list = new ArrayList<Integer>();
 		pno_list.add(pno);
 		
-		System.out.println("pno: "+pno+", size: "+pno_list.size());
+//		System.out.println("pno: "+pno+", size: "+pno_list.size());
 		
 		String jwtId = jwtService.get("userid");
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
-		funcPost(post, like_boolean_post.get(0), my_like_comment);
+		funcPost(jwtId, post, like_boolean_post.get(0), my_like_comment);
 
 		Map<String, Object> return_map = new HashMap<String, Object>();
 		if(post == null) {
@@ -602,7 +616,7 @@ public class PostController {
 		// 내가 좋아요 누른 댓글 리스트
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, pno);
 		
-		comments = funcComment(comments, like_boolean_list);
+		comments = funcComment(jwtId, comments, like_boolean_list);
 				
 		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 	}
