@@ -1,14 +1,5 @@
 <template>
   <div>
-    <v-btn
-      fab
-      dark
-      color="var(--main-y)"
-      bottom
-      right
-      fixed
-      @click="gotop()"
-    ><v-icon>mdi-chevron-up</v-icon></v-btn>
     <v-tabs
     v-model="tab"
     align-with-title
@@ -64,11 +55,7 @@ export default {
     ...mapActions({
       getAllTab: 'tags/getAllTab',
       getUserInfo:'user/getUserInfo',
-    }),
-    gotop(){
-       document.documentElement.scrollTop = 0;
-      // $('template').animate({scrollTop : 0}, 1000)
-    }
+    })
   },
   created(){
     this.getAllTab()
