@@ -82,7 +82,7 @@ const like = (data, callback, errorCallback) =>{
 }
 
 // 북마크 --------------------
-const getBookMark = (data, callback, errorCallback) =>{
+const getBookMark = (callback, errorCallback) =>{
   axios.get(hosturl+`/bookmark`)
   .then(callback)
   .catch(errorCallback)
@@ -121,6 +121,10 @@ const PostApi = {
   deletePosting:(data,callback,errorCallback)=>deletePosting(data,callback,errorCallback),
   deleteComment:(data,callback,errorCallback)=>deleteComment(data,callback,errorCallback),
   like:(data,callback,errorCallback)=>like(data,callback,errorCallback),
+  getBookMark:(data,callback,errorCallback)=>getBookMark(data,callback,errorCallback),
+  updateBookMark:(data,callback,errorCallback)=>updateBookMark(data,callback,errorCallback),
+  deleteBookMark:(data,callback,errorCallback)=>deleteBookMark(data,callback,errorCallback),
+  deleteOneBookMark:(data,callback,errorCallback)=>deleteOneBookMark(data,callback,errorCallback),
 }
 
 export default PostApi
