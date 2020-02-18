@@ -59,7 +59,7 @@
   <v-list flat>
       <v-subheader>계정</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in account" :key="item">
+        <v-list-item v-for="item in account" :key="item" @click="accountClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -90,8 +90,10 @@
   </v-card>
 
 <!-- 회원정보 수정 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
-  <v-dialog v-model="update">
-  <v-card>
+  <v-dialog v-model="update" width="unset">
+  <v-card
+    max-width="400"
+  >
     <v-btn depressed outlined @click="update=false"><v-icon color="red">mdi-close</v-icon>이거누르면닫힘</v-btn>
     여기는 회원정보 수정
   <p>못바꾸는 애들은 p태그로 넣었어요</p>
@@ -212,18 +214,57 @@ fullscreen hide-overlay
 transition="dialog-bottom-transition"
 >
 
-      <v-card>
-        <v-toolbar flat dark color="primary">
-          <v-btn icon dark @click="activityDialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <!-- 여기에 나중에 포스트리스트 띄우기 -->
-        <component v-bind:is="activityDialog?currentComponent:'span'" :tabName="activityTabName"></component>
-      </v-card>
-    </v-dialog>
+  <v-card>
+    <v-toolbar flat dark color="primary">
+      <v-btn icon dark @click="activityDialog = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+    <!-- 여기에 나중에 포스트리스트 띄우기 -->
+    <component v-bind:is="activityDialog?currentComponent:'span'" :tabName="activityTabName"></component>
+  </v-card>
+</v-dialog>
+
+<!-- 탈퇴 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
+<v-dialog 
+v-model="signOutDialog" 
+width="unset"
+>
+  <v-card
+  max-width="400"
+  style="padding:12px;"
+  >
+  <v-card-actions>
+  <v-card-title class="subtitle" style="color:red;">회원 탈퇴 하시겠습니까?</v-card-title>
+  </v-card-actions>
+  <v-card-actions>
+    <v-text-field
+      type = "password"
+      v-model="signOutPW"
+      outlined
+      label="*한 번 탈퇴하면 다시 재가입 할 수 없습니다"
+      placeholder="비밀번호를 다시 입력해주세요"
+      color="red"
+    ></v-text-field>
+  </v-card-actions>
+  <v-container fluid style="padding-top:0px;">
+    <v-row align="center">
+      <v-col class="d-flex" style="padding-top:0px">
+      <v-btn text class="widfull title" @click="signOut">
+        탈퇴하기
+      </v-btn>
+      </v-col>
+      <v-col class="d-flex" style="padding-top:0px">
+      <v-btn text class="widfull title" @click="signOutDialog = false">
+        취소
+      </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
+  </v-card>
+</v-dialog>
 
 
 </div>
@@ -262,8 +303,8 @@ export default {
       {mdi:'comment-outline',text:'댓글 단 글',tab:'...comment'}
       ],
       account: [
-        {mdi:'shield-star-outline',text:'SSAFY인증현황'},
-        {mdi:'account-arrow-right',text:'회원탈퇴'}
+        {mdi:'shield-star-outline',text:'SSAFY인증현황',value:'Certified'},
+        {mdi:'account-arrow-right',text:'회원탈퇴',value:'signOut'}
       ],
       extra:[
         {mdi:'check-decagram',text:'커뮤니티이용규칙'},
@@ -271,11 +312,14 @@ export default {
         {mdi:'iframe-outline',text:'개발스택'},
         {mdi:'podium',text:'개발팀소개'}
       ],
-      activityDialog: false,
       
       activityTitle:'',
       currentComponent:'PostList',
       activityTabName:'',
+      signOutPW:'',
+      //다이얼로그만
+      activityDialog: false,
+      signOutDialog : false,
     }
   },
   methods:{
@@ -317,6 +361,34 @@ export default {
       this.activityDialog= true;
       this.activityTitle = activityItem.text
       this.activityTabName = activityItem.tab
+    },
+    accountClick(accountItem){
+      if(accountItem.value=='signOut'){
+        //회원 탈퇴
+        this.signOutDialog = true
+        this.signOutPW=''
+      }
+    },
+    signOut(){
+      UserApi.requestUserDelete({
+                  "id": this.userInfo.id,
+                  "password": this.signOutPW
+                },
+          res=>{
+            
+            console.log(res.data)
+            if(res.data.state === 'ok'){
+              alert('탈퇴가 성공적으로 완료되었습니다.')
+              this.logout()
+            }else{
+              alert('탈퇴 실패! :'+res.data.message)
+            }
+          },
+          err=>{
+            alert('탈퇴에 실패했습니다.')
+            console.log('탈퇴 실패!'+err)
+          }
+        )
     }
   },
   computed:{
