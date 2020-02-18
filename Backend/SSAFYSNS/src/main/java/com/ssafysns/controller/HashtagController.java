@@ -49,9 +49,9 @@ public class HashtagController {
 	public ResponseEntity<Map<String, Object>> searchTabHashtag() throws Exception {
 		// 1. id를 로그인한 유저의 id로 설정
 		System.out.println("아이디를 조회합니다");
-		
+
 		String id = jwtService.get("userid");
-		
+
 		System.out.println("아이디 조회 완료");
 
 		return handleSuccess(tabHashtagService.searchById(id));
@@ -165,8 +165,11 @@ public class HashtagController {
 		String id = jwtService.get("userid");
 		followHashtag.setId(id);
 
-		followHashtagService.update(followHashtag);
-		return handleSuccess("TabHashtag 수정 완료");
+		boolean result = followHashtagService.update(followHashtag);
+		if (result)
+			return handleSuccess("TabHashtag 수정 완료");
+		else
+			return handleFail("TabHashtag 20개 초과", HttpStatus.OK);
 	}
 
 	// 모든 FollowHashtag 조회
