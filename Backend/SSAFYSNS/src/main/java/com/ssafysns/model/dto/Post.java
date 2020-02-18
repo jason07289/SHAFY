@@ -68,7 +68,7 @@ public class Post {
 	@CreationTimestamp // Date를 현재 시간으로 초기화하여 저장함
 	private Date datetime;
 
-	@Column(length = 200)
+	@Column(length = 1000)
 	private String attachments;
 
 	@Column(columnDefinition = "int default 0")
