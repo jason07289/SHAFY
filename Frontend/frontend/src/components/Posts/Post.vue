@@ -85,8 +85,10 @@
 <!-- 본문정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
   <!-- 이미지 -->
       <!-- src="https://imgur.com/a/dvZcOAa" -->
+      <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      src="https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg"
+      v-if="post.attachment"
+      :src="post.attachment"
       height="194"
     ></v-img>
 
@@ -121,17 +123,18 @@
     
     
     <!-- 좋아요랑댓글갯수하단바 -->
+
     <v-card-actions style="padding-bottom:0px;">
       <v-spacer></v-spacer>
       <v-btn text class = "ma-0" color="blue darken-1">
         <v-icon size = "15" >mdi-thumb-up</v-icon>
-        <span class="caption">45</span>
+        <span class="caption">{{ post.like_count }}</span>
       </v-btn>
       <v-btn text class = "ma-0" color="blue darken-1"
-            @click="comment_show = !comment_show"
+            @click="like"
       >
         <v-icon size = "15">mdi-comment</v-icon>
-        <span class="caption">45</span>
+        <span class="caption">{{ post.comment.length }}</span>
       </v-btn>
       
     </v-card-actions>
@@ -262,6 +265,7 @@ export default {
       getAllTab: 'tags/getAllTab',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+
     closedialog(){
       this.tagDialog_show = false
     },

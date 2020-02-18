@@ -1,7 +1,7 @@
 <template>
       <v-card style="align:center;">
         <!-- {{ myfollowing[hashtagName] }} -->
-        <!-- {{ hashtagName }} -->
+        <!-- {{ myfollowing }} -->
         <v-card-actions style="align:center;">
             <v-card-title  class="headline"  style="text-align:center;align:center;width:100%;" >#{{hashtagName}}</v-card-title>
             <v-btn icon @click="$emit('close')"> <v-icon> mdi-close </v-icon> </v-btn>
@@ -52,7 +52,7 @@ import HashTagApi from "../../apis/HashTagApi"
         console.log(res)
         if (res.data.state==='ok'){
           // 밖으로 나간다.
-          console.log('팔로우되었습니다.',res)
+          console.log('팔로우 수정 되었습니다.',res)
           // this.$emit('close')
         }else{
           console.log(res)
@@ -65,13 +65,13 @@ import HashTagApi from "../../apis/HashTagApi"
         })
       },
       followtag(){
-        this.updatefollowing()
         this.$store.commit('tags/setOnefollowing',  this.hashtagName)
+        this.updatefollowing()
       },
       unfollowtag(){
-        this.updatefollowing()
         this.$store.commit('tags/deleteOnefollowing', this.hashtagName)
-      },
+        this.updatefollowing()
+     },
     },
     computed:{
       ...mapState({
