@@ -267,7 +267,7 @@ public class UserServiceImpl implements UserService{
 			AES256Util aes = new AES256Util();
 
 			if(pw.equals(aes.decrypt(find.getPassword()))) {
-				find.setBanned(1);
+				find.setDeleted(1);
 				userRepository.save(find);
 				return true;
 			}else {
@@ -288,7 +288,11 @@ public class UserServiceImpl implements UserService{
 //		System.out.println("userID:  "+userid);
 		User user = userRepository.getOne(userid);
 //		System.out.println(user);
-	
+		user.setDeleted(0);
+		user.setBanned(0);
+		user.setAuth(null);
+		user.setCode(null);
+		
 		return user;
 		
 	}

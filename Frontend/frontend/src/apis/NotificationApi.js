@@ -6,7 +6,7 @@ const hosturl = properties.backendIP
 const appname = '/notification'
 /* eslint-disable no-unused-vars */
 const ReadNotification = (data,callback,errorCallback) => {
-  axios.put(hosturl+appname, data)
+  axios.put(hosturl+appname+`/${data.no}`)
   .then(callback)
   .catch(errorCallback)
 }

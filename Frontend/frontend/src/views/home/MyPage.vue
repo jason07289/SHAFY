@@ -57,7 +57,7 @@
   outlined
   >
   <v-list flat>
-      <v-subheader>내 활동</v-subheader>
+      <v-subheader>계정</v-subheader>
       <v-list-item-group>
         <v-list-item v-for="item in account" :key="item">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
@@ -77,7 +77,7 @@
   outlined
   >
   <v-list flat>
-      <v-subheader>내 활동</v-subheader>
+      <v-subheader>기타</v-subheader>
       <v-list-item-group>
         <v-list-item v-for="item in extra" :key="item">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
@@ -206,7 +206,11 @@
   </v-dialog>
 
 <!-- 내 활동 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
-<v-dialog v-model="activityDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+<v-dialog 
+v-model="activityDialog" 
+fullscreen hide-overlay 
+transition="dialog-bottom-transition"
+>
 
       <v-card>
         <v-toolbar flat dark color="primary">
@@ -217,6 +221,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <!-- 여기에 나중에 포스트리스트 띄우기 -->
+        <component v-bind:is="activityDialog?currentComponent:'span'" :tabName="activityTabName"></component>
       </v-card>
     </v-dialog>
 
@@ -229,6 +234,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import UserApi from '../../apis/UserApi'
+import PostList from '../../components/Posts/PostList'
 const firebase = require('firebase/app')
 require('firebase/storage') 
 
@@ -251,9 +257,9 @@ export default {
           },
       //이밑은 CSS관련
       activity: [
-      {mdi:'star-box-multiple-outline',text:'북마크한 글'},
-      { mdi:'file-document-box-outline',text:'작성한 글'},
-      {mdi:'comment-outline',text:'댓글 단 글'}
+      {mdi:'star-box-multiple-outline',text:'북마크한 글',tab:'...bookmark'},
+      { mdi:'file-document-box-outline',text:'작성한 글',tab:'...post'},
+      {mdi:'comment-outline',text:'댓글 단 글',tab:'...comment'}
       ],
       account: [
         {mdi:'shield-star-outline',text:'SSAFY인증현황'},
@@ -266,7 +272,10 @@ export default {
         {mdi:'podium',text:'개발팀소개'}
       ],
       activityDialog: false,
+      
       activityTitle:'',
+      currentComponent:'PostList',
+      activityTabName:'',
     }
   },
   methods:{
@@ -307,7 +316,7 @@ export default {
     activityClick(activityItem){
       this.activityDialog= true;
       this.activityTitle = activityItem.text
-      console.log("on:"+activityItem)
+      this.activityTabName = activityItem.tab
     }
   },
   computed:{
@@ -317,7 +326,10 @@ export default {
   },
   created(){
     this.getUserInfo()
-  }
+  },
+  components:{
+    PostList
+  },
 
 }
 </script>

@@ -3,7 +3,6 @@
          
 
     <v-bottom-navigation
-      hide-on-scroll
       fixed
       background-color="var(--main-sb)"
       color="#ffffff"

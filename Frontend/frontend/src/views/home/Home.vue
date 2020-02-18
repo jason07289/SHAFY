@@ -1,5 +1,14 @@
 <template>
   <div>
+    <v-btn
+      fab
+      dark
+      color="var(--main-y)"
+      bottom
+      right
+      fixed
+      @click="gotop()"
+    ><v-icon>mdi-chevron-up</v-icon></v-btn>
     <v-tabs
     v-model="tab"
     align-with-title
@@ -9,15 +18,15 @@
     background-color="var(--main-y)"
     >
     <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
-      <v-tab v-for="item in Tabs" :key="item"  @click="pick(item)">
+      <v-tab v-for="item in Tabs" :key="item">
         <v-icon size="17">mdi-pound</v-icon>{{ item }}
       </v-tab>
      
-      <v-tabs-items v-model="tab" >
+      <v-tabs-items v-model="tab">
         <v-tab-item
           v-for="item in Tabs"
           :key="item"
-        > 
+        >
         <component v-bind:is="currentComponent" :tabName="item"></component>
         </v-tab-item>
       </v-tabs-items>
@@ -35,13 +44,14 @@ import PostList from '../../components/Posts/PostList'
 import PostApi from '../../apis/PostApi'
 import { mapActions, mapState } from 'vuex'
 
+
 export default {
   data () {
       return {
           currentComponent: 'PostList',
           page: 0,
           tab: null,
-          tabName: '테스트',
+          tabName: '',
         // Tabs: [
         //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
         // ],
@@ -53,20 +63,21 @@ export default {
   methods:{
     ...mapActions({
       getAllTab: 'tags/getAllTab',
-      clearAll: 'post/clearAll'
+      getUserInfo:'user/getUserInfo',
     }),
-    pick(item){
-      // this.clearAll()
-      this.tabName=item
+    gotop(){
+       document.documentElement.scrollTop = 0;
+      // $('template').animate({scrollTop : 0}, 1000)
     }
   },
   created(){
-    // console.log(this.$store.state.tags.tabtags)
     this.getAllTab()
+    this.getUserInfo()
   },
   computed:{
     ...mapState({
       Tabs: state=> state.tags.tabtags,
+      userInfo: state => state.user.userInfo,
     })
   },
 }
