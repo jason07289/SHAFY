@@ -59,13 +59,16 @@ public class Post {
 	
 	@Column(nullable=false, length = 20)	//게시글 등록 시 직접 입력
 	private String nickname;
+	
+	@Transient
+	private boolean auth;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp // Date를 현재 시간으로 초기화하여 저장함
 	private Date datetime;
 
-	@Column(length = 200)
+	@Column(length = 1000)
 	private String attachments;
 
 	@Column(columnDefinition = "int default 0")

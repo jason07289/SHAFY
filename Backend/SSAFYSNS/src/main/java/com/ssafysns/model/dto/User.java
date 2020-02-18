@@ -140,7 +140,7 @@ public class User {
 	@Column(length = 20)
 	private String utype;
 
-	@Column(length = 200)
+	@Column(length = 1000)
 	private String img;
 
 	@Column(length = 20)
