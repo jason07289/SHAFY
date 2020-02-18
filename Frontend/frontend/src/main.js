@@ -11,7 +11,10 @@ import firebaseconfig from './plugins/firebaseconfig'
 import infiniteScroll from 'vue-infinite-scroll'
 // import ImageUploader from 'vue-image-upload-resize'
 
-Vue.config.productionTip = false
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 Vue.use(Router)
 Vue.use(Vuetify)

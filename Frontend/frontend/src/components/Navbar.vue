@@ -1,13 +1,11 @@
 <template>
   <div class="Navbar">
          
-
     <v-bottom-navigation
       fixed
       background-color="var(--main-sb)"
       color="#ffffff"
     >
-
 
       <v-btn @click="routing('MyPage')">
         <v-icon>mdi-account</v-icon>
