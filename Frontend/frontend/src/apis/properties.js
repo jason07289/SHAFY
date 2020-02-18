@@ -8,6 +8,6 @@ const set = {
     HLA: 'http://70.12.246.93:8080',
 }
 export default{
-    backendIP : set.PSJ,
+    backendIP : set.HLA,
     frontendIP : set.FE_LST
 }

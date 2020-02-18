@@ -7,7 +7,9 @@
       v-model="tagDialog_show"
       max-width="290"
     >
-    <tagDialog :hashtag-name="dialogTagName"></tagDialog>
+    <!-- tagDialog_show=false -->
+    <!-- <component :is="`tagDialog`" :hashtag-name="dialogTagName" @close="closedialog"></component> -->
+    <tagDialog @close="closedialog" :hashtag-name="dialogTagName"></tagDialog>
    </v-dialog>
   <!-- PostLoader ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
   <v-skeleton-loader
@@ -217,7 +219,8 @@
 <script>
 import tagDialog from "./TagDialog"
 import PostApi from "../../apis/PostApi"
-import { mapState } from 'vuex'
+
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Post',
@@ -227,6 +230,7 @@ export default {
   computed:{
     ...mapState({
       userInfo: state => state.user.userInfo,
+      myfollowing: state => state.tags.followtags
     })
   },
   data() {
@@ -254,6 +258,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      getAllTab: 'tags/getAllTab',
+      getMyfollowing: 'tags/getMyfollowing',
+    }),
+    closedialog(){
+      this.tagDialog_show = false
+    },
     deleteComment(no, idx){
       // this.post.comment[idx].user.id = '알수없음'
       PostApi.deleteComment(
@@ -272,7 +283,7 @@ export default {
       console.log(">>클릭됨 : ",tagName)
       this.dialogTagName = tagName
       this.tagDialog_show = true;
-      
+      console.log('새로 띄우나',this.myfollowing)
     },
     setContent(){
       //한줄미리보기 해주는거
@@ -372,7 +383,6 @@ export default {
      return str;
     }
   },
-
   mounted:function () {
           /* 할 일들 
     1. 날짜 변경(방금 전 등)    => setDate()
@@ -397,8 +407,6 @@ export default {
     },
   },
   
-
-
 }
 function transferTime(time){    
      var now = new Date();
