@@ -140,7 +140,7 @@ https://antdev.tistory.com/36
         return userInfo;
     }
 
-- 마지막에 hashmap 형태의 userInfo를 통해 사용자 정보가 들어가며 여기서 소셜로그인 했을 때의 사용자 정보를 불러올 수 있다. 
+- 마지막에 hashmap 형태의 userInfo를 통해 사용자 정보가 들어가며 여기서 소셜로그인 했을 때의 사용자 정보를 불러올 수 있다.
 - 본 프로젝트에서는 email, 혹은 sns id 밖에 쓰지 않지만 확장성을 고려해 map 형태로 사용자 정보를 받았다.
 
 ### database와의 연동
