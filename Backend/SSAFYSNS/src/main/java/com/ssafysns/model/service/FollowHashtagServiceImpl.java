@@ -1,15 +1,15 @@
 package com.ssafysns.model.service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.ssafysns.exception.FollowHashtagException;
 import com.ssafysns.exception.TabHashtagException;
 import com.ssafysns.model.dto.FollowHashtag;
-import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.repository.FollowHashtagRepository;
 
 @Service
@@ -19,16 +19,22 @@ public class FollowHashtagServiceImpl implements FollowHashtagService {
 	FollowHashtagRepository followHashtagRepository;
 
 	@Override
-	public void update(FollowHashtag followHashtag) {
+	public boolean update(FollowHashtag followHashtag) {
 		try {
 			// FollowHashtag의 insert, delete, update가 모두 이루어짐.
 			String id = followHashtag.getId();
 			Optional<FollowHashtag> find = followHashtagRepository.findByUserId(id);
+			String hashtag = followHashtag.getHashtag();
+			int tagCount = StringUtils.countOccurrencesOf(hashtag, "#"); // count: tag 개수
+//			System.out.println(tagCount);
+			if (tagCount > 20)
+				return false;
 			if (find.isPresent()) {
 				followHashtagRepository.updateByUserId(id, followHashtag.getHashtag());
 			} else {
 				followHashtagRepository.save(followHashtag);
 			}
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
