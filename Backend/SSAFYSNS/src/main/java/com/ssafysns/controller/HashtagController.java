@@ -167,9 +167,9 @@ public class HashtagController {
 
 		boolean result = followHashtagService.update(followHashtag);
 		if (result)
-			return handleSuccess("TabHashtag 수정 완료");
+			return handleSuccess("FollowHashtag 수정 완료");
 		else
-			return handleFail("TabHashtag 20개 초과", HttpStatus.OK);
+			return handleFail("FollowHashtag 20개 초과", HttpStatus.OK);
 	}
 
 	// 모든 FollowHashtag 조회
