@@ -76,10 +76,39 @@ const deleteComment = (data, callback, errorCallback) => {
 }
 
 const like = (data, callback, errorCallback) =>{
-  axios.post(`/likes/${data.pno}`)
+  axios.post(hosturl+`/likes/${data.pno}`)
   .then(callback)
   .catch(errorCallback)
 }
+
+// 북마크 --------------------
+const getBookMark = (data, callback, errorCallback) =>{
+  axios.get(hosturl+`/bookmark`)
+  .then(callback)
+  .catch(errorCallback)
+}
+
+
+const updateBookMark = (data, callback, errorCallback) =>{
+  axios.post(hosturl+`/bookmark`,data)
+  .then(callback)
+  .catch(errorCallback)
+}
+
+
+const deleteBookMark = (callback, errorCallback) =>{
+  axios.delete(hosturl+`/bookmark`)
+  .then(callback)
+  .catch(errorCallback)
+}
+
+
+const deleteOneBookMark = (data, callback, errorCallback) =>{
+  axios.delete(hosturl+`/bookmark/post/${data.pno}`)
+  .then(callback)
+  .catch(errorCallback)
+}
+
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),

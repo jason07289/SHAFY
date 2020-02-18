@@ -126,15 +126,22 @@
 
     <v-card-actions style="padding-bottom:0px;">
       <v-spacer></v-spacer>
-      <v-btn text class = "ma-0" color="blue darken-1">
-        <v-icon size = "15" >mdi-thumb-up</v-icon>
-        <span class="caption">{{ post.like_count }}</span>
+      <!-- {{ post }} -->
+      <!-- {{ post.like_check }} -->
+      <!-- {{ like }} -->
+      <!-- {{ post.like_count }} -->
+      <!-- {{ cnt }} -->
+      
+      <v-btn @click="liketoggle" text class = "ma-0" color="blue darken-1">
+        <v-icon v-if="like===false" size = "15">mdi-thumb-up-outline</v-icon>
+        <v-icon v-else size = "15" >mdi-thumb-up</v-icon>
+        <span class="caption">{{ cnt }}</span>
       </v-btn>
       <v-btn text class = "ma-0" color="blue darken-1"
-            @click="like"
-      >
-        <v-icon size = "15">mdi-comment</v-icon>
-        <span class="caption">{{ post.comment.length }}</span>
+        @click="comment_show = !comment_show"
+        >
+      <v-icon size = "15">mdi-comment</v-icon>
+      <span class="caption">{{ post.comment.length }}</span>
       </v-btn>
       
     </v-card-actions>
@@ -257,7 +264,8 @@ export default {
       isWriting:-99,
       commentHolder:'댓글을 입력하세요',
       anonymous: 0,
-
+      like: this.post.like_check,
+      cnt: this.post.like_count,
     }
   },
   methods: {
@@ -265,7 +273,22 @@ export default {
       getAllTab: 'tags/getAllTab',
       getMyfollowing: 'tags/getMyfollowing',
     }),
-
+    liketoggle(){
+      console.log(this.cnt, this.like)
+      if (this.like){
+        this.cnt -= 1
+      }else{
+        this.cnt += 1
+      }
+      this.like = !this.like
+      PostApi.like({pno: this.post.pno},res=>{
+        if(res.data.state==='ok'){
+          console.log(res.data)
+        }
+      },err=>{
+        console.log(err)
+      })
+    },
     closedialog(){
       this.tagDialog_show = false
     },
