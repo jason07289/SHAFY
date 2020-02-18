@@ -285,10 +285,10 @@ public class PostController {
 		
 		String follow_tag = followService.searchById(jwtId).get().getHashtag();
 		if(follow_tag == null) {
-			follow_tag = "__공지사항__";
+			follow_tag = "공지사항";
 		} else {
 			follow_tag = follow_tag.replace("#", "#|#");
-			follow_tag = follow_tag.substring(2)+"#|__공지사항__";
+			follow_tag = follow_tag.substring(2)+"#|공지사항";
 		}
 		
 //		System.out.println("follow_tag: "+follow_tag);
@@ -306,6 +306,15 @@ public class PostController {
 			return handleFail(result_map, HttpStatus.OK);
 		} else {
 			result_map.put("post", post_list);
+		}
+		
+		// 마지막페이지인지 확인
+		Post isLast = postService.isLastPage(pno_list, page);
+
+		if(isLast == null) {
+			result_map.put("next", false);
+		} else {
+			result_map.put("next", true);
 		}
 		
 		return handleSuccess(result_map);
@@ -516,7 +525,7 @@ public class PostController {
 		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
 		if((user.getAuth()==null 
 				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
-				&& post.getHashtag().startsWith("__공지사항__")) {
+				&& post.getHashtag().startsWith("공지사항")) {
 			System.out.println("공지사항 권한이 없습니다.");
 			return handleFail("fail", HttpStatus.BAD_REQUEST);
 		} else {
