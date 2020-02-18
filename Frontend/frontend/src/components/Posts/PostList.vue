@@ -38,7 +38,7 @@ export default {
       getTabposts: 'post/getTabposts',
       clearAll: 'post/clearAll'
     }),
-    loadMore(){
+    getTab(){
       this.busy = true
       PostApi.getTabPostlist({hashtag:this.tabName, page:this.page},res=>{
       console.log('응답오고있는지',res)
@@ -50,13 +50,40 @@ export default {
           this.busy =true
         }
       }else{
-        // 리스트가 하나도 없는경우도 포함 
+        // 리스트가 하나도 없는경우 -> 탭 팔로우 하러 가기 
         this.busy = true
       }
     },err=>{
       this.busy = true
       console.log(err)
     })
+    },
+    getHome(){
+        this.busy = true
+        PostApi.getHomePost({page:this.page},res=>{
+        console.log('응답오고있는지',res)
+        if (res.data.state === 'ok'){
+          this.posts = this.posts.concat(res.data.message.post)
+          this.page++
+          this.busy = false
+          if(res.data.message.next === false){
+            this.busy =true
+          }
+        }else{
+          // 리스트가 하나도 없는경우도 포함 -> 글 작성하러 가기
+          this.busy = true
+        }
+      },err=>{
+        this.busy = true
+        console.log(err)
+      })
+      },
+    loadMore(){
+      if (this.tabName === '...home'){
+        this.getHome()
+      }else{
+        this.getTab()
+      }
     }
     // loadMore(tabName){
     //   console.log('포스트 새로 불러오기',this.tabName)
@@ -65,8 +92,8 @@ export default {
   },
   computed:{
     ...mapState({
-    posts: state => state.post.posts,
-    busy: state => state.post.busy,
+    // posts: state => state.post.posts,
+    // busy: state => state.post.busy,
   }),
   },
   props: ['tabName']
