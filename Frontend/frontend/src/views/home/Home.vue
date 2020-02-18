@@ -18,6 +18,11 @@
      
       <v-tabs-items v-model="tab">
         <v-tab-item>
+          <div>
+          <v-btn dark large @click="followEditDialog = true">
+            팔로우 해시태그 편집
+          </v-btn>
+          </div>
         <component v-bind:is="currentComponent" tabName="...home"></component>
         </v-tab-item>
         <v-tab-item
@@ -28,10 +33,50 @@
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
-    <!-- 여기에 탭 네임을 넘겨줘야해요 -->
-    <!-- <component v-bind:is="PostList" :tabName="currentTab"></component> -->
-    <!-- <PostList :tabName="tabName"/> -->
-    
+    <!-- 팔로우 해시태그 편집 다이얼로그 ------------------------------------------->
+    <v-dialog
+      v-model = "followEditDialog"
+      max-width="350"
+      hide-overlay
+      outlined
+      elevation="0"
+    >
+      <v-card outlined max-width="350"
+      >
+        <v-card-title> 
+          <span>팔로우한 태그들 </span><v-spacer/>
+          <v-btn icon @click="followEditDialog=false"><v-icon>mdi-close</v-icon></v-btn>
+        </v-card-title>
+        <v-divider class="mx-4"
+        style="margin-top:2px; margin-bottom:8px;"
+        />
+        <div>
+          <v-chip-group column style="padding:0px 20px 12px 20px;"> 
+        <v-chip 
+        close 
+        v-for="tag in Object.keys(this.myfollowing)" 
+        :key="tag"
+        @click:close="unfollowtag(tag)"
+        >
+          # {{tag}}
+        </v-chip>
+          </v-chip-group>
+          <v-card-actions style="padding:12px 36px 0px 36px;">
+            <v-text-field 
+            :append-icon="'mdi-plus-box'"
+            :prepend-icon="'mdi-pound'"
+            placeholder="팔로우할 태그를 입력하세요"
+            dense v-model="followingTextField" 
+            @click:append="followtag"
+            @keyup.enter="followtag">
+            </v-text-field>
+            <!-- <v-btn dark @click="followtag">추가</v-btn> -->
+            
+          </v-card-actions>
+
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -39,6 +84,7 @@
  /* eslint-disable no-unused-vars */
 import PostList from '../../components/Posts/PostList'
 import PostApi from '../../apis/PostApi'
+import HashTagApi from "../../apis/HashTagApi"
 import { mapActions, mapState } from 'vuex'
 
 
@@ -52,6 +98,8 @@ export default {
         // Tabs: [
         //   '다른태그', '삼성전자', '싸피2기', '싸피셜','알고리즘스터디','취업준비','도커공부하는애들','카페','식단',
         // ],
+          followEditDialog:false,
+          followingTextField:'',
       }
   },
   components:{
@@ -66,7 +114,37 @@ export default {
     gotop(){
        document.documentElement.scrollTop = 0;
       // $('template').animate({scrollTop : 0}, 1000)
-    }
+    },
+    updatefollowing(){
+      var temp = ['']
+      temp = temp.concat(Object.keys(this.myfollowing))
+      temp = temp.join('#')
+      HashTagApi.putFollowtag({hashtag:temp}, res=>{
+        console.log(res)
+        if (res.data.state==='ok'){
+          // 밖으로 나간다.
+          console.log('팔로우되었습니다.',res)
+          // this.$emit('close')
+        }else{
+          console.log(res)
+          // 아닌경우 오류 알람 주고 나가기
+          // this.$emit('close')
+        }
+      },err=>{
+        console.log(err)
+        // this.$emit('close')
+        })
+    },
+    followtag(){
+      if(this.followingTextField=='') return
+      this.$store.commit('tags/setOnefollowing',  this.followingTextField)
+      this.updatefollowing()
+      this.followingTextField = ''
+    },
+    unfollowtag(tagName){
+      this.$store.commit('tags/deleteOnefollowing', tagName)
+      this.updatefollowing()
+    },
   },
   created(){
     this.getAllTab()
@@ -77,6 +155,7 @@ export default {
     ...mapState({
       Tabs: state=> state.tags.tabtags,
       userInfo: state => state.user.userInfo,
+      myfollowing: state=> state.tags.followtags,
     })
   },
 }
