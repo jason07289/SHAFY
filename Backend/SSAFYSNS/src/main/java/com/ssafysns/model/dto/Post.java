@@ -92,8 +92,6 @@ public class Post {
 	private List<Comment> comment;
 	
 	@OneToMany(mappedBy="post")
-	private List<PostLikes> postlike;
-	
-	@OneToMany(mappedBy="post")
-	private List<Vote> vote;
+	private List<PostLikes> postlike; 
+
 }

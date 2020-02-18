@@ -29,6 +29,7 @@ import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.Vote;
 import com.ssafysns.model.service.BookmarkService;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
@@ -38,6 +39,7 @@ import com.ssafysns.model.service.NotificationService;
 import com.ssafysns.model.service.PostService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
+import com.ssafysns.model.service.VoteService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -71,9 +73,34 @@ public class PostController {
 	NotificationService notificationService;
 	
 	@Autowired
+	VoteService voteService;
+	
+	@Autowired
 	JwtService jwtService;
 	
 	static int limit = 3;
+	
+	@ApiOperation("투표 등록")
+	@PostMapping("/vote")
+	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody Vote vote) throws Exception {
+		Map<String, Object> result_map = new HashMap<String, Object>();
+		
+		String id = jwtService.get("userid");
+		
+		vote.setPno(1);
+		vote.setId(id);
+		
+		System.out.println("투표 등록");
+		voteService.insert(vote);
+		System.out.println("투표 등록 완료");
+		
+		int vno = voteService.searchByUserId(id);
+//		vote.setPno(pno);
+		vote.setChk(1);
+		voteService.update(vote);
+		
+		return handleSuccess(result_map);
+	}
 	
 	/**
 	 * 주소 분기
@@ -129,7 +156,7 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		if(post_list.size()==0) {
 			result_map.put("post", null);
 		} else {
@@ -160,7 +187,7 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		
 		if(post_list.size()==0) {
 			result_map.put("post", null);
@@ -191,7 +218,7 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		if(post_list.size()==0) {
 			result_map.put("post", null);
 		} else {
@@ -214,7 +241,7 @@ public class PostController {
 			Post post = post_list.get(i);
 			post.setLike_count(post.getPostlike().size());
 		}
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		
 		// 리스트 정렬
 		Collections.sort(post_list, new Comparator<Post>() {
@@ -258,7 +285,7 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		if(post_list.size()==0) {
 			result_map.put("post", null);
 		} else {
@@ -298,7 +325,7 @@ public class PostController {
 		/**
 		 * 여기 바꾸기
 		 */
-		post_list = returnPost(post_list, pno_list);
+		post_list = returnPost(post_list, pno_list, page);
 		
 		Map<String, Object> result_map = new HashMap<String, Object>();
 		
@@ -326,24 +353,27 @@ public class PostController {
 	 * - Comment, Likes 처리
 	 * @throws UnauthorizedException 
 	 */
-	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list) throws UnauthorizedException{
+	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws UnauthorizedException{
 		String jwtId = jwtService.get("userid");
 		
 		List<Post> post_list = posts;
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		
 		// 게시글 중 내가 좋아요 눌렀는지 여부
-		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list);
+		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list, page);
 		
 		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
+		System.out.println();
+		System.out.println("post_boolean_list.size() == "+ post_boolean_list.size());
+		System.out.println();
+		
 		for(int i = 0, post_size = post_list.size(); i<post_size; i++) {
 			Post post = post_list.get(i);
-			boolean check = post_boolean_list.get(i);
+			boolean check = post_boolean_list.get(page+i);
 			
 			funcPost(jwtId, post, check, my_like_comment);
-			
 		}
 		return post_list;
 	}
@@ -447,7 +477,7 @@ public class PostController {
 		List<Integer> pno_list = likesService.selectPnoById(jwtId); //좋아요 누른 글 리스트 리스트 반환
 		List<Post> post_list = postService.searchAllFollowList(pno_list, page);	//개수 제한
 		
-		returnPost(post_list, pno_list);
+		returnPost(post_list, pno_list, page);
 		
 		return new ResponseEntity<List<Post>>(post_list, HttpStatus.OK);
 	}
@@ -589,7 +619,7 @@ public class PostController {
 		
 		String jwtId = jwtService.get("userid");
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
-		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
+		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list, 0);
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
 		funcPost(jwtId, post, like_boolean_post.get(0), my_like_comment);
