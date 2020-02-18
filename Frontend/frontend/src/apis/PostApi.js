@@ -28,7 +28,7 @@ const getTabPostlist = (params,callback,errorCallback) => {
 
 const getHomePost = (params, callback, errorCallback) => {
   console.log('Getpostlist', params)
-  axios.get(hosturl+appname+`/follow/${params.page}`)
+  axios.get(hosturl+appname+`/newsfeed/${params.page}`)
   .then(callback)
   .catch(errorCallback)
 }
