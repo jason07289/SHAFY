@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.ssafysns.model.dto.FollowHashtag;
 
 public interface FollowHashtagService {
-	public void update(FollowHashtag followHashtag);
+	public boolean update(FollowHashtag followHashtag);
 
 	public Optional<FollowHashtag> searchById(String id);
 
