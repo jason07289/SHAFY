@@ -79,7 +79,7 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), token 중복불가 - session 토큰이 들어갈 자리")
+	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), 이메일 인증 후 시행")
 	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
@@ -110,7 +110,7 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("비밀번호 찾기 비밀번호 찾기 기능. id,이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식 부가적인 인증 부분이 더 있으면 좋긴할듯")
+	@ApiOperation("비밀번호 찾기 비밀번호 찾기 기능. id,이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식 부가적인 인증 부분이 더 있으면 좋긴할듯(ex. 질문같은거)")
 	@PutMapping("/user/findpw")
 	public ResponseEntity<Map<String, Object>> findPw(@RequestBody UserDto user){
 		//비밀번호 찾기 기능. 이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식
@@ -221,7 +221,7 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("회원 정보 조회. 비밀번호 등은 복호화 하지 않고 제공할 것임, front에서 필요한 정보만 표기하도록 해야함, param에 id가 아니라 token에서 id를 가져오는 방식으로 바꿀예정")
+	@ApiOperation("회원 정보 조회. 필요없는 부분은 null로 한다.")
 	@GetMapping("/user")
 	public ResponseEntity<Map<String,Object>> MyInfo(){
 		
