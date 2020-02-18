@@ -26,8 +26,7 @@ public class FollowHashtag {
 	private int no;
 
 	// 2020.02.10 hashtag는 id 하나당 하나의 String으로 들어옴 ex)"#SSAFY#2기#삼성" 띄어쓰기 없음!
-//	@Column(length = 1000)
-	@Column(columnDefinition="LONGTEXT")
+	@Column(length = 1000)
 	private String hashtag;
 
 	// 2020.02.10 id를 unique로 수정함!
