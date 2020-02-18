@@ -1,6 +1,6 @@
 # CURL
-
-## ==keyword: "CURL", "SSL", "CSRF", "user-agent"==
+https://lab.ssafy.com/webmobile2-sub3/s02p13a305/tree/develop
+## keyword: "CURL", "SSL", "CSRF", "user-agent"
 
  \* 이력사항
  \* 2020. 02. 17. 황란아 최초작성
@@ -27,7 +27,7 @@ cf) https://bakyeono.net/post/2016-05-02-rest-api-client-for-cli.html
 
 - SSAFY 인증 시 CURL을 사용한 이유
 
-  -  ==SSL(Secure Sockets Layer) 인증== - curl 은 기본적으로 https 사이트의 SSL 인증서를 검증한다. 우리는 curl 실행시 --cacert  옵션으로 CA certificate 를 지정해 주었다.
+  -  SSL(Secure Sockets Layer) 인증 - curl 은 기본적으로 https 사이트의 SSL 인증서를 검증한다. 우리는 curl 실행시 --cacert  옵션으로 CA certificate 를 지정해 주었다.
 
     ```
     --cacert cacert.pem
@@ -39,7 +39,7 @@ cf) https://bakyeono.net/post/2016-05-02-rest-api-client-for-cli.html
 
     
 
-  - ==CSRF==
+  - CSRF
 
     - CSRF란: 사이트 간 요청 위조(Cross-site request forgery, CSRF, XSRF)는 웹사이트 취약점 공격의 하나로, 사용자가 자신의 의지와는 무관하게 공격자가 의도한 행위(수정, 삭제, 등록 등)를 특정 웹사이트에 요청하게 하는 공격을 말한다.
 
@@ -59,7 +59,7 @@ cf) https://bakyeono.net/post/2016-05-02-rest-api-client-for-cli.html
 
 - cd /home/ubuntu
 
-- ==shell 파일을 만들어 쿠키를 저장하고 csrf token 따기==
+- shell 파일을 만들어 쿠키를 저장하고 csrf token 따기
 
   vim csrf.sh
 
@@ -78,7 +78,7 @@ cf) https://bakyeono.net/post/2016-05-02-rest-api-client-for-cli.html
 
 
 
-- ==shell 파일을 만들어 저장한 csrf token과 쿠키를 이용해서 페이지 리턴 받기==
+- shell 파일을 만들어 저장한 csrf token과 쿠키를 이용해서 페이지 리턴 받기
 
   vim authentication.sh
 
