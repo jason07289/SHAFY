@@ -11,7 +11,7 @@ public class MailUtil {
 		//mail server 설정 
  		String charSet ="utf-8";
 
-		String hostSMTP = "imap.gmail.com";
+		String hostSMTP = "smtp.gmail.com";
 		
 		String hostSMTPid = "jason07289@gmail.com";//id
 		String hostSMTPpwd = "19923109a!";
@@ -27,15 +27,15 @@ public class MailUtil {
 		mail.setCharset(charSet);
 //		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
-		mail.setSmtpPort(993);
+		mail.setSmtpPort(465);
 
 //		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-//		mail.setStartTLSEnabled(true);
+		mail.setStartTLSEnabled(true);
 //		mail.setStartTLSRequired(true);
-		mail.setSSL(true);
+//		mail.setSSL(true);
 		mail.addTo(userEmail);
-		mail.setSSLOnConnect(true);
+//		mail.setSSLOnConnect(true);
 		mail.setFrom(fromEmail,fromName,charSet);
 		mail.setSubject(subject);
 		mail.setHtmlMsg(msg);
