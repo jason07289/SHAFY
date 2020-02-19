@@ -21,37 +21,37 @@ public class MailUtil {
 		
 		
 		
-		SimpleEmail email = new SimpleEmail();
-		email.setStartTLSEnabled(true);
-		email.setSmtpPort(587);
-		email.setHostName(hostSMTP);       //ex) nate.com 일 경우!! ->> mail.nate.com
-//		email.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-		email.setAuthentication(hostSMTPid, hostSMTPpwd);
-		email.addTo(userEmail, "받는사람");    //ex) onamt@nate.com
-		email.setFrom(fromEmail, fromName);
-		email.setSubject("[S#ARFY] 인증코드입니다.");
-		email.setMsg("인증코드는 ["+msg+"] 입니다.");
-		email.send();
+//		SimpleEmail email = new SimpleEmail();
+//		email.setStartTLSEnabled(true);
+//		email.setSmtpPort(587);
+//		email.setHostName(hostSMTP);       //ex) nate.com 일 경우!! ->> mail.nate.com
+////		email.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
+//		email.setAuthentication(hostSMTPid, hostSMTPpwd);
+//		email.addTo(userEmail, "받는사람");    //ex) onamt@nate.com
+//		email.setFrom(fromEmail, fromName);
+//		email.setSubject("[S#ARFY] 인증코드입니다.");
+//		email.setMsg("인증코드는 ["+msg+"] 입니다.");
+//		email.send();
 
 
 		
-//		HtmlEmail mail = new HtmlEmail();
-//		mail.setDebug(true);
-//		mail.setCharset(charSet);
-////		mail.setSSLOnConnect(true);
-//		mail.setHostName(hostSMTP);
-//		mail.setSmtpPort(587);
-//		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
+		HtmlEmail mail = new HtmlEmail();
+		mail.setDebug(true);
+		mail.setCharset(charSet);
+//		mail.setSSLOnConnect(true);
+		mail.setHostName(hostSMTP);
+		mail.setSmtpPort(587);
+		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 //		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-//		mail.setStartTLSEnabled(true);
-////		mail.setStartTLSRequired(true);
-////		mail.setSSL(true);
-//		mail.addTo(userEmail);
-////		mail.setSSLOnConnect(true);
-//		mail.setFrom(fromEmail,fromName,charSet);
-//		mail.setSubject(subject);
-//		mail.setHtmlMsg(msg);
-//		mail.send();
+		mail.setStartTLSEnabled(true);
+//		mail.setStartTLSRequired(true);
+//		mail.setSSL(true);
+		mail.addTo(userEmail);
+//		mail.setSSLOnConnect(true);
+		mail.setFrom(fromEmail,fromName,charSet);
+		mail.setSubject(subject);
+		mail.setHtmlMsg(msg);
+		mail.send();
 		
 		
 	}
