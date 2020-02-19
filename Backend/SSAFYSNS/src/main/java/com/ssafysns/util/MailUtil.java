@@ -25,8 +25,7 @@ public class MailUtil {
 		mail.setCharset(charSet);
 		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
-		mail.setSmtpPort(465);
-			
+		mail.setSmtpPort(587);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 		mail.setStartTLSEnabled(true);
 		mail.addTo(userEmail);
