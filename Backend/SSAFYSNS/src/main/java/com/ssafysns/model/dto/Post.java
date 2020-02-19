@@ -82,6 +82,9 @@ public class Post {
 	
 	@Transient
 	private boolean like_check;
+	
+	@Transient
+	private boolean bookmark_check;
 
 	// 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)

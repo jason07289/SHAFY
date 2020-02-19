@@ -19,16 +19,18 @@ public class MailUtil {
 		String fromEmail = "ssafysns@gmail.com";
 		String fromName = "ssafysns 대표";	
 		
-		
 		HtmlEmail mail = new HtmlEmail();
 		mail.setDebug(true);
 		mail.setCharset(charSet);
 		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
 		mail.setSmtpPort(587);
+		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 		mail.setStartTLSEnabled(true);
+		mail.setSSL(true);
 		mail.addTo(userEmail);
+		mail.setSSLOnConnect(true);
 		mail.setFrom(fromEmail,fromName,charSet);
 		mail.setSubject(subject);
 		mail.setHtmlMsg(msg);
