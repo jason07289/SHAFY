@@ -10,7 +10,7 @@ public class MailUtil {
 		
 		//mail server 설정 
  		String charSet ="utf-8";
-		String hostSMTP = "imap.gmail.com";
+		String hostSMTP = "smtp.gmail.com";
 		
 		String hostSMTPid = "jason07289";//id
 		String hostSMTPpwd = "19923109a!";
@@ -26,7 +26,7 @@ public class MailUtil {
 		mail.setCharset(charSet);
 //		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
-		mail.setSmtpPort(587);
+		mail.setSmtpPort(993);
 //		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 //		mail.setStartTLSEnabled(true);
