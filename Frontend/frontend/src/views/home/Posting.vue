@@ -99,57 +99,37 @@
   </v-card-text>
   <v-divider></v-divider>
         <v-card-actions>
-          <v-btn icon @click="vote_show != vote_show">
-            <v-icon v-show="!vote_show">mdi-vote</v-icon>
-          </v-btn>
           <v-btn color="blue darken-1" text @click="step=1">back</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
+          <v-btn icon @click="vote_show = !vote_show">
+          <v-icon>mdi-vote</v-icon>
+          </v-btn>
         </v-card-actions>  
 <!-- 투표 게시하는 부분 -->
-<v-expand-transition v-show="vote_show">
+<v-expand-transition >
   <v-card-text  
+  v-show="vote_show"
     class="py-0"
     style="margin-top:20px;"
 >
   <!--<span class="subheading" style="padding-left:10px;">투표 만들기</span>-->
   <!--추가-->
-  <v-form v-model="valid">
-    <v-text-field label="투표명"
-    v-model="v_title"
-    :counter="30"
-    >
-    </v-text-field>
-    <v-text-field label="첫 번째 주제"
-    v-model="v_first"
-    :counter="40"
-    >
-    </v-text-field>
-    <v-text-field label="두 번째 주제"
-    v-model="v_second"
-    :counter="40">
-    </v-text-field>
-    <div class="text-center">
-      <v-btn 
-      depressed
-      tile
-      block
-      class="primary"
-      @click="register()">
-      투표 등록하기
-      </v-btn>
-    </div>
-    <!--
-  <v-row align="center">
-  <v-col class="d-flex" cols="12" sm="10" style="padding-bottom:0px;">
+  <v-form>
     <v-text-field label="투표명"
     v-model="vote.title"
     :counter="30"
     >
     </v-text-field>
-  </v-col>
-  </v-row>
-  -->
+    <v-text-field label="첫 번째 주제"
+    v-model="vote.a_name"
+    :counter="40"
+    >
+    </v-text-field>
+    <v-text-field label="두 번째 주제"
+    v-model="vote.b_name"
+    :counter="40">
+    </v-text-field>
   </v-form>
   </v-card-text>
 </v-expand-transition>
@@ -157,63 +137,7 @@
 
 
 
-
-<!--추가-->
-<!-- <step:3> 투표선택ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
 <v-window-item :value="3">
-<v-card-text  
-    class="py-0"
-    style="margin-top:20px;"
->
-  <!--<span class="subheading" style="padding-left:10px;">투표 만들기</span>-->
-  <!--추가-->
-  <v-form v-model="valid">
-    <v-text-field label="투표명"
-    v-model="v_title"
-    :counter="30"
-    >
-    </v-text-field>
-    <v-text-field label="첫 번째 주제"
-    v-model="v_first"
-    :counter="40"
-    >
-    </v-text-field>
-    <v-text-field label="두 번째 주제"
-    v-model="v_second"
-    :counter="40">
-    </v-text-field>
-    <div class="text-center">
-      <v-btn 
-      depressed
-      tile
-      block
-      class="primary"
-      @click="register()">
-      투표 등록하기
-      </v-btn>
-    </div>
-    <!--
-  <v-row align="center">
-  <v-col class="d-flex" cols="12" sm="10" style="padding-bottom:0px;">
-    <v-text-field label="투표명"
-    v-model="vote.title"
-    :counter="30"
-    >
-    </v-text-field>
-  </v-col>
-  </v-row>
-  -->
-  </v-form>
-  </v-card-text>
-  <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="blue darken-1" text @click="step=2">back</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
-        </v-card-actions>
-</v-window-item>
-
-<v-window-item :value="4">
   <v-card-actions style="padding-top:20px;padding-bottom:0px;">
     <!-- <v-card-title style="position:center">
     <v-icon size="50" color="green">mdi-emoticon-happy-outline</v-icon>
@@ -241,7 +165,7 @@
 <script>
 import presetData from '../../assets/preset'
 import { mapActions, mapState } from 'vuex'
-import PostApi from '../../apis/PostApi' 
+// import PostApi from '../../apis/PostApi' 
 const firebase = require('firebase/app')
 require('firebase/storage') 
   export default {
@@ -275,18 +199,10 @@ require('firebase/storage')
         img_name:'',
         //--투표 관련 변수--(추가)
         vote_show: false,
-        v_title:'',
-        v_first:'',
-        v_second:'',
         vote: {
-          pno: 0,
           title:'',
           a_name:'',
           b_name:''
-        },
-        result_map:{
-          vote:{},
-          postingForm:{}
         },
       }
     },
@@ -344,22 +260,39 @@ require('firebase/storage')
         })
       },
       doposting(){
-        this.step=3
         // content랑 해시태그 유효성 검증
-        console.log(this.postingForm)
+        // console.log(this.postingForm)
         if (this.content === ''){
           alert('게시글 내용을 입력 해 주세요')
+          return
         }
         if (this.selectedTag.length === 0){
           alert('1개 이상의 tag를 선택 해 주세요')
+          return
         }
-        else{
-          console.log('선택',this.selectedTag)
-          this.postingForm.id = this.userInfo.id
-          this.postingForm.content = this.content
-          this.postingForm.hashtag = this.selectedTag.join('')
-          this.posting(this.postingForm)
+        // 만약 투표 기능을 사용할 경우 투표 유효성 검증
+        if (this.vote_show===true){
+          console.log(this.vote)
+          // 제목 쓰세요 
+          if (this.vote.title === ''){
+            alert('투표 제목을 입력해주세요')
+            return
+          }
+          if (this.vote.a_name === ''){
+            alert('투표 내용을 입력해주세요')
+            return
+          }
+          if (this.vote.b_name === ''){
+            alert('투표 내용을 입력해주세요')
+            return
+          }
         }
+        this.step=3
+        console.log('선택',this.selectedTag, {post:this.postingForm,vote:this.vote})
+        this.postingForm.id = this.userInfo.id
+        this.postingForm.content = this.content
+        this.postingForm.hashtag = this.selectedTag.join('')
+        this.posting({post:this.postingForm,vote:this.vote})
       },
        goStep2(){
          this.step=2;
@@ -369,37 +302,6 @@ require('firebase/storage')
       goStep3(){
         this.step=3;
         this.selectedTag = JSON.parse(JSON.stringify( this.Tags ))
-      },
-      // 추가
-      register() {
-        if(this.v_first==''&&this.v_second!=''
-            ||this.v_first!=''&&this.v_second==''){
-          alert('투표 주제를 모두 입력 해 주세요')
-        } else {//if(this.v_first!='' && this.v_second!=''){
-          console.log('등록 시작')
-          this.vote.title = this.v_title
-          this.vote.a_name = this.v_first
-          this.vote.b_name = this.v_second
-          this.result_map.vote = this.vote;
-          this.postingForm.content = this.content;
-          this.postingForm.hashtag = this.hashtag;
-          this.result_map.postingForm = this.postingForm;
-          let data = this.result_map;
-          console.log(data)
-          console.log(this.vote.a_name)
-          console.log(this.vote.b_name)
-          console.log(data.vote.title)
-          console.log(data.postingForm.content)
-          PostApi.registerVote(data, res => {
-            if(res.data.state==='ok') {
-              alert('투표 등록이 완료되었습니다.')
-            } else {
-              alert('오류 발생')
-            }
-          }, error => {
-            alert(`${error} error 발생`)
-          })
-        } 
       },
     ...mapActions({
       posting:'post/doposting',
