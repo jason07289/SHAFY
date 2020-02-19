@@ -21,6 +21,6 @@ public interface LikesService {
 	public List<Integer> selectPnoById(String jwtId);	//내가 좋아요 누른 모든 게시글 번호
 	
 	public List<Boolean> likeBooleanComment(List<Integer> my_like_comment, int pno);
-	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list, int page);
+	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list);
 	
 }

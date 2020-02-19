@@ -68,9 +68,11 @@ public class LikesController {
 		
 		boolean status = likesService.insert(post_likes);
 		if(status) {
-			//게시글 좋아요 알림 전송			
-			Notification notification =  new Notification(post.getId(), new Date(), pno, 1, 0);
-			notificationService.insert(notification);
+			//게시글 좋아요 알림 전송
+			if(!post.getId().equals(jwtId)) {
+				Notification notification =  new Notification(post.getId(), new Date(), pno, 1, 0);
+				notificationService.insert(notification);
+			}
 			return handleSuccess("게시글 좋아요를 눌렀습니다.");
 		} else {
 			return handleSuccess("게시글 좋아요를 취소합니다.");

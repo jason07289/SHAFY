@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.ssafysns.model.dto.Vote.VoteBuilder;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,6 +40,9 @@ public class VoteRecord {
 	
 	@Column(nullable = false, length = 30)
 	String id;
+	
+	@Column(nullable = false)
+	int choice;
 	
 	// 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
