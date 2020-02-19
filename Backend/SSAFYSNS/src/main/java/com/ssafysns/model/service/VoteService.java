@@ -15,9 +15,10 @@ public interface VoteService {
 	public void insert(VoteRecord voteRecord);
 	public boolean update(VoteRecord voteRecord) throws UserException;
 	public void delete(VoteRecord voterecord);
+	public List<Integer> MyVoteRecordList(String id);
 	
 	// 내가 투표를 어디에 했는지/안했는지 체크
-	public Vote isVoted(String id, int vno);
+	public VoteRecord isVoted(String id, int vno);
 	
 	/**
 	 * Vote
@@ -28,4 +29,6 @@ public interface VoteService {
 	
 	public List<Boolean> voteBooleanPost(List<Integer> my_like_post, List<Integer> follow_list);
 	public Vote searchByPno(int pno);
+	public int getAValue(int vno);
+	public int getBValue(int vno);
 }

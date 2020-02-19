@@ -68,14 +68,50 @@ public class VoteServiceImpl implements VoteService {
 	
 	// 내가 투표를 했는지 안했는지 체크
 	@Override
-	public Vote isVoted(String id, int vno) {
-		Vote vote = null;
+	public VoteRecord isVoted(String id, int vno) {
+		VoteRecord voteRecord = null;
 		try {
-			vote = voteRecordRepository.isVoted(id, vno);
+			voteRecord = voteRecordRepository.isVoted(id, vno);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return vote;
+		return voteRecord;
+	}
+
+	// 일단 안 쓰는 애
+	@Override
+	public List<Integer> MyVoteRecordList(String id) {
+		List<Integer> voterecord_list = null;
+		try {
+			voterecord_list = voteRecordRepository.searchById(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return voterecord_list;
+	}
+	
+	
+	// A_value, B_value 합 가져오기
+	@Override
+	public int getAValue(int vno) {
+		int sum = 0;
+		try {
+			sum = voteRecordRepository.getAValue(vno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sum;
+	}
+
+	@Override
+	public int getBValue(int vno) {
+		int sum = 0;
+		try {
+			sum = voteRecordRepository.getBValue(vno);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sum;
 	}
 
 
@@ -95,7 +131,7 @@ public class VoteServiceImpl implements VoteService {
 	public int searchByUserId(String id) {
 		int vno = -1;
 		try {
-			vno = voteRepository.searchByUserId(id);
+			vno = voteRepository.lastVoteByUserId(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

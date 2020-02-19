@@ -1,10 +1,5 @@
 package com.ssafysns.model.dto;
 
-import java.util.Date;
-import java.util.List;
-
-import com.ssafysns.model.dto.Post.PostBuilder;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

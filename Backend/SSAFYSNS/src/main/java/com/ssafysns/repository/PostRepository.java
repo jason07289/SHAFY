@@ -58,4 +58,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 	@Query(value="select * from post p where p.id=:jwtId", nativeQuery=true)
 	List<Integer> searchMyPost(@Param("jwtId") String jwtId);
 
+	@Query(value="select * from post p where p.id=:id order by datetime desc limit :top", nativeQuery=true)
+	Post checkLastVotePost(@Param("id") String id, @Param("top") int top);
+
 }

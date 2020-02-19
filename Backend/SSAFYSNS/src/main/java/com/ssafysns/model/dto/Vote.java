@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -61,5 +62,15 @@ public class Vote {
 //	
 	@Transient
 	String my_value; 
+	
+	// 외래키 설정
+	@ManyToOne()
+	@JoinColumn(name = "pno", referencedColumnName="pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_vote_pno"))
+	private Post post;
+	
+	// 외래키 설정
+	@OneToOne()
+	@JoinColumn(name = "id", referencedColumnName="id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_vote_id"))
+	private User user;
 
 }
