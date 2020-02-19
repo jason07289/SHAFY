@@ -22,15 +22,15 @@ public class MailUtil {
 		HtmlEmail mail = new HtmlEmail();
 		mail.setDebug(true);
 		mail.setCharset(charSet);
-		mail.setSSLOnConnect(true);
+//		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
 		mail.setSmtpPort(587);
 		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 		mail.setStartTLSEnabled(true);
-		mail.setSSL(true);
+//		mail.setSSL(true);
 		mail.addTo(userEmail);
-		mail.setSSLOnConnect(true);
+//		mail.setSSLOnConnect(true);
 		mail.setFrom(fromEmail,fromName,charSet);
 		mail.setSubject(subject);
 		mail.setHtmlMsg(msg);
