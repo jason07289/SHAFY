@@ -89,7 +89,10 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public long count(String id) {
 		try {
-			return notificationRepository.countByIdAndNotChecked(id);
+			long countResult = notificationRepository.countByIdAndNotChecked(id);
+			if (countResult > 10)
+				countResult = 10;
+			return countResult;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotificationException("로그인한 유저의 미확인 알람 개수 조회 중 오류가 발생했습니다.");
