@@ -26,8 +26,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	Notification findByNo(@Param("no") int no);
 
 	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
-	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
-	long countByIdAndNotChecked(@Param("id") String id);
+	@Query(value = "select count(*) from (select * from notification n where n.id = :id order by datetime desc limit :count) sub where sub.checked=0", nativeQuery = true)
+	long countByIdAndNotChecked(@Param("id") String id, @Param("count") int count);
+//	// 현재 로그인한 유저의 확인하지 않은 알람 개수를 리턴
+//	@Query(value = "select count(n) from Notification n where n.id = :id and n.checked = 0")
+//	long countByIdAndNotChecked(@Param("id") String id);
 
 	@Modifying
 	@Transactional
@@ -37,6 +40,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@Query(value = "select u.alarm from User u where u.id = :id")
 	int selectUserAlarm(@Param("id") String id);
 
-	@Query(value = "select n from Notification n where n.id = :id and n.checked = 0")
-	List<Notification> findAllByUserId(@Param("id") String id);
+	@Query(value = "select * from notification n where n.id = :id order by datetime desc limit :count", nativeQuery = true)
+	List<Notification> findAllByUserId(@Param("id") String id, @Param("count") int count);
 }

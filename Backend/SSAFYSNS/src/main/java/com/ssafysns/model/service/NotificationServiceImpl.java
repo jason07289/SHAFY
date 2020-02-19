@@ -89,7 +89,10 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public long count(String id) {
 		try {
-			return notificationRepository.countByIdAndNotChecked(id);
+			long countResult = notificationRepository.countByIdAndNotChecked(id, 10);
+			if (countResult > 10)
+				countResult = 10;
+			return countResult;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotificationException("로그인한 유저의 미확인 알람 개수 조회 중 오류가 발생했습니다.");
@@ -121,7 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public List<Notification> searchAllByUserId(String id) {
 		try {
-			return notificationRepository.findAllByUserId(id);
+			return notificationRepository.findAllByUserId(id, 10);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotificationException("id로 Notification 목록 조회 중 오류가 발생했습니다.");
@@ -132,7 +135,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<NotificationResult> searchAll(String id) {
 		try {
 			List<NotificationResult> result = new ArrayList<NotificationResult>();
-			List<Notification> findAll = searchAllByUserId(id);
+			List<Notification> findAll = notificationRepository.findAllByUserId(id, 10);
 			Notification notification;
 
 			int no;

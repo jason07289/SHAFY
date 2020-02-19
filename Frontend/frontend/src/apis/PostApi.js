@@ -15,6 +15,12 @@ const getPostlist = (params,callback,errorCallback) => {
   .then(callback)
   .catch(errorCallback)
 }
+//pno에 해당하는 포스트 하나 받아오기
+const getPost = (params, callback, errorCallback)=>{
+  axios.get(hosturl+appname+`/${params.pno}`)
+  .then(callback)
+  .catch(errorCallback)
+}
 
 // 해시태그에 해당하는 list 받아오기
 
@@ -90,7 +96,7 @@ const getBookMark = (callback, errorCallback) =>{
 
 
 const updateBookMark = (data, callback, errorCallback) =>{
-  axios.post(hosturl+`/bookmark`,data)
+  axios.post(hosturl+`/bookmark/`,data)
   .then(callback)
   .catch(errorCallback)
 }
@@ -109,9 +115,16 @@ const deleteOneBookMark = (data, callback, errorCallback) =>{
   .catch(errorCallback)
 }
 
+// 투표 등록 (추가)
+const registerVote = (data, callback, errorCallback) => {
+  axios.post(hosturl+appname+'/vote', data)
+  .then(callback)
+  .catch(errorCallback)
+}
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
+  getPost:(params,callback,errorCallback)=>getPost(params,callback,errorCallback),
   getTabPostlist:(params,callback,errorCallback)=>getTabPostlist(params,callback,errorCallback),
   getHomePost:(params,callback,errorCallback)=>getHomePost(params,callback,errorCallback),
   requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
@@ -125,6 +138,7 @@ const PostApi = {
   updateBookMark:(data,callback,errorCallback)=>updateBookMark(data,callback,errorCallback),
   deleteBookMark:(data,callback,errorCallback)=>deleteBookMark(data,callback,errorCallback),
   deleteOneBookMark:(data,callback,errorCallback)=>deleteOneBookMark(data,callback,errorCallback),
+  registerVote:(data,callback,errorCallback)=>registerVote(data,callback,errorCallback),
 }
 
 export default PostApi
