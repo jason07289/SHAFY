@@ -3,7 +3,7 @@ import java.util.Random;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
-import org.springframework.boot.SpringApplication;
+import org.apache.commons.mail.SimpleEmail;
 
 public class MailUtil {
 	public void sendMail(String userEmail, String subject, String msg) throws Exception{
@@ -19,22 +19,38 @@ public class MailUtil {
 		String fromEmail = "ssafysns@gmail.com";
 		String fromName = "ssafysns 대표";	
 		
-		HtmlEmail mail = new HtmlEmail();
-		mail.setDebug(true);
-		mail.setCharset(charSet);
-//		mail.setSSLOnConnect(true);
-		mail.setHostName(hostSMTP);
-		mail.setSmtpPort(587);
-		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
-		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-		mail.setStartTLSEnabled(true);
-//		mail.setSSL(true);
-		mail.addTo(userEmail);
-//		mail.setSSLOnConnect(true);
-		mail.setFrom(fromEmail,fromName,charSet);
-		mail.setSubject(subject);
-		mail.setHtmlMsg(msg);
-		mail.send();
+		
+		
+		SimpleEmail email = new SimpleEmail();
+		email.setStartTLSEnabled(true);
+		email.setSmtpPort(587);
+		email.setHostName(hostSMTP);       //ex) nate.com 일 경우!! ->> mail.nate.com
+		email.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
+		email.addTo(userEmail, "받는사람");    //ex) onamt@nate.com
+		email.setFrom(fromEmail, "보내는사람");
+		email.setSubject("인증코드입니다.");
+		email.setMsg("인증코드는 ["+msg+"] 입니다.");
+		email.send();
+
+
+		
+//		HtmlEmail mail = new HtmlEmail();
+//		mail.setDebug(true);
+//		mail.setCharset(charSet);
+////		mail.setSSLOnConnect(true);
+//		mail.setHostName(hostSMTP);
+//		mail.setSmtpPort(587);
+//		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
+//		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
+//		mail.setStartTLSEnabled(true);
+////		mail.setStartTLSRequired(true);
+////		mail.setSSL(true);
+//		mail.addTo(userEmail);
+////		mail.setSSLOnConnect(true);
+//		mail.setFrom(fromEmail,fromName,charSet);
+//		mail.setSubject(subject);
+//		mail.setHtmlMsg(msg);
+//		mail.send();
 		
 		
 	}
