@@ -15,6 +15,12 @@ const getPostlist = (params,callback,errorCallback) => {
   .then(callback)
   .catch(errorCallback)
 }
+//pno에 해당하는 포스트 하나 받아오기
+const getPost = (params, callback, errorCallback)=>{
+  axios.get(hosturl+appname+`/${params.pno}`)
+  .then(callback)
+  .catch(errorCallback)
+}
 
 // 해시태그에 해당하는 list 받아오기
 
@@ -112,6 +118,7 @@ const deleteOneBookMark = (data, callback, errorCallback) =>{
 
 const PostApi = {
   getPostlist:(params,callback,errorCallback)=>getPostlist(params,callback,errorCallback),
+  getPost:(params,callback,errorCallback)=>getPost(params,callback,errorCallback),
   getTabPostlist:(params,callback,errorCallback)=>getTabPostlist(params,callback,errorCallback),
   getHomePost:(params,callback,errorCallback)=>getHomePost(params,callback,errorCallback),
   requestPosting:(data,callback,errorCallback)=>requestPosting(data,callback,errorCallback),
