@@ -121,7 +121,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public List<Notification> searchAllByUserId(String id) {
 		try {
-			return notificationRepository.findAllByUserId(id);
+			return notificationRepository.findAllByUserId(id, 10);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NotificationException("id로 Notification 목록 조회 중 오류가 발생했습니다.");
@@ -132,7 +132,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<NotificationResult> searchAll(String id) {
 		try {
 			List<NotificationResult> result = new ArrayList<NotificationResult>();
-			List<Notification> findAll = searchAllByUserId(id);
+			List<Notification> findAll = notificationRepository.findAllByUserId(id, 10);
 			Notification notification;
 
 			int no;
