@@ -90,7 +90,7 @@ const getBookMark = (callback, errorCallback) =>{
 
 
 const updateBookMark = (data, callback, errorCallback) =>{
-  axios.post(hosturl+`/bookmark`,data)
+  axios.post(hosturl+`/bookmark/`,data)
   .then(callback)
   .catch(errorCallback)
 }
