@@ -29,11 +29,11 @@ public class MailUtil {
 		mail.setSmtpPort(993);
 //		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-//		mail.setStartTLSEnabled(true);
+		mail.setStartTLSEnabled(true);
 //		mail.setStartTLSRequired(true);
-		mail.setSSL(true);
+//		mail.setSSL(true);
 		mail.addTo(userEmail);
-		mail.setSSLOnConnect(true);
+//		mail.setSSLOnConnect(true);
 		mail.setFrom(fromEmail,fromName,charSet);
 		mail.setSubject(subject);
 		mail.setHtmlMsg(msg);
