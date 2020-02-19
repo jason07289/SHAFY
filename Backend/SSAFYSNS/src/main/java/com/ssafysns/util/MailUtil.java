@@ -10,7 +10,8 @@ public class MailUtil {
 		
 		//mail server 설정 
  		String charSet ="utf-8";
-		String hostSMTP = "imap.naver.com";
+
+		String hostSMTP = "imap.gmail.com";
 		
 		String hostSMTPid = "jason07999@naver.com";//id
 		String hostSMTPpwd = "19921992a";
@@ -18,20 +19,6 @@ public class MailUtil {
 		//보내는 이 설정
 		String fromEmail = "ssafysns@naver.com";
 		String fromName = "ssafysns 대표";	
-		
-		
-		
-//		SimpleEmail email = new SimpleEmail();
-//		email.setStartTLSEnabled(true);
-//		email.setSmtpPort(587);
-//		email.setHostName(hostSMTP);       //ex) nate.com 일 경우!! ->> mail.nate.com
-////		email.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-//		email.setAuthentication(hostSMTPid, hostSMTPpwd);
-//		email.addTo(userEmail, "받는사람");    //ex) onamt@nate.com
-//		email.setFrom(fromEmail, fromName);
-//		email.setSubject("[S#ARFY] 인증코드입니다.");
-//		email.setMsg("인증코드는 ["+msg+"] 입니다.");
-//		email.send();
 
 
 		
@@ -41,6 +28,7 @@ public class MailUtil {
 //		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
 		mail.setSmtpPort(993);
+
 //		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 //		mail.setStartTLSEnabled(true);
