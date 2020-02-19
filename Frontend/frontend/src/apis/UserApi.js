@@ -46,15 +46,15 @@ const requestSignup = (data, callback, errorCallback) => {
     .catch(errorCallback)
 }
 
-
 const requestIDCheck = (params, callback, errorCallback) => {
-    axios.get(hosturl+appname+`/nickname`,params)
+    console.log(params)
+    axios.get(hosturl+appname+`/emailAuth/${params.id}`)
     .then(callback)
     .catch(errorCallback)
 }
 // 닉네임 중복 확인
 const requestNicknameCheck = (params, callback, errorCallback) => {
-    axios.get(hosturl+appname+`/nickname`,params)
+    axios.get(hosturl+appname+`/checkNickname/${params.nickName}`)
     .then(callback)
     .catch(errorCallback)
 }
