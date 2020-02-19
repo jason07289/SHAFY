@@ -89,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public long count(String id) {
 		try {
-			long countResult = notificationRepository.countByIdAndNotChecked(id);
+			long countResult = notificationRepository.countByIdAndNotChecked(id, 10);
 			if (countResult > 10)
 				countResult = 10;
 			return countResult;
