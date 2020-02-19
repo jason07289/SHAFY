@@ -48,9 +48,26 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Photo</v-btn>
+          <!-- 사진 업로드 -->
+          <!-- @click="dialog = false" -->
+
+          <v-btn color="blue darken-1" text @click="$refs.inputUpload.click()">Photo</v-btn>
+          <input v-show="false" ref="inputUpload" type="file" @change="onUpload" >
+          <div id="preview">
+            <img v-if="uploadValue===100" :src="postingForm.attachments" />
+          </div>
           <v-btn color="blue darken-1" text @click="goStep2()">Next</v-btn>
         </v-card-actions>
+          <!-- 익명 -->
+         <span class="caption" style="padding-top:25px;">익명</span>
+          <v-checkbox
+            v-model="postingForm.anonymous"
+            color="primary"
+            value=1
+            dense
+            hide-details
+            style="width:10%;margin-right:10px;"
+        ></v-checkbox>
 </v-window-item>
 
 <!-- <step:2> 태그선택rㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
@@ -115,7 +132,8 @@
 <script>
 import presetData from '../../assets/preset'
 import { mapActions, mapState } from 'vuex'
- 
+const firebase = require('firebase/app')
+require('firebase/storage') 
   export default {
     data () {
       return {
@@ -141,6 +159,10 @@ import { mapActions, mapState } from 'vuex'
         //step2와 window stepper관련 변수
         step:1,
         selectedIndex:[],
+        //image upload 관련 변수
+        imageData: null, 
+        uploadValue: 0,
+        img_name:'',
       }
     },
 
@@ -180,11 +202,26 @@ import { mapActions, mapState } from 'vuex'
     },
 
     methods: {
-      
+      onUpload(e){
+        this.imageData = e.target.files[0]
+        this.img_name = e.target.name
+        console.log(e.target.name)
+        console.log('img object: ',this.imageData)
+        const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData)
+        storageRef.on(`state_changed`,snapshot=>{
+          this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        }, error=>{console.log(error.message)},
+        ()=>{this.uploadValue=100;
+          storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+            this.postingForm.attachments =url;
+            console.log('url 저장 완료',this.postingForm.attachments)
+          });
+        })
+      },
       doposting(){
         this.step=3
         // content랑 해시태그 유효성 검증
-        
+        console.log(this.postingForm)
         if (this.content === ''){
           alert('게시글 내용을 입력 해 주세요')
         }
@@ -215,6 +252,10 @@ import { mapActions, mapState } from 'vuex'
   }
 </script>
 <style scoped>
+#preview img {
+  max-width: 100%;
+  max-height: 500px;
+}
 #posting{
   background-color: #fcfcfc;
 }

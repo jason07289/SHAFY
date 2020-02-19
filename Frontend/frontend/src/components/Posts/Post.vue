@@ -85,8 +85,10 @@
 <!-- 본문정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
   <!-- 이미지 -->
       <!-- src="https://imgur.com/a/dvZcOAa" -->
+      <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      src="https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg"
+      v-if="post.attachment"
+      :src="post.attachment"
       height="194"
     ></v-img>
 
@@ -121,17 +123,25 @@
     
     
     <!-- 좋아요랑댓글갯수하단바 -->
+
     <v-card-actions style="padding-bottom:0px;">
       <v-spacer></v-spacer>
-      <v-btn text class = "ma-0" color="blue darken-1">
-        <v-icon size = "15" >mdi-thumb-up</v-icon>
-        <span class="caption">45</span>
+      <!-- {{ post }} -->
+      <!-- {{ post.like_check }} -->
+      <!-- {{ like }} -->
+      <!-- {{ post.like_count }} -->
+      <!-- {{ cnt }} -->
+      
+      <v-btn @click="liketoggle" text class = "ma-0" color="blue darken-1">
+        <v-icon v-if="like===false" size = "15">mdi-thumb-up-outline</v-icon>
+        <v-icon v-else size = "15" >mdi-thumb-up</v-icon>
+        <span class="caption">{{ cnt }}</span>
       </v-btn>
       <v-btn text class = "ma-0" color="blue darken-1"
-            @click="comment_show = !comment_show"
-      >
-        <v-icon size = "15">mdi-comment</v-icon>
-        <span class="caption">45</span>
+        @click="comment_show = !comment_show"
+        >
+      <v-icon size = "15">mdi-comment</v-icon>
+      <span class="caption">{{ post.comment.length }}</span>
       </v-btn>
       
     </v-card-actions>
@@ -178,7 +188,7 @@
           <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
           <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
           <div class="caption" style="width:100%;">{{comment.content}}</div>
-          
+
         </v-card>
       </v-card-actions>
 
@@ -254,7 +264,8 @@ export default {
       isWriting:-99,
       commentHolder:'댓글을 입력하세요',
       anonymous: 0,
-
+      like: this.post.like_check,
+      cnt: this.post.like_count,
     }
   },
   methods: {
@@ -262,6 +273,22 @@ export default {
       getAllTab: 'tags/getAllTab',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+    liketoggle(){
+      console.log(this.cnt, this.like)
+      if (this.like){
+        this.cnt -= 1
+      }else{
+        this.cnt += 1
+      }
+      this.like = !this.like
+      PostApi.like({pno: this.post.pno},res=>{
+        if(res.data.state==='ok'){
+          console.log(res.data)
+        }
+      },err=>{
+        console.log(err)
+      })
+    },
     closedialog(){
       this.tagDialog_show = false
     },

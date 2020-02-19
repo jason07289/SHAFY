@@ -286,7 +286,7 @@
 import { mapState, mapActions } from 'vuex'
 const firebase = require('firebase/app')
 require('firebase/storage') 
-// import UserApi from '../../apis/UserApi'
+import UserApi from '../../apis/UserApi'
 
 
 export default {
@@ -345,7 +345,7 @@ export default {
     uploadValue: 0,
     //CSS관련----
     dialog:false,
-    emailDisabled:true,
+    emailDisabled:false,
     emailCertified:false,
     nicknameChecked:false,
   }
@@ -401,8 +401,19 @@ export default {
     },
     //CSS 관련---
     doEmail(){
+      console.log(this.email)
+      UserApi.requestIDCheck({id:this.email}, res=>{
+        if (res.data.state === 'ok'){
+            console.log(res.data.message)
+            this.dialog = true;
+        }else{
+          console.log(res)
+          alert(res.data.message)
+        }
+      },err=>{
+        console.log(err)
+      })
       //이메일 인증 버튼을 누른 경우
-      this.dialog = true;
     },
     doCertify(){
       //다이얼로그에서 인증 요청 버튼을 누르는 경우
@@ -410,9 +421,18 @@ export default {
     },
     nicknameCheck(){
       //중복 체크 하는 코드 넣기
-
+      console.log('닉네임검사', this.signUpForm.nickname)
+      UserApi.requestNicknameCheck({nickName:this.signUpForm.nickname},res=>{
+        if (res.data.state === 'ok'){
+          alert(res.data.message)
+          this.nicknameChecked = true
+        }else{
+          alert(res.data.message)
+        }
+      },err=>{
+        console.log(err)
+      })
       //CSS 변경
-      this.nicknameChecked = true
     }
   },
   created(){
