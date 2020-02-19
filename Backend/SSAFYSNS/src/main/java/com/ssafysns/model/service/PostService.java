@@ -43,5 +43,11 @@ public interface PostService {
 	// 마지막 페이지인지 확인(pno_list)
 	public Post isLastPage(List<Integer> pno_list, int page);
 	
+	
+	/**
+	 * 투표 체크
+	 */
+	public Post checkForVote(String id);
+	
 	public int count();
 }

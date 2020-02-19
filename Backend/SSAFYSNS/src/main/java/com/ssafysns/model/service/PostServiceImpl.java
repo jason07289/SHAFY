@@ -234,4 +234,15 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	@Override
+	public Post checkForVote(String id) {
+		Post post = null;
+		try {
+			post = postRepository.checkLastVotePost(id, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post;
+	}
+
 }

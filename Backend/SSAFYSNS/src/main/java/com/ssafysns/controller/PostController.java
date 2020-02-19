@@ -31,6 +31,7 @@ import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.dto.PostVote;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.Vote;
+import com.ssafysns.model.dto.VoteRecord;
 import com.ssafysns.model.service.BookmarkService;
 import com.ssafysns.model.service.CommentService;
 import com.ssafysns.model.service.FollowHashtagService;
@@ -81,35 +82,67 @@ public class PostController {
 	
 	static int limit = 3;
 	
-	@ApiOperation("투표 등록")
+	@ApiOperation("게시글, 투표 등록")
 	@PostMapping("/vote")
 	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody PostVote postVote) throws Exception {
-		Map<String, Object> result_map = new HashMap<String, Object>();
 		
 		String id = jwtService.get("userid");
 		
+		System.out.println("투표 시작");
+		System.out.println(postVote.toString());
+		
 		Post post = postVote.getPost();
 		Vote vote = postVote.getVote();
-		System.out.println("==========="+vote.toString());
+		System.out.println(post.getContent());
+		System.out.println(vote.toString());
+		boolean message = false;
 		
 		if(vote.getTitle() != "") {
 			System.out.println("투표가 있네용");
-			vote.setPno(1);
-			vote.setId(id);
-			System.out.println("투표 등록");
-			voteService.insert(vote);
-			System.out.println("투표 등록 완료");
+			// Post 등록
+			post.setChk(0);
+			message = insertPost(id, post);
 			
-			int vno = voteService.searchByUserId(id);
-//		vote.setPno(pno);
-			vote.setChk(1);
-			voteService.update(vote);
-		} else {
+			// Vote 등록
+			Post check = postService.checkForVote(id);
+			if(check == null) {
+				System.out.println("에러ㅠㅠㅠㅠㅠ");
+			} else {
+				vote.setPno(check.getPno());
+			}
+			vote.setId(id);
+			voteService.insert(vote);
+		} else { //투표가 없을 경우
 			System.out.println("투표가 없어용");
+			post.setChk(1);
+			message = insertPost(id, post);
 		}
 		
+		if(!message) {
+			return handleFail("공지사항 권한이 없습니다.", HttpStatus.OK);
+		} else {
+			return handleSuccess("게시글이 등록되었습니다.");
+		}
 		
-		return handleSuccess(result_map);
+	}
+	
+	public Boolean insertPost(String id, Post post) throws Exception {
+		
+		// 닉네임 설정
+		User user = userService.MyInfo();
+		String nickname = user.getNickname();
+		post.setNickname(nickname);
+		
+		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
+		if((user.getAuth()==null 
+				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
+				&& post.getHashtag().startsWith("공지사항")) {
+			System.out.println("공지사항 권한이 없습니다.");
+			return false;
+		} else {
+			postService.insert(id, post);
+		}
+		return true;
 	}
 	
 	/**
@@ -367,35 +400,66 @@ public class PostController {
 		String jwtId = jwtService.get("userid");
 		
 		List<Post> post_list = posts;
-		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		
-		// 게시글 중 내가 좋아요 눌렀는지 여부
-		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list);
+		// 내가 좋아요 누른 모든 게시글 번호 + 현재 게시글 리스트 중 내가 좋아요 눌렀는지 여부
+		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
+		List<Boolean> like_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list);
+
+		// 내가 북마크 한 모든 북마크 번호 + 북마크 눌렀는지 여부
+		List<Integer> my_bookmark_post = bookmarkService.searchPnoById(jwtId);
+		List<Boolean> bookmark_boolean_list = likesService.likeBooleanPost(my_bookmark_post, pno_list);
 		
 		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
+		
 		System.out.println();
-		System.out.println("post_boolean_list.size() == "+ post_boolean_list.size());
+		System.out.println("like_boolean_list.size() == "+ like_boolean_list.size());
+		System.out.println("bookmark_boolean_list.size() == "+ bookmark_boolean_list.size());
 		System.out.println();
 		
 		for(int i = 0, post_size = post_list.size(); i<post_size; i++) {
 			Post post = post_list.get(i);
-			boolean check = post_boolean_list.get(page+i);
-			
-			funcPost(jwtId, post, check, my_like_comment);
+			boolean like_chk = like_boolean_list.get(page+i);
+			boolean bookmark_chk = bookmark_boolean_list.get(page+i);
+			funcPost(jwtId, post, like_chk, bookmark_chk, my_like_comment);
 		}
 		return post_list;
 	}
 	
-	private void funcPost(String jwtId, Post post, boolean check, List<Integer> my_like_comment) {
+	private void funcPost(String jwtId, Post post, boolean like_chk, boolean bookmark_chk, List<Integer> my_like_comment) {
 		
 		// Like_Count, Like_Check 설정
-		if(check) {
+		if(like_chk) {
 			post.setLike_check(true);
 		}
 		post.setLike_count(post.getPostlike().size());
 		post.setPostlike(null);
+		
+		// 북마크 체크 여부 설정
+		if(bookmark_chk) {
+			post.setBookmark_check(true);
+		}
+		
+		// 투표 체크 여부
+		Vote vote = null;
+		if(post.getVote()!=null) { //투표가 있을 경우
+			vote = post.getVote();
+			int vno = vote.getVno();
+			VoteRecord voteRecord = voteService.isVoted(jwtId, vno);
+			int a_value = voteService.getAValue(vno);
+			int b_value = voteService.getBValue(vno);
+		
+			if(voteRecord == null) {
+				vote.setMy_value("No");
+			} else if(voteRecord.getChoice()==1) {
+				vote.setMy_value("A");
+			} else {
+				vote.setMy_value("B");
+			}
+			vote.setA_value(a_value);
+			vote.setB_value(b_value);
+		}
 		
 		/**
 		 *  게시글 익명 처리
@@ -405,10 +469,10 @@ public class PostController {
 		}
 		if(post.getAnonymous() == 1) {
 			post.setNickname("익명");
-			post.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 		} else {
 			post.setNickname(post.getUser().getNickname());
 		}
+		post.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 		post.setUser(null);
 		
 		// 해당 게시글(pno)에 달린 댓글 리스트
@@ -443,11 +507,11 @@ public class PostController {
 					temp_comment.setAuth(true);
 				}
 				if(temp_comment.getAnonymous() == 1) {
-					temp_comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 					temp_comment.setNickname("익명");
 				} else {
 					temp_comment.setNickname(temp_comment.getUser().getNickname());
 				}
+				temp_comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 //				System.out.println(temp_comment.getNickname());
 				temp_comment.setUser(null);
 				temp_comment.setPost(null);
@@ -525,11 +589,11 @@ public class PostController {
 					comment.setAuth(true);
 				}
 				if(comment.getAnonymous() == 1) {
-					comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 					comment.setNickname("익명");
 				} else {
 					comment.setNickname(comment.getUser().getNickname());
 				}
+				comment.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
 				comment.setUser(null);
 			}
 			
@@ -628,11 +692,15 @@ public class PostController {
 //		System.out.println("pno: "+pno+", size: "+pno_list.size());
 		
 		String jwtId = jwtService.get("userid");
+		// 내가 좋아요 누른 모든 번호 + 좋아요 눌렀는지 여부
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
-		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
-		
-		funcPost(jwtId, post, like_boolean_post.get(0), my_like_comment);
+		List<Integer> my_like_comment = likesService.selectCnoById(jwtId); 
+		// 내가 북마크 한 모든 북마크 번호 + 북마크 눌렀는지 여부
+		List<Integer> my_bookmark_post = bookmarkService.searchPnoById(jwtId);
+		List<Boolean> bookmark_boolean_list = likesService.likeBooleanPost(my_bookmark_post, pno_list);
+				
+		funcPost(jwtId, post, like_boolean_post.get(0), bookmark_boolean_list.get(0), my_like_comment);
 
 		Map<String, Object> return_map = new HashMap<String, Object>();
 		if(post == null) {
