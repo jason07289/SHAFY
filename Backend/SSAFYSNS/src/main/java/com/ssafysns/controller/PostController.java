@@ -27,7 +27,6 @@ import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
-import com.ssafysns.model.dto.PostLikes;
 import com.ssafysns.model.dto.PostVote;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.Vote;
@@ -42,6 +41,7 @@ import com.ssafysns.model.service.PostService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
 import com.ssafysns.model.service.VoteService;
+import com.ssafysns.repository.VoteRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -84,45 +84,50 @@ public class PostController {
 	
 	@ApiOperation("게시글, 투표 등록")
 	@PostMapping("/vote")
-	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody PostVote postVote) throws Exception {
+	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody VoteRecord voteRecord) throws Exception {
+		String jwtId = jwtService.get("userid");
 		
-		String id = jwtService.get("userid");
+		voteRecord.setId(jwtId);
+		voteService.insert(voteRecord);
 		
-		System.out.println("투표 시작");
-		System.out.println(postVote.toString());
-		
-		Post post = postVote.getPost();
-		Vote vote = postVote.getVote();
-		System.out.println(post.getContent());
-		System.out.println(vote.toString());
-		boolean message = false;
-		
-		if(vote.getTitle() != "") {
-			System.out.println("투표가 있네용");
-			// Post 등록
-			post.setChk(0);
-			message = insertPost(id, post);
-			
-			// Vote 등록
-			Post check = postService.checkForVote(id);
-			if(check == null) {
-				System.out.println("에러ㅠㅠㅠㅠㅠ");
-			} else {
-				vote.setPno(check.getPno());
-			}
-			vote.setId(id);
-			voteService.insert(vote);
-		} else { //투표가 없을 경우
-			System.out.println("투표가 없어용");
-			post.setChk(1);
-			message = insertPost(id, post);
-		}
-		
-		if(!message) {
-			return handleFail("공지사항 권한이 없습니다.", HttpStatus.OK);
-		} else {
-			return handleSuccess("게시글이 등록되었습니다.");
-		}
+		return handleSuccess("투표 완료");
+//		String id = jwtService.get("userid");
+//		
+//		System.out.println("투표 시작");
+//		System.out.println(postVote.toString());
+//		
+//		Post post = postVote.getPost();
+//		Vote vote = postVote.getVote();
+//		System.out.println(post.getContent());
+//		System.out.println(vote.toString());
+//		boolean message = false;
+//		
+//		if(vote.getTitle() != "") {
+//			System.out.println("투표가 있네용");
+//			// Post 등록
+//			post.setChk(0);
+//			message = insertPost(id, post);
+//			
+//			// Vote 등록
+//			Post check = postService.checkForVote(id);
+//			if(check == null) {
+//				System.out.println("에러ㅠㅠㅠㅠㅠ");
+//			} else {
+//				vote.setPno(check.getPno());
+//			}
+//			vote.setId(id);
+//			voteService.insert(vote);
+//		} else { //투표가 없을 경우
+//			System.out.println("투표가 없어용");
+//			post.setChk(1);
+//			message = insertPost(id, post);
+//		}
+//		
+//		if(!message) {
+//			return handleFail("공지사항 권한이 없습니다.", HttpStatus.OK);
+//		} else {
+//			return handleSuccess("게시글이 등록되었습니다.");
+//		}
 		
 	}
 	
@@ -444,6 +449,7 @@ public class PostController {
 		// 투표 체크 여부
 		Vote vote = null;
 		if(post.getVote()!=null) { //투표가 있을 경우
+			System.out.println("투표오오오");
 			vote = post.getVote();
 			int vno = vote.getVno();
 			VoteRecord voteRecord = voteService.isVoted(jwtId, vno);
@@ -459,6 +465,8 @@ public class PostController {
 			}
 			vote.setA_value(a_value);
 			vote.setB_value(b_value);
+			vote.setPost(null);
+			vote.setUser(null);
 		}
 		
 		/**
@@ -614,28 +622,65 @@ public class PostController {
 	// Post 등록
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
-	public ResponseEntity<Map<String, Object>> insert(@RequestBody Post post) throws Exception {
+	public ResponseEntity<Map<String, Object>> insert(@RequestBody PostVote postVote) throws Exception {
 		
-		String id = post.getId();
-
-		// 닉네임 설정
-		User user = userService.MyInfo();
-		String nickname = user.getNickname();
-		post.setNickname(nickname);
+		String id = jwtService.get("userid");
 		
-		/**
-		 * post.getId()와  Id가 다를 때 비교 해야 하나?
-		 */
-		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
-		if((user.getAuth()==null 
-				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
-				&& post.getHashtag().startsWith("공지사항")) {
-			System.out.println("공지사항 권한이 없습니다.");
-			return handleFail("fail", HttpStatus.BAD_REQUEST);
-		} else {
-			postService.insert(id, post);
+		System.out.println("투표 시작");
+		System.out.println(postVote.toString());
+		
+		Post post = postVote.getPost();
+		Vote vote = postVote.getVote();
+		System.out.println(post.getContent());
+		System.out.println(vote.toString());
+		boolean message = false;
+		
+		if(vote.getTitle() != "") {
+			System.out.println("투표가 있네용");
+			// Post 등록
+			post.setChk(0);
+			message = insertPost(id, post);
+			
+			// Vote 등록
+			Post check = postService.checkForVote(id);
+			if(check == null) {
+				System.out.println("에러ㅠㅠㅠㅠㅠ");
+			} else {
+				vote.setPno(check.getPno());
+			}
+			vote.setId(id);
+			voteService.insert(vote);
+		} else { //투표가 없을 경우
+			System.out.println("투표가 없어용");
+			post.setChk(1);
+			message = insertPost(id, post);
 		}
-		return handleSuccess("Post 등록 완료");
+		
+		if(!message) {
+			return handleFail("공지사항 권한이 없습니다.", HttpStatus.OK);
+		} else {
+			return handleSuccess("게시글이 등록되었습니다.");
+		}
+//		String id = post.getId();
+//
+//		// 닉네임 설정
+//		User user = userService.MyInfo();
+//		String nickname = user.getNickname();
+//		post.setNickname(nickname);
+//		
+//		/**
+//		 * post.getId()와  Id가 다를 때 비교 해야 하나?
+//		 */
+//		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
+//		if((user.getAuth()==null 
+//				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
+//				&& post.getHashtag().startsWith("공지사항")) {
+//			System.out.println("공지사항 권한이 없습니다.");
+//			return handleFail("fail", HttpStatus.BAD_REQUEST);
+//		} else {
+//			postService.insert(id, post);
+//		}
+//		return handleSuccess("Post 등록 완료");
 	}
 	
 	// Post 삭제(pno)

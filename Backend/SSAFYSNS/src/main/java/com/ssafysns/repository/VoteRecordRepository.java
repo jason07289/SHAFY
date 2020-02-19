@@ -26,9 +26,9 @@ public interface VoteRecordRepository extends JpaRepository<VoteRecord, Integer>
 	@Query("select vr.vno from vote_record vr where vr.id=:id")
 	List<Integer> searchById(String id);
 
-	@Query(value="select count(vr.a_value) from vote_record vr where vr.vno=:vno", nativeQuery=true)
+	@Query(value="select count(*) from vote_record vr where vr.vno=:vno and vr.choice=1", nativeQuery=true)
 	int getAValue(int vno);
 
-	@Query(value="select count(vr.b_value) from vote_record vr where vr.vno=:vno", nativeQuery=true)
+	@Query(value="select count(*) from vote_record vr where vr.vno=:vno and vr.choice=2", nativeQuery=true)
 	int getBValue(int vno);
 }
