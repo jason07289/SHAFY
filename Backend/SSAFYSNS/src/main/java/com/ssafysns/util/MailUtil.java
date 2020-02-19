@@ -10,13 +10,13 @@ public class MailUtil {
 		
 		//mail server 설정 
  		String charSet ="utf-8";
-		String hostSMTP = "smtp.gmail.com";
+		String hostSMTP = "smtp.naver.com";
 		
-		String hostSMTPid = "jason07289@gmail.com";//id
-		String hostSMTPpwd = "19923109a!";
+		String hostSMTPid = "jason07999@naver.com";//id
+		String hostSMTPpwd = "19921992a";
 		
 		//보내는 이 설정
-		String fromEmail = "ssafysns@gmail.com";
+		String fromEmail = "ssafysns@naver.com";
 		String fromName = "ssafysns 대표";	
 		
 		
@@ -42,8 +42,8 @@ public class MailUtil {
 //		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
 		mail.setSmtpPort(587);
-		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
-//		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
+//		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
+		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
 		mail.setStartTLSEnabled(true);
 //		mail.setStartTLSRequired(true);
 //		mail.setSSL(true);
