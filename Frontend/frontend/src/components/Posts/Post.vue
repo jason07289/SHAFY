@@ -43,11 +43,14 @@
           justify="end"
           style="padding-right:10px;"
         >
-      <v-btn icon class = "ma-0" color="grey darken-1">
+        <!-- 북마크한 글일때 -->
+      <v-btn icon class = "ma-0" color="grey darken-1" v-if="bookmark" @click="togglebookmark">
         <v-icon size="30">mdi-bookmark</v-icon>
       </v-btn>
-        
-        
+      <!-- 북마크한 글이 아닐때 -->
+      <v-btn icon class = "ma-0" color="grey darken-1" v-else @click="togglebookmark">
+        <v-icon size="30">mdi-bookmark-outline</v-icon>
+      </v-btn>
           <!-- <v-icon class="mr-1">mdi-heart</v-icon>
           <span class="subheading mr-2">256</span>
           <span class="mr-1">·</span>
@@ -266,6 +269,8 @@ export default {
       anonymous: 0,
       like: this.post.like_check,
       cnt: this.post.like_count,
+      // bookmark:false,
+      bookmark: this.post.bookmark_check,
     }
   },
   methods: {
@@ -273,8 +278,32 @@ export default {
       getAllTab: 'tags/getAllTab',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+    togglebookmark(){
+      this.bookmark = !this.bookmark
+      if(!this.bookmark){
+        PostApi.deleteOneBookMark({pno:this.post.pno},res=>{
+          if (res.data.state === 'ok'){
+          console.log(res)
+          }else{
+          console.log(res)
+          }
+        },err=>{
+          console.log(err)
+        })
+      }else{
+        PostApi.updateBookMark({pno:this.post.pno},res=>{
+          if (res.data.state === 'ok'){
+          console.log(res)
+          }else{
+          console.log(res)
+          }
+        },err=>{
+          console.log(err)
+        })
+      }
+    },
     liketoggle(){
-      console.log(this.cnt, this.like)
+      // console.log(this.cnt, this.like)
       if (this.like){
         this.cnt -= 1
       }else{
