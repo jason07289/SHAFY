@@ -28,6 +28,7 @@ import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
 import com.ssafysns.model.dto.PostLikes;
+import com.ssafysns.model.dto.PostVote;
 import com.ssafysns.model.dto.User;
 import com.ssafysns.model.dto.Vote;
 import com.ssafysns.model.service.BookmarkService;
@@ -82,22 +83,31 @@ public class PostController {
 	
 	@ApiOperation("투표 등록")
 	@PostMapping("/vote")
-	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody Vote vote) throws Exception {
+	public ResponseEntity<Map<String, Object>> registerVote(@RequestBody PostVote postVote) throws Exception {
 		Map<String, Object> result_map = new HashMap<String, Object>();
 		
 		String id = jwtService.get("userid");
 		
-		vote.setPno(1);
-		vote.setId(id);
+		Post post = postVote.getPost();
+		Vote vote = postVote.getVote();
+		System.out.println("==========="+vote.toString());
 		
-		System.out.println("투표 등록");
-		voteService.insert(vote);
-		System.out.println("투표 등록 완료");
-		
-		int vno = voteService.searchByUserId(id);
+		if(vote.getTitle() != "") {
+			System.out.println("투표가 있네용");
+			vote.setPno(1);
+			vote.setId(id);
+			System.out.println("투표 등록");
+			voteService.insert(vote);
+			System.out.println("투표 등록 완료");
+			
+			int vno = voteService.searchByUserId(id);
 //		vote.setPno(pno);
-		vote.setChk(1);
-		voteService.update(vote);
+			vote.setChk(1);
+			voteService.update(vote);
+		} else {
+			System.out.println("투표가 없어용");
+		}
+		
 		
 		return handleSuccess(result_map);
 	}
@@ -360,7 +370,7 @@ public class PostController {
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		
 		// 게시글 중 내가 좋아요 눌렀는지 여부
-		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list, page);
+		List<Boolean> post_boolean_list = likesService.likeBooleanPost(my_like_post, pno_list);
 		
 		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
@@ -619,7 +629,7 @@ public class PostController {
 		
 		String jwtId = jwtService.get("userid");
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
-		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list, 0);
+		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		
 		funcPost(jwtId, post, like_boolean_post.get(0), my_like_comment);

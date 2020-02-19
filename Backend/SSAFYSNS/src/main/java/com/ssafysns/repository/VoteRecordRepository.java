@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.ssafysns.model.dto.Likes;
+import com.ssafysns.model.dto.Vote;
 import com.ssafysns.model.dto.VoteRecord;
 
 public interface VoteRecordRepository extends JpaRepository<VoteRecord, Integer> {
@@ -16,4 +17,7 @@ public interface VoteRecordRepository extends JpaRepository<VoteRecord, Integer>
 
 	@Query("select vr from vote_record vr where vr.id=:id and vr.vno=:vno")
 	Likes checkLikes(@Param("id") String id, @Param("vno") int vno);
+
+	@Query(value = "select vr from vote_record vr where vr.id=:id and vr.vno=:vno")
+	Vote isVoted(@Param("id") String id, @Param("vno") int vno);
 }

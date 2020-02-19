@@ -148,7 +148,7 @@ public class LikesServiceImpl implements LikesService {
 	}
 
 	@Override
-	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list, int page) {
+	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list) {
 		List<Boolean> boolean_list = null;
 		
 		try {

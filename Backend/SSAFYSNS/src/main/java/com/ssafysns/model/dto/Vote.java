@@ -50,13 +50,16 @@ public class Vote {
 	@Column(nullable = false, length = 30)
 	String b_name; 
 	
-	@Column()
+	@Transient
+	int a_value;
+	
+	@Transient
 	int b_value;
 //	
 	@Column()
 	int chk;
 //	
-//	@Transient
-//	String my_value; 
+	@Transient
+	String my_value; 
 
 }
