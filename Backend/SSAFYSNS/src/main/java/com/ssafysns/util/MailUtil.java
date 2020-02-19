@@ -13,11 +13,11 @@ public class MailUtil {
 
 		String hostSMTP = "imap.gmail.com";
 		
-		String hostSMTPid = "jason07999@naver.com";//id
-		String hostSMTPpwd = "19921992a";
+		String hostSMTPid = "jason07289@gmail.com";//id
+		String hostSMTPpwd = "19923109a!";
 		
 		//보내는 이 설정
-		String fromEmail = "ssafysns@naver.com";
+		String fromEmail = "ssafysns@gmail.com";
 		String fromName = "ssafysns 대표";	
 
 
