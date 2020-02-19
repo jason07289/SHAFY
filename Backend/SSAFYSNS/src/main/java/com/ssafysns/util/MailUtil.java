@@ -10,7 +10,7 @@ public class MailUtil {
 		
 		//mail server 설정 
  		String charSet ="utf-8";
-		String hostSMTP = "smtp.naver.com";
+		String hostSMTP = "imap.naver.com";
 		
 		String hostSMTPid = "jason07999@naver.com";//id
 		String hostSMTPpwd = "19921992a";
@@ -40,14 +40,14 @@ public class MailUtil {
 		mail.setCharset(charSet);
 //		mail.setSSLOnConnect(true);
 		mail.setHostName(hostSMTP);
-		mail.setSmtpPort(587);
+		mail.setSmtpPort(993);
 //		mail.setAuthentication(hostSMTPid, hostSMTPpwd);
 		mail.setAuthenticator(new DefaultAuthenticator(hostSMTPid, hostSMTPpwd));
-		mail.setStartTLSEnabled(true);
+//		mail.setStartTLSEnabled(true);
 //		mail.setStartTLSRequired(true);
-//		mail.setSSL(true);
+		mail.setSSL(true);
 		mail.addTo(userEmail);
-//		mail.setSSLOnConnect(true);
+		mail.setSSLOnConnect(true);
 		mail.setFrom(fromEmail,fromName,charSet);
 		mail.setSubject(subject);
 		mail.setHtmlMsg(msg);
