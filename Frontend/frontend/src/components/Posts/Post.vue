@@ -97,10 +97,21 @@
 
   <!-- 본문텍스트 -->
 
+    <!-- 투표
+      안했으면 No
+      1번 찍었으면 A 
+      2번 찍었응면 B 
+      -->
+
     <v-expand-transition>
     <v-card-text style="padding-bottom:0px;color:black;">
       <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
-      <span v-show="content_show"> {{postdata_full}}<br> </span>
+      <span v-show="content_show"> {{postdata_full}}<br> 
+      <p>{{ post.vote.title }}</p>
+      <v-btn :disabled="this.post.vote.my_value!=='No'" @click="vote(1)">{{ post.vote.a_name }}:{{ post.vote.a_value }}</v-btn>
+      <v-btn :disabled="this.post.vote.my_value!=='No'" @click="vote(2)">{{ post.vote.b_name }}:{{ post.vote.b_value }}</v-btn>
+      내가 투표한 값{{ post.vote.my_value }}
+      </span>
     </v-card-text>
 
       
@@ -244,7 +255,7 @@ export default {
     ...mapState({
       userInfo: state => state.user.userInfo,
       myfollowing: state => state.tags.followtags
-    })
+    }),
   },
   data() {
     return {
@@ -278,6 +289,20 @@ export default {
       getAllTab: 'tags/getAllTab',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+    vote(choice){
+      var temp = ''
+      if (choice === 1){
+        temp = 'A'
+      }else{
+        temp = 'B'
+      }
+      console.log(choice,'에 투표하셨습니다.')
+      PostApi.registerVote({vno:this.post.vote.vno, choice:choice},res=>{
+        if(res.data.state === 'ok'){
+          this.post.vote.my_value = temp
+        }
+      },err=>{console.log(err)})
+    },
     togglebookmark(){
       this.bookmark = !this.bookmark
       if(!this.bookmark){
