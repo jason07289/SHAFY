@@ -20,7 +20,13 @@
       </v-btn>
   
       <v-btn @click="routing('Notification')">
+      <v-badge
+          color="red"
+          :value="userInfo.alarm==true"
+          dot
+        >
         <v-icon>mdi-bell</v-icon>
+      </v-badge>
       </v-btn>
 
       <v-btn @click="clickPosting">
@@ -40,6 +46,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import posting from '../views/home/Posting'
 export default {
   name: 'Navbar',
@@ -53,6 +60,9 @@ export default {
     posting,
   },
   methods:{
+    ...mapActions({
+      getUserInfo:'user/getUserInfo',
+    }),
     routing(routeName){
       this.$router.push({ name: routeName})
     },
@@ -60,7 +70,15 @@ export default {
       this.dialog = true;
       this.step=1;
     }
-  }
+  },
+    created(){
+    this.getUserInfo()
+  },
+  computed:{
+    ...mapState({
+      userInfo: state => state.user.userInfo,
+    })
+  },
 }
 </script>
 <style scoped>
