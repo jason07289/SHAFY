@@ -78,7 +78,7 @@ public class NotificationController {
 //	}
 
 	// 모든 Notification 조회
-	@ApiOperation(value = "로그인한 유저의 checked=false인 모든 Notification 목록 조회")
+	@ApiOperation(value = "로그인한 유저의 Notification 목록 조회")
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> searchAll() throws Exception {
 		// 1. id를 로그인한 유저의 id로 설정

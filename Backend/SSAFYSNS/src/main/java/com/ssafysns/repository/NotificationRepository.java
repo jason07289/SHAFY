@@ -37,6 +37,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@Query(value = "select u.alarm from User u where u.id = :id")
 	int selectUserAlarm(@Param("id") String id);
 
-	@Query(value = "select n from Notification n where n.id = :id and n.checked = 0")
-	List<Notification> findAllByUserId(@Param("id") String id);
+	@Query(value = "select * from notification n where n.id = :id order by datetime desc limit :count", nativeQuery = true)
+	List<Notification> findAllByUserId(@Param("id") String id,@Param("count") int count);
 }
