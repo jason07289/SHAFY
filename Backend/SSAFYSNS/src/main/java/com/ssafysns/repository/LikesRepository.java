@@ -31,7 +31,7 @@ public interface LikesRepository extends JpaRepository<Likes, Integer>{
 	@Query(value = "select case when c.cno in :cno_list then 'true' else 'false' end from comment c where c.pno = :pno", nativeQuery = true)
 	List<Boolean> checkLikeComment(@Param("cno_list") List<Integer> cno_list, @Param("pno") int pno);
 
-	@Query(value = "select case when p.pno in :my_like_post then 'true' else 'false' end from Post p where p.pno in :follow_list")
+	@Query(value = "select case when p.pno in :my_like_post then 'true' else 'false' end from post p where p.pno in :follow_list order by p.pno desc", nativeQuery=true)
 	List<Boolean> checkLikePost(@Param("my_like_post") List<Integer> my_like_post, @Param("follow_list") List<Integer> follow_list);
 
 }

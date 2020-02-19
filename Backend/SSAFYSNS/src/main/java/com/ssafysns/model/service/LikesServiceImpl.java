@@ -31,6 +31,8 @@ public class LikesServiceImpl implements LikesService {
 	@Autowired
 	PostRepository postRepository;
 	
+	int limit = 3;
+	
 	// 댓글 좋아요
 	@Transactional
 	@Override
@@ -146,7 +148,7 @@ public class LikesServiceImpl implements LikesService {
 	}
 
 	@Override
-	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list) {
+	public List<Boolean> likeBooleanPost(List<Integer> my_like_post, List<Integer> follow_list, int page) {
 		List<Boolean> boolean_list = null;
 		
 		try {
