@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,7 +52,7 @@ public class Post {
 	@Column(length = 1000, nullable = false)
 	private String content;
 
-	@Column(length = 500)
+	@Column(length = 500, nullable = false)
 	private String hashtag;
 
 	@Column(nullable=false, length = 30)
@@ -85,7 +86,10 @@ public class Post {
 	
 	@Transient
 	private boolean bookmark_check;
-
+	
+	@Transient
+	private int chk;
+	
 	// 외래키 설정
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_board_id"))
@@ -95,6 +99,9 @@ public class Post {
 	private List<Comment> comment;
 	
 	@OneToMany(mappedBy="post")
-	private List<PostLikes> postlike; 
+	private List<PostLikes> postlike;
+	
+	@OneToOne(mappedBy="post")
+	private Vote vote;
 
 }
