@@ -376,6 +376,10 @@ export default {
         })
     },
     Join(){
+      if (!this.nicknameChecked){
+        alert('닉네임 체크를 해주세요')
+        return
+      }
       this.signUpForm.id = this.email
       this.signUpForm.password = this.password
       var isrequired = true
