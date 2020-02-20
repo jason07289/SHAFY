@@ -41,7 +41,6 @@ import com.ssafysns.model.service.PostService;
 import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
 import com.ssafysns.model.service.VoteService;
-import com.ssafysns.repository.VoteRepository;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -477,7 +476,9 @@ public class PostController {
 		}
 		if(post.getAnonymous() == 1) {
 			post.setNickname("익명");
+			post.setProfile(null);
 		} else {
+			post.setProfile(post.getUser().getImg());
 			post.setNickname(post.getUser().getNickname());
 		}
 		post.setId(null);			// 나중에 개인 식별 코드 컬럼으로 대체
@@ -630,12 +631,13 @@ public class PostController {
 		System.out.println(postVote.toString());
 		
 		Post post = postVote.getPost();
+		post.setId(id);
 		Vote vote = postVote.getVote();
 		System.out.println(post.getContent());
-		System.out.println(vote.toString());
+//		System.out.println(vote.toString());
 		boolean message = false;
 		
-		if(vote.getTitle() != "") {
+		if(vote!=null && vote.getTitle() != "") {
 			System.out.println("투표가 있네용");
 			// Post 등록
 			post.setChk(0);
