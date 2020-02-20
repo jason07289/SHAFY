@@ -3,8 +3,8 @@
 
 <!-- 내프로필 -------------------------------------------------->
   <v-card
-  max-width="344"
-  min-width="444"
+  max-width="444"
+  min-width="244"
   min-height="120"
   class="mx-auto mb_custom"
   outlined
@@ -32,8 +32,8 @@
   </v-card>
 <!-- 내활동 -------------------------------------------------->
   <v-card
-  max-width="344"
-  min-width="444"
+  max-width="444"
+  min-width="244"
   class="mx-auto mb_custom"
   outlined
   >
@@ -51,8 +51,8 @@
   </v-card>
   <!-- 계정 -------------------------------------------------->
   <v-card
-  max-width="344"
-  min-width="444"
+  max-width="444"
+  min-width="244"
   class="mx-auto mb_custom"
   outlined
   >
@@ -71,8 +71,8 @@
 
   <!-- 기타 -------------------------------------------------->
   <v-card
-  max-width="344"
-  min-width="444"
+  max-width="444"
+  min-width="244"
   class="mx-auto mb_custom"
   outlined
   >

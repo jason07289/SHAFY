@@ -21,9 +21,12 @@ import Appbar from '@/components/Appbar'
     }
 </script>
 <style>
+#app{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 :root{
-    --background-w : #fcfcfc;
-    --main-y : #f3c568;
+    --background-w : #f1f1f1;
+    --main-y : #ffffff;
     --main-y-dark :#574c37;
     --main-sb: #9fafc0;
     --button-on : #90a9d2;
@@ -38,7 +41,7 @@ import Appbar from '@/components/Appbar'
 예쁜베이지: #fbf7dd
 
 누런페북  : #eeede9
-
+원래노란색: #f3c568
 예쁜배경색: #fffdeb
 
 

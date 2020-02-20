@@ -9,8 +9,26 @@
     outlined
     style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
       >
-        <v-card-title v-if="step==1">게시글 작성</v-card-title>
-        <v-card-title v-if="step==2">해시태그 선택</v-card-title>
+        <v-card-actions v-if="step==1">
+          <v-card-title style="padding:10px;">게시글 작성</v-card-title><v-spacer/>
+         <!-- 익명 -->
+         <span class="caption" style="margin-left:12px;">익명</span>
+          <v-checkbox
+            v-model="postingForm.anonymous"
+            value=1
+            dense
+            hide-details
+            style="width:10%;margin-top:0px;"
+        ></v-checkbox>
+        </v-card-actions>
+        <v-card-actions v-if="step==2">
+        <v-card-title style="padding:10px;">해시태그 선택</v-card-title><v-spacer/>
+        <v-btn color="primary" dark depressed @click="vote_show = !vote_show">
+        <v-icon size="20">mdi-vote</v-icon>
+      <span v-if="!vote_show" class="body-2">찬반투표 등록</span>
+      <span v-else class="body-2">찬반투표 취소</span>
+      </v-btn>
+        </v-card-actions>
         <v-divider></v-divider>
 
 <v-window v-model="step">
@@ -47,27 +65,30 @@
 <!-- [step:1] 다이얼로그footerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
         <v-divider></v-divider>
         <v-card-actions>
+          
           <v-spacer></v-spacer>
           <!-- 사진 업로드 -->
           <!-- @click="dialog = false" -->
 
-          <v-btn color="blue darken-1" text @click="$refs.inputUpload.click()">Photo</v-btn>
-          <input v-show="false" ref="inputUpload" type="file" @change="onUpload" >
-          <div id="preview">
-            <img v-if="uploadValue===100" :src="postingForm.attachments" />
+          <div id="preview" v-if="uploadValue===100" style="height:40px;">
+            <img 
+              :src="postingForm.attachments" 
+              style="width:100%;height:100%;object-fit:contain"
+            />
+            <v-icon color="green">mdi-check</v-icon>
           </div>
+          <div id="circular" v-if="uploadValue==1">
+            <v-progress-circular
+              :size="15"
+              color="primary"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+          <v-btn color="blue darken-1" text @click="$refs.inputUpload.click();uploadValue=1">Photo</v-btn>
+          <input v-show="false" ref="inputUpload" type="file" @change="onUpload" >
           <v-btn color="blue darken-1" text @click="goStep2()">Next</v-btn>
         </v-card-actions>
-          <!-- 익명 -->
-         <span class="caption" style="padding-top:25px;">익명</span>
-          <v-checkbox
-            v-model="postingForm.anonymous"
-            color="primary"
-            value=1
-            dense
-            hide-details
-            style="width:10%;margin-right:10px;"
-        ></v-checkbox>
+          
 </v-window-item>
 
 <!-- <step:2> 태그선택ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
@@ -97,21 +118,15 @@
   </v-chip-group>
 
   </v-card-text>
-  <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="blue darken-1" text @click="step=1">back</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
-          <v-btn icon @click="vote_show = !vote_show">
-          <v-icon>mdi-vote</v-icon>
-          </v-btn>
-        </v-card-actions>  
-<!-- 투표 게시하는 부분 -->
+    <!-- 투표 게시하는 부분 -->
+    <v-card-actions style="padding-left:12px;">
+
+
 <v-expand-transition >
   <v-card-text  
   v-show="vote_show"
     class="py-0"
-    style="margin-top:20px;"
+    style="padding:0px 60px 10px 60px;"
 >
   <!--<span class="subheading" style="padding-left:10px;">투표 만들기</span>-->
   <!--추가-->
@@ -119,20 +134,32 @@
     <v-text-field label="투표명"
     v-model="vote.title"
     :counter="30"
+    style="margin-bottom:20px"
     >
     </v-text-field>
     <v-text-field label="첫 번째 주제"
+    outlined
+    hide-details
     v-model="vote.a_name"
-    :counter="40"
     >
     </v-text-field>
+    <div style="width:100%;height:40px;text-align:center;margin-top:12px;"><span class="body-2" style="color:gray">vs</span></div>
     <v-text-field label="두 번째 주제"
+    outlined
     v-model="vote.b_name"
-    :counter="40">
+    >
     </v-text-field>
   </v-form>
   </v-card-text>
 </v-expand-transition>
+  </v-card-actions>
+  <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="step=1">back</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="doposting">Done</v-btn>
+        </v-card-actions>  
+
 </v-window-item>
 
 
@@ -204,6 +231,8 @@ require('firebase/storage')
           a_name:'',
           b_name:''
         },
+        //CSS
+        circular:false,
       }
     },
 

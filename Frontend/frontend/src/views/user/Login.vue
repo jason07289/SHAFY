@@ -21,6 +21,7 @@
             outlined
             hide-details="true"
             style="height:48px !important;"
+            @keyup.enter="login"
             ></v-text-field>
             <v-text-field
             dense
@@ -30,6 +31,7 @@
             :type="show1 ? 'text' : 'password'"
             placeholder="비밀번호"
             outlined
+            @keyup.enter="login"
             ></v-text-field>
             <div class="text-center">
               <v-btn 

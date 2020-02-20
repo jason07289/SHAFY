@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-<v-dialog v-model="dialog"  persistent max-width="444px" height="600px">
+<v-dialog v-model="dialog"  persistent width="unset" height="600px">
  <!-- 버튼부분 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->     
       <!-- <template v-slot:activator="{ on }"> -->
         <!-- <v-btn color="primary" dark v-on="on">Posting</v-btn> -->
@@ -9,7 +9,10 @@
 
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     
-      <v-card>
+      <v-card
+        max-width="444"
+        min-width="444"
+      >
         <v-card-title>게시글 작성</v-card-title>
         <v-divider></v-divider>
 

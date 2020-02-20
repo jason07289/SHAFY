@@ -3,7 +3,6 @@
     <v-tabs
     v-model="tab"
     align-with-title
-    dark
     show-arrows
     color="var(--main-y-dark)"
     background-color="var(--main-y)"
@@ -18,7 +17,7 @@
      
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <div>
+          <div style="background-color:#f1f1f1;">
           <v-btn dark large @click="followEditDialog = true">
             팔로우 해시태그 편집
           </v-btn>

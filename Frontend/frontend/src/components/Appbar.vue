@@ -9,7 +9,7 @@
     style="background-color:var(--main-y);"
   >
 
-    <v-toolbar-title style="color:#ffffff; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#ffffff;">mdi-pound</v-icon>ARFY</v-toolbar-title>
+    <v-toolbar-title style="color:#555555; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#555555;">mdi-pound</v-icon>ARFY</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
@@ -17,7 +17,7 @@
       
 
     <v-btn icon>
-      <v-icon color="#ffffff" @click="clickMagnify">mdi-magnify</v-icon>
+      <v-icon color="#555555" @click="clickMagnify">mdi-magnify</v-icon>
     </v-btn>
 
 
