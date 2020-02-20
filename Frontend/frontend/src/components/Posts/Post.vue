@@ -83,7 +83,6 @@
 
       </v-chip-group>
     </v-card-text>
-    <v-divider class="mx-4"></v-divider>
 <!-- 해시태그정보 endㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
 
 <!-- 본문정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
@@ -91,11 +90,17 @@
       <!-- src="https://imgur.com/a/dvZcOAa" -->
       <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      v-if="post.attachment"
-      :src="post.attachment"
+      v-if="post.attachments!=''"
+      :src="post.attachments"
       height="194"
+      style="object-fit: contain;"
+      @click="imageDialog=true"
     ></v-img>
-
+    <v-dialog v-model="imageDialog" width="unset">
+      <v-card>
+      <v-img contain width="444" :src = "post.attachments"/>
+      </v-card>
+    </v-dialog>
   <!-- 본문텍스트 -->
 
     <!-- 투표
@@ -108,13 +113,45 @@
     <v-card-text style="padding-bottom:0px;color:black;">
       <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
       <span v-show="content_show" v-html="postdata_full"> <br> 
-      <template v-if="post.vote!=null">
-      <p>{{ post.vote.title }}</p>
-      <v-btn :disabled="this.post.vote.my_value!=='No'" @click="vote(1)">{{ post.vote.a_name }}:{{ post.vote.a_value }}</v-btn>
-      <v-btn :disabled="this.post.vote.my_value!=='No'" @click="vote(2)">{{ post.vote.b_name }}:{{ post.vote.b_value }}</v-btn>
-      내가 투표한 값{{ post.vote.my_value }}
-      </template>
       </span>
+      <div v-if="content_show&&post.vote!=null">
+        <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/>
+      
+      <div align="center" 
+      class="font-weight-black"
+      style="margin-bottom:12px;"
+      >
+        <code style="margin:0px 2px 0px 0px;">투표주제
+        <v-icon size="16" >
+          mdi-arrow-right-drop-circle
+        </v-icon>
+        </code>
+        {{ post.vote.title }}
+      </div>
+
+      <v-hover
+        v-slot:default="{ hover }"
+      >
+      <v-card
+        :color="hover?'red':'black'"
+        @click="vote(1)"
+      >
+        <!-- :disabled="this.post.vote.my_value!=='No'"  -->
+      <v-icon>mdi-pound</v-icon>
+      {{ post.vote.a_name }}
+      :{{ post.vote.a_value }}
+      </v-card>
+      </v-hover>
+      <v-btn 
+        :disabled="this.post.vote.my_value!=='No'" 
+        @click="vote(2)"
+      >
+      {{ post.vote.b_name }}
+      :{{ post.vote.b_value }}
+      </v-btn>
+
+      <!-- 내가 투표한 값{{ post.vote.my_value }} -->
+      </div>
     </v-card-text>
 
       
@@ -285,6 +322,7 @@ export default {
       cnt: this.post.like_count,
       // bookmark:false,
       bookmark: this.post.bookmark_check,
+      imageDialog:false,
     }
   },
   methods: {
