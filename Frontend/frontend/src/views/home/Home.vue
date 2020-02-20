@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    style="background-color:var(--background-w);"
+  >
     <v-tabs
     v-model="tab"
     align-with-title
@@ -9,18 +11,25 @@
     >
     <v-tabs-slider color="var(--background-w)"></v-tabs-slider>
       <v-tab>
-        <v-icon size="17">mdi-home</v-icon>HOME
-      </v-tab>
+        <v-icon size="17">mdi-home</v-icon>
+        HOME
+        </v-tab>
       <v-tab v-for="item in Tabs" :key="item">
         <v-icon size="17">mdi-pound</v-icon>{{ item }}
       </v-tab>
      
       <v-tabs-items v-model="tab">
         <v-tab-item>
-          <div style="background-color:#f1f1f1;">
-          <v-btn dark large @click="followEditDialog = true">
-            팔로우 해시태그 편집
-          </v-btn>
+          <div style="background-color:#f1f1f1;width:100%;text-align:center;padding:12px;" >
+            <v-tooltip bottom>
+              <template #activator="tooltipOn">
+              <v-btn depressed style="background-color:#dddddd; color:#777777;"  large @click="followEditDialog = true" v-on="tooltipOn.on">
+                팔로우 해시태그 편집 
+                <v-icon size="21" color="#999999" style="margin-left:8px;">mdi-square-edit-outline</v-icon>
+              </v-btn>
+              </template>
+              <span>HOME 타임라인에 뜨게 할 팔로우 해시태그들을 수정할 수 있어요</span>
+            </v-tooltip>
           </div>
         <component v-bind:is="currentComponent" tabName="...home"></component>
         </v-tab-item>
@@ -28,6 +37,9 @@
           v-for="item in Tabs"
           :key="item"
         >
+        <div 
+          style="width:100%;height:40px;background-color:var(--background-w);"
+          />
         <component v-bind:is="currentComponent" :tabName="item"></component>
         </v-tab-item>
       </v-tabs-items>

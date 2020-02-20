@@ -91,121 +91,184 @@
 
 <!-- 회원정보 수정 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
   <v-dialog v-model="update" width="unset">
-  <v-card
-    max-width="400"
-  >
-    <v-btn depressed outlined @click="update=false"><v-icon color="red">mdi-close</v-icon>이거누르면닫힘</v-btn>
-    <v-card outlined><div>{{userInfo}}</div></v-card>
-    여기는 회원정보 수정
-  <p>못바꾸는 애들은 p태그로 넣었어요</p>
-  <p>ID:{{ userInfo.id }}</p>
-  <p>이름 : {{ userInfo.name }}</p>
-  <v-text-field
-    v-model="userInfo.phone"
-    :type="show1 ? 'text' : 'userInfo.phone'"
-    :placeholder="userInfo.phone"
+  <v-card class="mx-auto"
+    max-width ="500"
     outlined
-    prepend-icon="mdi-phone"
-  ></v-text-field>
-  <v-menu
-    ref="menu"
-    v-model="menu"
-    :close-on-content-click="false"
-    :return-value.sync="userInfo.birth"
-    transition="scale-transition"
-    offset-y
-    min-width="290px"
-  >
-  <template v-slot:activator="{ on }">
-    <v-text-field
-      v-model="userInfo.birth"
-      label="birthday"
-      prepend-icon="mdi-calendar"
-      readonly
-      v-on="on"
-    ></v-text-field>
-  </template>
-  <v-date-picker 
-  v-model="userInfo.birth" no-title scrollable
-  :min=minDate
-  :max=maxDate
-  >
-    <v-spacer></v-spacer>
-    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-    <v-btn text color="primary" @click="$refs.menu.save(userInfo.birth)">OK</v-btn>
-  </v-date-picker>
-</v-menu>
-  <v-text-field
-  v-model="userInfo.nickname"
-  :counter="10"
-  :type="show1 ? 'text' : 'userInfo.nickname'"
-  outlined
-  prepend-icon="mdi-clipboard-account"
-  ></v-text-field>
-  <v-select
-    v-model="userInfo.location"
-    :items="Info.location"
-    label="location"
-    placeholder="지역"
-    prepend-icon="mdi-map-marker"
-    outlined
-  ></v-select>
-  <p>여기에 이미지 띄우고?바꾸도록?</p>
-  <v-file-input 
-    accept="image/*" 
-    label="File input"
-    outlined
-    v-model="imageData"
-    @change="onUpload"
-    ></v-file-input>
-  <div v-if="userInfo.utype==='student'" id='StudentInfo'>
-  <v-select 
-    v-model="userInfo.grade" 
-    name="grade" 
-    id="grade"
-    :label="serInfo.grade"
-    :items="Info.grade"
-    outlined
+    style="padding:12px 25px 35px 25px; margin-top:12px;"
     >
-    </v-select>
-    <v-select 
-      v-model="userInfo.class1" 
-      name="class1" 
-      id="class1"
-      :label="serInfo.class1"
-      :items="Info.class1"
-      outlined>
-      </v-select>
-      <v-select 
-      v-model="userInfo.class2" 
-      name="class2" 
-      id="class2"
-      :label="serInfo.class2"
-      :items="Info.class2"
-      outlined
-      ></v-select>
-    <v-select 
-      v-model="userInfo.state" 
-      name="state" 
-      id="state"
-      :label="userInfo.state"
-      :items="Info.state"
-      outlined
-      ></v-select>
-      </div>
+    <v-card-title> 회원정보 수정 </v-card-title>
+    <v-form style="padding:0px 18px 0px 18px;">
+
+    <v-container fluid style="padding-bottom:0px;">
+       
+    </v-container>
+        <span class="caption" style="color:gray;width:100%;display:block;">* 별도의 인증이 필요하거나 변경 불가능한 항목의 변경이 필요한 경우</span>
+        <span class="caption" style="color:gray;width:100%;display:block;">*  S#ARFY 운영진에 연락 바랍니다.   email :: nim950313@gmail.com</span>
+        <div style="width:100%;height:32px;"/>
+
+
+        
+    <!-------------기본정보-->
+        <v-container fluid style="padding-bottom:0px;">
+        <v-row align="center" style="margin-left:20px;">
+        ID   ::  {{userInfo.id}}
+        </v-row>
+        <v-row align="center" style="margin-left:20px;">
+        이름 ::   {{userInfo.name}}
+        </v-row>
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
+        <v-text-field
+        v-model="userInfo.nickname"
+        :counter="10"
+        :type="show1 ? 'text' : 'userInfo.nickname'"
+        :disabled="nicknameChecked"
+        placeholder="닉네임"
+        style="margin-left:20px;padding-top:0px;"
+        ></v-text-field>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3">
+          <v-btn v-if="!nicknameChecked" outlined @click="nicknameCheck">중복검사</v-btn>
+          <span v-else class="caption"><v-icon size="18">mdi-check</v-icon>사용가능</span>
+        </v-col>
+        </v-row>
+    </v-container>
+    <!----------------부가정보-->
+    <v-form style="padding:0px 18px 0px 18px;">
+        <v-container fluid>
+          <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="6">
+         <v-select
+          v-model="userInfo.location"
+          :items="Info.location"
+          label="교육/관심 지역"
+          placeholder="SSAFY교육장위치"
+          append-icon="mdi-map-marker"
+        ></v-select>
+      </v-col>
+      <v-col class="d-flex" cols="12" sm="6">
+        <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :return-value.sync="userInfo.birth"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="userInfo.birth"
+            label="생년월일"
+            append-icon="mdi-calendar"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker 
+        v-model="userInfo.birth" no-title scrollable
+        :min=minDate
+        :max=maxDate
+        >
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu.save(userInfo.birth)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+      </v-col>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+        <v-text-field
+          label="전화번호"
+          v-model="userInfo.phone"
+          :type="show1 ? 'text' : 'userInfo.phone'"
+          placeholder="ex) 010-1234-1234"
+        ></v-text-field>
+        </v-card-actions>
+     <v-card-actions>
+      <v-file-input 
+      accept="image/*" 
+      label="프로필 사진"
+      v-model="imageData"
+      @change="onUpload"
+      ></v-file-input>
+        </v-card-actions>
+
+      <div style="width:100%;height:25px;"/>
+      <v-divider class="mx-0"></v-divider>
+      <div style="width:100%;height:25px;"/>
+
+      <div v-if="this.$route.params.type==='Student'" id='StudentInfo'>
+
+      <v-card-subtitle>SSAFY 교육생 관련 정보</v-card-subtitle>
+        <v-container fluid>
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="4">
+        <v-select 
+        v-model="userInfo.grade" 
+        name="grade" 
+        id="grade"
+        label="기수 선택"
+        :items="Info.grade"
+        outlined
+        ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="8">
+        <v-select
+        v-model="userInfo.state" 
+        name="state" 
+        id="state"
+        label="상태 구분"
+        :items="Info.state"
+        outlined
+        >
+        </v-select>
+        </v-col>
+        </v-row>
+        <v-row align="center">
+        <v-col class="d-flex" cols="12" sm="6">
+        <v-select 
+        dense
+        v-model="userInfo.class1" 
+        name="class1" 
+        id="class1"
+        label="1학기 반 선택"
+        :items="Info.class1"></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="6">
+        <v-select 
+        dense
+        v-model="userInfo.class2" 
+        name="class2" 
+        id="class2"
+        label="2학기 반 선택"
+        :items="Info.class2"
+        ></v-select>
+        </v-col>
+        </v-row>
+        </v-container>
+    </div>
     <div v-else id='GeneralInfo'>
       <v-select 
         v-model="userInfo.utype" 
         name="type" 
         id="type"
-        :label="userInfo.utype"
+        label="타입 선택"
         :items="Info.utype"
         outlined
         >
         </v-select>
     </div>
-  <button @click="submit">회원정보 수정 날리기</button>
-  </v-card>
+      
+  </v-form>
+        
+
+
+    </v-form>
+    <v-btn block @click="submit">수정 완료</v-btn>
+    </v-card>
   </v-dialog>
 
 <!-- 내 활동 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
@@ -349,6 +412,9 @@ export default {
       activityDialog: false,
       signOutDialog : false,
       certiSheet:false,
+      //회원정보수정용
+      nicknameChecked:false,
+
     }
   },
   methods:{
@@ -424,6 +490,21 @@ export default {
             console.log('탈퇴 실패!'+err)
           }
         )
+    },
+    nicknameCheck(){
+      //중복 체크 하는 코드 넣기
+      console.log('닉네임검사', this.userInfo.nickname)
+      UserApi.requestNicknameCheck({nickName:this.userInfo.nickname},res=>{
+        if (res.data.state === 'ok'){
+          alert(res.data.message)
+          this.nicknameChecked = true
+        }else{
+          alert(res.data.message)
+        }
+      },err=>{
+        console.log(err)
+      })
+      //CSS 변경
     }
   },
   computed:{

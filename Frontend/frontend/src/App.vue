@@ -28,7 +28,7 @@ import Appbar from '@/components/Appbar'
     --background-w : #f1f1f1;
     --main-y : #ffffff;
     --main-y-dark :#574c37;
-    --main-sb: #9fafc0;
+    --main-sb: #84AC67;
     --button-on : #90a9d2;
     --button-off: #dddddd;
 
