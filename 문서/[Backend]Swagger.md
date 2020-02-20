@@ -93,4 +93,4 @@ Swagger은 NodeJs, Java, Python 등 다양한 언어를 지원해준다. 이 포
 
 
 
-## Swagger를 통한 백엔드와 프론트엔드가 문서를 통해 협업!!!
+## Swagger를 통해 백엔드와 프론트엔드가 문서를 통해 협업!!!
