@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafysns.exception.AdminException;
+import com.ssafysns.exception.IdException;
 import com.ssafysns.exception.MyLoginException;
 import com.ssafysns.exception.UnauthorizedException;
+import com.ssafysns.model.dto.TabHashtag;
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.UserDto;
 import com.ssafysns.model.dto.UserForChangePW;
+import com.ssafysns.model.service.SSAFYCertificationService;
+import com.ssafysns.model.service.TabHashtagService;
 import com.ssafysns.model.service.UserService;
 
 //import com.ssafysns.model.service.UserService;
@@ -38,7 +45,12 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private TabHashtagService tabHashtagService;
 
+	@Autowired
+	private SSAFYCertificationService ssafyCertificationService;
 	
 	@ExceptionHandler
 	public ResponseEntity<Map<String, Object>> handler(Exception e){
@@ -66,39 +78,41 @@ public class UserController {
 		resultMap.put("message",  data);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
-	
-//	@ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
-//	@PostMapping(value = "/signin/{provider}")
-//	public SingleResult<String> signinByProvider(
-//	        @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
-//	        @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken) {
-//	 
-//	    KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
-//	    User user = userJpaRepo.findByUidAndProvider(String.valueOf(profile.getId()), provider).orElseThrow(CUserNotFoundException::new);
-//	    return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
-//	}
-	
 
-	
-	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), token 중복불가 - session 토큰이 들어갈 자리")
-	@PostMapping("/user/signup/")
+	@ApiOperation("회원가입 id 중복불가, 닉네임 중복불가 (확인 로직으로 확인이 필요), 이메일 인증 후 시행")
+	@PostMapping("/user/signup")
 	public ResponseEntity<Map<String, Object>> signUp(@RequestBody User user){
 		try {
+			
+			// 회원가입 부분에서!
+			if(ssafyCertificationService.isPassed(user.getId())){
+				// user의 ssafy 인증 컬럼값을 true로 바꿔줌
+				user.setApproval(1);
+				
+			}
+			
+			
+			
 			if(userService.create(user)) {
+				tabHashtagService.update(new TabHashtag("", user.getId()));
+				
+				
+				
+				
+				
 				return handleSuccess("회원가입에 성공하셨습니다.");
 			}else {
 				return handleFail("다시 확인해주세요", HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return handleFail("오류 발생", HttpStatus.OK);
+			return handleFail(e.toString(), HttpStatus.OK);
 		}
 	}
 	
-	@ApiOperation("비밀번호 찾기 비밀번호 찾기 기능. id,이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식 부가적인 인증 부분이 더 있으면 좋긴할듯")
+	@ApiOperation("비밀번호 찾기 비밀번호 찾기 기능. id,이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식 부가적인 인증 부분이 더 있으면 좋긴할듯(ex. 질문같은거)")
 	@PutMapping("/user/findpw")
-	public ResponseEntity<Map<String, Object>> findPw(@RequestBody User user){
+	public ResponseEntity<Map<String, Object>> findPw(@RequestBody UserDto user){
 		//비밀번호 찾기 기능. 이름을 입력받아서 이메일로 임시번호를 전송하고 로그인하게 하는 방식
 		try {
 			userService.findPW(user.getId(), user.getName());
@@ -111,13 +125,15 @@ public class UserController {
 	
 	@ApiOperation("로그인")
 	@PostMapping("/user/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
+	public ResponseEntity<Map<String, Object>> login(@RequestBody UserDto user){
 		String jwt="";
 		try {
 			jwt = userService.login(user.getId(), user.getPassword());
 		}catch(EntityNotFoundException ene) {
+			ene.printStackTrace();
 			return handleFail("아이디를 찾을 수 없습니다.", HttpStatus.OK);
 		}catch(MyLoginException mle) {
+			mle.printStackTrace();
 			return handleFail("잘못된 비밀번호 입니다.", HttpStatus.OK);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -130,12 +146,12 @@ public class UserController {
 //	@PostMapping("/api/user/logOut")
 //	public ResponseEntity<Map<String,Object>> logout(){
 //		
-//		return handleSuccess("로그인에 성공하셨습니다.");
+//		return handleSuccess("로그아웃에 성공하셨습니다.");
 //	}
 //	
 	
 	
-	@ApiOperation("비밀번호 변경, 현재비밀번호와 바꿀 비번이 달라야함")
+	@ApiOperation("비밀번호 변경, 현재비밀번호와 바꿀 비번이 달라야함 param이란 폼에 id, password, newpassword를 입력받음 ")
 	@PutMapping("/user/changepw")
 	public ResponseEntity<Map<String,Object>> changePW( 	
 			@RequestBody UserForChangePW param){
@@ -163,8 +179,9 @@ public class UserController {
 	}
 	
 	@ApiOperation("닉네임 중복확인")
-	@GetMapping("/user/nickname/{nickname}")
-	public ResponseEntity<Map<String,Object>> nickNameCheck(@PathVariable String nickName){
+	@GetMapping("/user/checkNickname/{nickName}")
+	public ResponseEntity<Map<String,Object>> checkNickname(@PathVariable String nickName){
+		System.out.println("in Controller: "+nickName);
 		if(userService.nickNameCheck(nickName) ){
 			return handleSuccess("사용가능한 닉네임입니다.");
 		}else {
@@ -172,9 +189,31 @@ public class UserController {
 		}
 	}
 	
+	@ApiOperation("이메일 인증 코드 생성 (이메일 중복확인도 같이함) 팝업창으로 여기서 리턴해주는 값(string)과 사용자가 입력할 code(String)을 비교")
+	@GetMapping("/user/emailAuth/{id}")
+	public ResponseEntity<Map<String, Object>> emailAuth(@PathVariable String id){
+		String code=null; 
+		try {
+			code =userService.emailAuthCodeCreate(id);
+			if(code==null) {
+				return handleFail("이미 존재하는 ID 입니다.",HttpStatus.OK);
+			}
+			
+			return handleSuccess(code);
+			
+		} catch (IdException e) {
+			return handleFail("이미 존재하는 ID 입니다.",HttpStatus.OK);
+		} catch (EmailException e) {
+			e.printStackTrace();
+			return handleFail("이메일 전송에 실패하였습니다.",HttpStatus.OK);
+		} catch (Exception e) {
+			return handleFail("오류 발생",HttpStatus.OK);
+		}
+	}
+
 	@ApiOperation("회원 탈퇴. 비밀번호 확인 후 탈퇴로직 동작 회원탈퇴의 경우 DB에서 데이터만 수정이기 때문에 그냥 user/delete로 했습니다.")
 	@PutMapping("/user/delete")
-	public ResponseEntity<Map<String,Object>> signOut(@RequestBody User user){
+	public ResponseEntity<Map<String,Object>> signOut(@RequestBody UserDto user){
 		if(userService.signOut(user.getId(),user.getPassword()) ){
 			return handleSuccess("회원 탈퇴 성공");
 		}else {
@@ -182,7 +221,7 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("회원 정보 조회. 비밀번호 등은 복호화 하지 않고 제공할 것임, front에서 필요한 정보만 표기하도록 해야함, param에 id가 아니라 token에서 id를 가져오는 방식으로 바꿀예정")
+	@ApiOperation("회원 정보 조회. 필요없는 부분은 null로 한다.")
 	@GetMapping("/user")
 	public ResponseEntity<Map<String,Object>> MyInfo(){
 		
@@ -198,6 +237,8 @@ public class UserController {
 		}
 		if(user==null) return handleFail("오류발생", HttpStatus.OK);
 		
+		user.setPassword(null);
+		
 		return handleSuccess(user);
 	}
 	
@@ -212,7 +253,27 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
-		
-		
 	}
+	
+	@ApiOperation("경고주기 - 3회 누적시 탈퇴처리")
+	@GetMapping("/user/UserBan/{id}")
+	public ResponseEntity<Map<String,Object>> UserBan(@PathVariable String id){
+		try {
+			
+			String msg=userService.userBan(id);
+			return handleSuccess(id+""+msg) ;
+			
+			
+		} catch (UnauthorizedException e) {
+			e.printStackTrace();
+			return handleFail("토큰 오류 발생", HttpStatus.OK);
+		} catch (AdminException e) {
+			e.printStackTrace();
+			return handleFail("계정 권한 오류 발생", HttpStatus.OK);
+		} catch (Exception e){
+			e.printStackTrace();
+			return handleFail("잘못된 id를 입력하셨습니다.", HttpStatus.OK);
+		}
+	}
+
 }

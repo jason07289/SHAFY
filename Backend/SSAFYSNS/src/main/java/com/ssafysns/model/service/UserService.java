@@ -1,8 +1,9 @@
 package com.ssafysns.model.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.ssafysns.exception.AdminException;
+import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
 
 public interface UserService {
@@ -19,5 +20,6 @@ public interface UserService {
 	public boolean signOut(String id, String pw);
 	public User MyInfo()throws Exception;
 	public List<User> list() throws Exception;
-	
+	public String emailAuthCodeCreate(String id) throws Exception;
+	public String userBan(String id) throws UnauthorizedException,AdminException;
 }

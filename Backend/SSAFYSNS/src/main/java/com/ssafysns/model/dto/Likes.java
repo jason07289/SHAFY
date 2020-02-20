@@ -3,6 +3,7 @@ package com.ssafysns.model.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,18 +43,18 @@ public class Likes {
 	private String id;
 
 	 // 외래키 설정
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_pno"))
 	private Post post;
 
 	// 외래키 설정
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cno", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_cno"))
 	private Comment comment;
 
 
 	// 외래키 설정
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_likes_id"))
 	private User user;
 	

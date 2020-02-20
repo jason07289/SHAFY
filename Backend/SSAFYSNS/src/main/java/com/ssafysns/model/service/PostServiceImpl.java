@@ -7,25 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafysns.model.dto.NoticeException;
+import com.ssafysns.exception.NoticeException;
+import com.ssafysns.exception.PostException;
 import com.ssafysns.model.dto.Post;
-import com.ssafysns.model.dto.PostException;
 import com.ssafysns.repository.PostRepository;
 import com.ssafysns.repository.UserRepository;
 
 @Service
 public class PostServiceImpl implements PostService {
+	
+	static int limit = 3;
 
 	@Autowired
 	private PostRepository postRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
 
 	@Override
 	public void insert(String id, Post post) {
-		String nickname = userRepository.findById(id).get().getNickname();
-		post.setNickname(nickname);
 		try {
 			postRepository.save(post);
 		} catch (Exception e) {
@@ -36,7 +33,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	@Transactional
-	public String delete(String id, int pno) {
+	public Boolean delete(int pno) {
 		Post post = null;
 		
 		try {
@@ -45,48 +42,27 @@ public class PostServiceImpl implements PostService {
 			e.printStackTrace();
 			throw new PostException("pno에 해당하는 게시글 정보를 불러올 수 없습니다.");
 		}
-		
-		if(post.getId() == id) {
-			try {
-				postRepository.updateDeleted(pno);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
-			}
-		} else { // 작성자와 로그인 유저정보가 다를 경우
-			throw new PostException("게시글 수정 권한이 없습니다.");
+
+		try {
+			postRepository.updateDeleted(pno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("게시물 삭제 중 오류가 발생했습니다.");
 		}
 		
-		return null;
+		return true;
 	}
 
 	//게시글 수정버튼	
 	@Override
-	public String update(String id, Post post) {
-		
-		if(post.getId() == id) {
-			try {
-				postRepository.save(post);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new PostException("게시물 수정 중 오류가 발생했습니다.");
-			}
-		} else {
-			throw new PostException("게시글 수정 권한이 없습니다.");
-		}
-		
-		return null;
-	}
-
-	// 모든 Post 조회
-	@Override
-	public List<Post> searchAll() {
+	public Boolean update(Post post) {
 		try {
-			return postRepository.findAll();
+			postRepository.save(post);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new PostException("게시물 목록 검색 중 오류가 발생했습니다.");
+			throw new PostException("게시물 수정 중 오류가 발생했습니다.");
 		}
+		return true;
 	}
 
 	// pno로 Post 조회
@@ -100,6 +76,153 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 	
+	// pno_list와 page로 조회
+	@Override
+	public List<Post> search(List<Integer> pno_list, int page) {
+		List<Post> post_list = null;
+		try {
+			post_list = postRepository.findByPnoList(pno_list, page, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post_list;
+	}
+	// 모든 Post 조회
+	@Override
+	public List<Post> searchAll() {
+		try {
+			return postRepository.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("게시물 목록 검색 중 오류가 발생했습니다.");
+		}
+	}
+	
+	// 최근 한 달 모든 게시글 조회
+	@Override
+	public List<Post> searchAMonth() {
+		try {
+			return postRepository.findAMonth();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("최근 한달 간 게시물 목록 검색 중 오류가 발생했습니다.");
+		}
+	}
+	// 최근 한 달 게시글의 pno_list 조회
+	@Override
+	public List<Integer> searchPnoAMonth() {
+		try {
+			return postRepository.findPnoAMonth();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new PostException("최근 한달 간 게시물 번호 목록 검색 중 오류가 발생했습니다.");
+		}
+	}
+
+	/**
+	 * ID 체크***
+	 * 뉴스피드
+	 */
+	// [뉴스피드] 로그인 한 사용자의 follow하는 모든 pno_list
+	@Override
+	public List<Integer> followHash(String hashtag) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = postRepository.followHash(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return pno_list;
+	}
+	// [뉴스피드] 로그인 한 사용자의 follow하는 모든 post(page)
+	@Override
+	public List<Post> searchAllFollowList(List<Integer> pno_list, int page) {
+		List<Post> posts = null;
+		
+		try {
+			posts = postRepository.findByPnoList(pno_list, page, limit);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new PostException("팔로우하는 모든 게시글 조회 중 오류가 발생했습니다.");
+		}
+		
+		return posts;
+	}
+	
+	// [Tab] hashtag를 가지는 모든 pno_list 불러오기
+	@Override
+	public List<Integer> searchPnoByHash(String hashtag) {
+		List<Integer> pno_list = null;		
+		try {
+			pno_list = postRepository.findPnoByHashtag(hashtag);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
+	}
+	
+	// [Tab] hashtag를 가지는 모든 post(page)
+	@Override
+	public List<Post> search(String hashtag, int page) {
+		List<Post> posts = null;
+		
+		try {
+			posts = postRepository.findByHashtag(hashtag, page, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return posts;
+	}
+
+	// 최근 한 달 간 베스트 게시글 20개
+	@Override
+	public List<Post> searchBest20() {
+		List<Post> posts = null;
+		try {
+			posts = postRepository.findAMonth();
+			posts = posts.subList(0, Integer.min(posts.size(), 20));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return posts;
+	}
+	
+	// 내가 쓴 글 페이지 번호 리스트 가져오기
+	@Override
+	public List<Integer> searchMyPost(String jwtId) {
+		List<Integer> pno_list = null;
+		try {
+			pno_list = postRepository.searchMyPost(jwtId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pno_list;
+	}
+
+	@Override
+	public Post isLastPage(String hashtag, int page) {
+		Post post = null;
+		try {
+			post = postRepository.isLastPage(hashtag, page+limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post;
+	}
+	
+	@Override
+	public Post isLastPage(List<Integer> pno_list, int page) {
+		Post post = null;
+		try {
+			post = postRepository.isLastPage(pno_list, page+limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return post;
+	}
+	
 	
 	@Override
 	public int count() {
@@ -111,63 +234,15 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
-	/**
-	 * ID 체크***
-	 * 뉴스피드
-	 */
-	// Follow 하는 pno 리스트 가져오기
 	@Override
-	public List<Integer> followHashPno(String id) {
-		List<Integer> all_hash_pno_list = null;
+	public Post checkForVote(String id) {
+		Post post = null;
 		try {
-			all_hash_pno_list  = postRepository.followHashPno(id);
+			post = postRepository.checkLastVotePost(id, 1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return all_hash_pno_list;
-	}
-	
-	// [뉴스피드]
-	// Follow하는 태그 리스트의 모든 글 가져오기
-	@Override
-	public List<Post> searchAllFollowList(List<Integer> pno_list) {
-		List<Post> posts = null;
-		
-		try {
-			posts = postRepository.findByPnoList(pno_list);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw new PostException("팔로우하는 모든 게시글 조회 중 오류가 발생했습니다.");
-		}
-		
-		return posts;
-	}
-	
-	//[Tab] 탭 해시태그로 Pno 리스트 가져오기
-	@Override
-	public List<Integer> searchPostNo(String hashtag) {
-		System.out.println("==============Pno List 출력==============");
-		List<Integer> pno_list = null;		
-		try {
-			pno_list = postRepository.findPnoByHashtag(hashtag);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pno_list;
-	}
-	
-	// [Tab] 탭 해시태그로 게시글 리스트 가져오기
-	@Override
-	public List<Post> search(String hashtag) {
-		List<Post> posts = null;
-		
-		try {
-			posts = postRepository.findByHashtag(hashtag);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return posts;
+		return post;
 	}
 
 }
