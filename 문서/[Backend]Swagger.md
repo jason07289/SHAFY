@@ -33,7 +33,7 @@ Swagger은 NodeJs, Java, Python 등 다양한 언어를 지원해준다. 이 포
 1. pom.xml에 dependency 추가
 
    ```
-<dependency>
+   <dependency>
    			<groupId>io.springfox</groupId>
    			<artifactId>springfox-swagger-ui</artifactId>
    			<version>2.9.2</version>
@@ -45,9 +45,9 @@ Swagger은 NodeJs, Java, Python 등 다양한 언어를 지원해준다. 이 포
    			<version>2.9.2</version>
    </dependency>
    ```
+
    
-   
-   
+
 2. 패키지 맞춰서 com.ssafy.config 패키지에 SwaggerConfig.java 생성
 
    - apis(RequestHandlerSelectors.basePackage("com.ssafy.controller"))를 통해 컨트롤러 소속 패키지 경로 지정!
@@ -93,4 +93,4 @@ Swagger은 NodeJs, Java, Python 등 다양한 언어를 지원해준다. 이 포
 
 
 
-## Swagger를 통해 백엔드와 프론트엔드가 문서를 통해 협업!!!
+## SWagger를 통해 백엔드와 프론트엔드가 협업!!!
