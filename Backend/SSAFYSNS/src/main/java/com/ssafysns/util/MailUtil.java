@@ -14,7 +14,7 @@ public class MailUtil {
 		String hostSMTP = "smtp.gmail.com";
 		
 		String hostSMTPid = "jason07289@gmail.com";//id
-		String hostSMTPpwd = "19923109a!";
+		String hostSMTPpwd = "";
 		
 		//보내는 이 설정
 		String fromEmail = "ssafysns@gmail.com";
