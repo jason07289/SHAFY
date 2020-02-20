@@ -63,6 +63,9 @@ public class Post {
 	
 	@Transient
 	private boolean auth;
+	
+	@Transient
+	private String profile;
 
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
