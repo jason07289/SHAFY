@@ -182,46 +182,46 @@ public class UserServiceImpl implements UserService{
 			if(user.getApproval()!=null) {
 				find.setApproval(user.getApproval());
 			}
-			if(user.getAuth()!=null) {
+			if(user.getAuth()!=null&&!user.getUtype().equals("")) {
 				find.setAuth(user.getAuth());
 			}
 			if(user.getBanned()!=null) {
 				find.setBanned(user.getBanned());
 			}
-			if(user.getBirth()!=null) {
+			if(user.getBirth()!=null&&!user.getUtype().equals("")) {
 				find.setBirth(user.getBirth());
 			}
-			if(user.getCode()!=null) {
-				find.setCode(user.getCode());
-			}
+//			if(user.getCode()!=null&&!user.getUtype().equals("")) {
+//				find.setCode(user.getCode());
+//			}
 			if(user.getDeleted()!=null) {
 				find.setDeleted(user.getDeleted());
 			}
-			if(user.getGrade()!=null) {
+			if(user.getGrade()!=null&&!user.getUtype().equals("")) {
 				find.setGrade(user.getGrade());
 			}
-			if(user.getImg()!=null) {
+			if(user.getImg()!=null&&!user.getUtype().equals("")) {
 				find.setImg(user.getImg());
 			}
-			if(user.getLocation()!=null) {
+			if(user.getLocation()!=null&&!user.getUtype().equals("")) {
 				find.setLocation(user.getLocation());
 			}
-			if(user.getName()!=null) {
+			if(user.getName()!=null&&!user.getUtype().equals("")) {
 				find.setName(user.getName());
 			}
-			if(user.getNickname()!=null) {
+			if(user.getNickname()!=null&&!user.getUtype().equals("")) {
 				find.setNickname(user.getNickname());
 			}
-			if(user.getPhone()!=null) {
+			if(user.getPhone()!=null&&!user.getUtype().equals("")) {
 				find.setPhone(user.getPhone());
 			}
-			if(user.getState()!=null) {
+			if(user.getState()!=null&&!user.getUtype().equals("")) {
 				find.setState(user.getState());
 			}
-			if(user.getUtype()!=null&&user.getUtype().equals("")) {
+			if(user.getUtype()!=null&&!user.getUtype().equals("")) {
 				find.setUtype(user.getUtype());
 			}
-			if(user.getPassword()!=null) {
+			if(user.getPassword()!=null&&!user.getUtype().equals("")) {
 				AES256Util aes = new AES256Util();
 				if(!user.getPassword().equals(aes.decrypt(find.getPassword()))){
 					throw new PasswordException2("password가 틀립니다.");
