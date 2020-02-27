@@ -7,8 +7,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserForChangePW {
-	private String id;
-	private String password;
+public class UserForChangePW extends User{
 	private String newPassword;
 }

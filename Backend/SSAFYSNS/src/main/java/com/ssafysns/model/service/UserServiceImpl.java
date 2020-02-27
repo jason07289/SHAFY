@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import com.ssafysns.exception.AdminException;
 import com.ssafysns.exception.IdException;
 import com.ssafysns.exception.MyLoginException;
+import com.ssafysns.exception.PasswordException;
+import com.ssafysns.exception.PasswordException2;
 import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.UserForChangePW;
 import com.ssafysns.repository.UserRepository;
 import com.ssafysns.util.AES256Util;
 import com.ssafysns.util.MailUtil;
@@ -166,18 +169,88 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public boolean update(User user) {
+	public String update(UserForChangePW user) {
 		try {
-			userRepository.save(user);
-			return true;
-		} catch (Exception e) {
+			User find = userRepository.getOne(user.getId());
+			System.out.println("변경전");
+			System.out.println(find);
+			System.out.println(user.getPassword());
+			System.out.println("??");
+			if(user.getAlarm()!=0) {
+				find.setAlarm(user.getAlarm());
+			}
+			if(user.getApproval()!=null) {
+				find.setApproval(user.getApproval());
+			}
+			if(user.getAuth()!=null) {
+				find.setAuth(user.getAuth());
+			}
+			if(user.getBanned()!=null) {
+				find.setBanned(user.getBanned());
+			}
+			if(user.getBirth()!=null) {
+				find.setBirth(user.getBirth());
+			}
+			if(user.getCode()!=null) {
+				find.setCode(user.getCode());
+			}
+			if(user.getDeleted()!=null) {
+				find.setDeleted(user.getDeleted());
+			}
+			if(user.getGrade()!=null) {
+				find.setGrade(user.getGrade());
+			}
+			if(user.getImg()!=null) {
+				find.setImg(user.getImg());
+			}
+			if(user.getLocation()!=null) {
+				find.setLocation(user.getLocation());
+			}
+			if(user.getName()!=null) {
+				find.setName(user.getName());
+			}
+			if(user.getNickname()!=null) {
+				find.setNickname(user.getNickname());
+			}
+			if(user.getPhone()!=null) {
+				find.setPhone(user.getPhone());
+			}
+			if(user.getState()!=null) {
+				find.setState(user.getState());
+			}
+			if(user.getUtype()!=null&&user.getUtype().equals("")) {
+				find.setUtype(user.getUtype());
+			}
+			if(user.getPassword()!=null) {
+				AES256Util aes = new AES256Util();
+				if(!user.getPassword().equals(aes.decrypt(find.getPassword()))){
+					throw new PasswordException2("password가 틀립니다.");
+				}else if(user.getPassword().equals(user.getNewPassword())) {
+					throw new PasswordException("바꾸실 password가 같습니다.");
+				}else {
+					find.setPassword(aes.encrypt(user.getNewPassword()));
+				}
+				
+			}
+			System.out.println("변경 후");
+
+			System.out.println(find);
+			userRepository.save(find);
+			System.out.println("save왜안되냐?");
+			return "OK";
+		} catch (PasswordException e) {
 			e.printStackTrace();
+			return "바꾸실 password가 같습니다.";
+		} catch (PasswordException2 e) {
+			e.printStackTrace();
+			return "입력하신 password가 틀립니다.";
+		} catch (Exception e) {
+			return "오류발생";
 		}
 		
 		
 		
 		
-		return false;
 	}
 
 
@@ -288,8 +361,8 @@ public class UserServiceImpl implements UserService{
 //		System.out.println("userID:  "+userid);
 		User user = userRepository.getOne(userid);
 //		System.out.println(user);
-		user.setDeleted(0);
-		user.setBanned(0);
+		user.setDeleted(null);
+		user.setBanned(null);
 		user.setAuth(null);
 		user.setCode(null);
 		
