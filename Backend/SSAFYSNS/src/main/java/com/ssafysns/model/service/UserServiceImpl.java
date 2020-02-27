@@ -361,8 +361,6 @@ public class UserServiceImpl implements UserService{
 //		System.out.println("userID:  "+userid);
 		User user = userRepository.getOne(userid);
 //		System.out.println(user);
-		user.setDeleted(null);
-		user.setBanned(null);
 		user.setAuth(null);
 		user.setCode(null);
 		

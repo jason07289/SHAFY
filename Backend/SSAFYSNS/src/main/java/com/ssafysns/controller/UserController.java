@@ -169,7 +169,7 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("user 업데이트. 상황에 맞게 파라미터를 넘겨주면 편하게 사용가능 *비밀번호는 이 URI로 절대 접근하지 말것*")
+	@ApiOperation("user 업데이트. ")
 	@PutMapping("/user")
 	public ResponseEntity<Map<String,Object>> update(@RequestBody UserForChangePW user){
 		try {
