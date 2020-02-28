@@ -214,7 +214,15 @@ public class UserServiceImpl implements UserService{
 				find.setGrade(user.getGrade());
 			}
 			if(user.getImg()!=null&&!user.getImg().equals("")) {
-				find.setImg(user.getImg());
+				
+				if(user.getImg().equals("no")) {
+					find.setImg("");
+				}else {
+					find.setImg(user.getImg());
+				}
+				
+				
+				
 			}
 			if(user.getLocation()!=null&&!user.getLocation().equals("")) {
 				find.setLocation(user.getLocation());
@@ -234,7 +242,7 @@ public class UserServiceImpl implements UserService{
 			if(user.getUtype()!=null&&!user.getUtype().equals("")) {
 				find.setUtype(user.getUtype());
 			}
-
+			
 			if(user.getNewPassword()!=null&&!user.getNewPassword().equals("")) {
 				
 				if(user.getPassword().equals(user.getNewPassword())) {

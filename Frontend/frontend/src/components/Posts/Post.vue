@@ -90,7 +90,7 @@
       <!-- src="https://imgur.com/a/dvZcOAa" -->
       <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      v-if="post.attachments!=null"
+      v-if="post.attachments!=''&&post.attachments!=null"
       :src="post.attachments"
       height="194"
       style="object-fit: contain;"
