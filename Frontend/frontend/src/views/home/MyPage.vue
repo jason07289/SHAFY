@@ -12,9 +12,10 @@
   >
   <v-card-actions>
   <v-list-item>
-    <v-list-item-avatar size="70" color="grey">
-      <img class = "profile" :src="userInfo.img">
-    </v-list-item-avatar>
+    <v-list-item-avatar size="70" v-if="userInfo.img!= ''" color="grey">
+        <img class = "profile" :src="userInfo.img">
+      </v-list-item-avatar>
+        <v-icon v-else size="70" color="grey" style="margin:8px 16px 8px 0px;padding:0px;">mdi-account-circle</v-icon>
     <v-list-item-content>
       <v-list-item-title class="body-1">{{userInfo.nickname}}님</v-list-item-title>
       <v-list-item-subtitle>{{userInfo.location}} {{userInfo.grade}}기</v-list-item-subtitle>
@@ -115,6 +116,36 @@
         </v-row>
         <v-row align="center" style="margin-left:20px;">
         <span style="width:50px;">이름</span>::{{userInfo.name}}
+        </v-row>
+        <!-- 변경할 비밀번호 -->
+        <v-row align="center"
+        style="margin-top:24px;"
+        >
+          <v-icon
+          size="14"
+          style="margin-left:31px;"
+          >mdi-lock-outline</v-icon>
+          <span class="caption"> 비밀번호 수정</span>
+        </v-row>
+        <v-row align="center">
+        <v-text-field
+        v-model="editpassword"
+        :rules="editPasswordRules"
+        :counter="20"
+        :type="show1 ? 'text' : 'password'"
+        placeholder="변경할 비밀번호(글자,숫자를 포함 8자리 이상)"
+        style="margin-left:31px;padding-top:0px;"
+        ></v-text-field>
+        </v-row>
+        <!-- 닉네임 -->
+        <v-row align="center"
+        style="margin-top:24px;"
+        >
+          <v-icon
+          size="14"
+          style="margin-left:31px;"
+          >mdi-account-outline</v-icon>
+          <span class="caption"> 닉네임 수정</span>
         </v-row>
         <v-row align="center">
         <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
@@ -267,7 +298,20 @@
 
 
     </v-form>
-    <v-btn block @click="submit">수정 완료</v-btn>
+    <v-text-field
+    type="password"
+    v-model="originalPasswordCheck"
+    placeholder="회원정보 수정을 위해 비밀번호를 입력해주세요"
+    hide-details
+    outlined
+    style="margin-top:24px;"
+    ></v-text-field>
+    <v-btn 
+    depressed
+    block 
+    color="custom_active white--text"
+    :disabled="originalPasswordCheck=='' || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(originalPasswordCheck)"
+    @click="submit">수정 완료</v-btn>
     </v-card>
   </v-dialog>
 
@@ -413,7 +457,13 @@ export default {
       signOutDialog : false,
       certiSheet:false,
       //회원정보수정용
+      originalPasswordCheck:'',
       nicknameChecked:false,
+      editpassword:'',
+      editPasswordRules:[
+        v => !!v || '비밀번호를 입력해주세요',
+        v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+      ],
 
     }
   },
@@ -426,7 +476,10 @@ export default {
           .then(()=>this.$router.push({name:'Login'}))
         },
     submit(){
+      this.userInfo.password=this.originalPasswordCheck
+      this.userInfo.newPassword = this.editpassword
       this.update = false
+      console.log("회원정보수정>>"+this.userInfo)
       UserApi.requestUpdateUser(this.userInfo
         ,res=>{
           if(res.data.state === 'ok'){
