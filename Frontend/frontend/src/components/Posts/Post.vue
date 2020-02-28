@@ -108,50 +108,85 @@
       1번 찍었으면 A 
       2번 찍었응면 B 
       -->
+    <div v-if="post.vote!=null">
+        <!-- <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/> -->
+      <v-card 
+      class="mx-auto" 
+      outlined
+      style="width:100%;"
+      color="#fcfcfc"
+      >
+      <!-- 투표타이틀 -->
+      <div align="center" 
+      class="font-weight-black"
+      style="margin:5px 0px 0px 0px;width:100%;"
+      >
+      <v-icon size="17">mdi-vote</v-icon>
+        {{ post.vote.title }}
+      </div>
+      <v-card-actions>
+        <!--왼쪽버튼-->
+        <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#014161':(hover?'blue':'#4181a1')"
+        class="vote-button vote-button-left"
+        @click="vote(1)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='A')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{post.vote.a_value}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.a_name}}
+        </div>
+        </v-card>
+        
+        </v-hover>
+        <!--오른쪽버튼-->
+       <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#91430f':(hover?'red':'#d1534f')"
+        class="vote-button vote-button-right"
+        @click="vote(2)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='B')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{post.vote.b_value}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.b_name}}
+        </div>
+        </v-card>
+        </v-hover>
+      </v-card-actions>
 
+      </v-card>
+      
+      </div>
     <v-expand-transition>
     <v-card-text style="padding-bottom:0px;color:black;">
       <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
       <span v-show="content_show" v-html="postdata_full"> <br> 
       </span>
-      <div v-if="content_show&&post.vote!=null">
-        <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/>
       
-      <div align="center" 
-      class="font-weight-black"
-      style="margin-bottom:12px;"
-      >
-        <code style="margin:0px 2px 0px 0px;">투표주제
-        <v-icon size="16" >
-          mdi-arrow-right-drop-circle
-        </v-icon>
-        </code>
-        {{ post.vote.title }}
-      </div>
-
-      <v-hover
-        v-slot:default="{ hover }"
-      >
-      <v-card
-        :color="hover?'red':'black'"
-        @click="vote(1)"
-      >
-        <!-- :disabled="this.post.vote.my_value!=='No'"  -->
-      <v-icon>mdi-pound</v-icon>
-      {{ post.vote.a_name }}
-      :{{ post.vote.a_value }}
-      </v-card>
-      </v-hover>
-      <v-btn 
-        :disabled="this.post.vote.my_value!=='No'" 
-        @click="vote(2)"
-      >
-      {{ post.vote.b_name }}
-      :{{ post.vote.b_value }}
-      </v-btn>
-
-      <!-- 내가 투표한 값{{ post.vote.my_value }} -->
-      </div>
     </v-card-text>
 
       
@@ -566,6 +601,29 @@ export default {
 }
 .custom_ {
   background-color:var(--button-off);
+}
+
+.vote-button{
+  width:50%;
+  height:100px;
+  padding-left:5px;
+  padding-right:5px;
+}
+.vote-button-left{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.vote-button-right{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: .5;
+  position: absolute;
+  width: 100%;
 }
 
 

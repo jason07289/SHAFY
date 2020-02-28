@@ -11,7 +11,7 @@
     <v-spacer/>
     <v-btn text @click="readAll">{{nmofNotification}}개 알림 모두 읽기</v-btn>
     </v-card-actions>
-    <v-divider class="mx-0"/>
+    <v-divider class="mx-0" style="margin-bottom:12px;"/>
     <!-- 알림기능 -------------------------------------------------->
    
       <!-- 안읽은거 : active상태 -->
@@ -20,15 +20,16 @@
       >
       <v-chip label
         @click="check(noti)"
-        :outlined="noti.checked==0?false:true"
-        :color="noti.checked==0?'blue white--text':'#aaaaaa'"
+        dark
+        :color="noti.checked==0?'custom_active white--text':'#aaaaaa'"
         style="width:100%;padding:30px 22px 30px 22px;margin:6px 18px 6px 18px"
         >
+        <v-icon v-if="noti.checked!=0" color="#dddddd" style="margin-right:4px;">mdi-check</v-icon>
         {{noti.notificationMessage}}
       </v-chip>
       </v-card-actions>
       <!-- 읽은거  -->
-      <v-divider class="mx-2"/>
+      <v-divider class="mx-2" style="margin-top:12px;"/>
 
 
 
