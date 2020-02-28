@@ -60,7 +60,7 @@
         <v-btn icon dark @click="resultDialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
+        <!-- <v-toolbar-title>{{activityTitle}}</v-toolbar-title> -->
         <v-spacer></v-spacer>
       </v-toolbar>
       <!-- 여기에 나중에 포스트리스트 띄우기 -->

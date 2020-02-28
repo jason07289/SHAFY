@@ -317,7 +317,7 @@ require('firebase/storage')
           }
         }
         this.step=3
-        console.log('선택',this.selectedTag, {post:this.postingForm,vote:this.vote})
+        console.log(`선택한 태그${this.selectedTag}`)
         this.postingForm.id = this.userInfo.id
         this.postingForm.content = this.content
         this.postingForm.hashtag = this.selectedTag.join('')

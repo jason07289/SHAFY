@@ -7,7 +7,7 @@
     >
         <div style="width:100%;height:40px;"></div>
         <v-img
-        src="https://gitlab.com/Yoowoobin/img_tmp_wb/-/raw/master/Free_imgURL/%EC%83%A4%ED%94%BC%EB%A1%9C%EA%B3%A02.png">
+        src="../../assets/sharfylogo.png">
         </v-img>
         <div style="width:100%;height:40px;"></div>
         <div class="mx-3 mt-3">
@@ -113,9 +113,6 @@ export default {
       this.loginSubmit({'id':this.email, 'password': this.password})
    },
   },
-  created(){
-    console.log(this.$store.state.user.myurl)
-  }
-  
+
 }
 </script>

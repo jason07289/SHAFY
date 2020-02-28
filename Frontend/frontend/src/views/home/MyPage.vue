@@ -40,7 +40,7 @@
   <v-list flat>
       <v-subheader>내 활동</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in activity" :key="item" @click="activityClick(item)">
+        <v-list-item v-for="item in activity" :key="item.text" @click="activityClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -59,7 +59,7 @@
   <v-list flat>
       <v-subheader>계정</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in account" :key="item" @click="accountClick(item)">
+        <v-list-item v-for="item in account" :key="item.text" @click="accountClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -79,7 +79,7 @@
   <v-list flat>
       <v-subheader>기타</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in extra" :key="item">
+        <v-list-item v-for="item in extra" :key="item.text">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -427,20 +427,18 @@ export default {
         },
     submit(){
       this.update = false
-      console.log(this.userInfo)
       UserApi.requestUpdateUser(this.userInfo
         ,res=>{
-          console.log(res)
           if(res.data.state === 'ok'){
             alert('회원 정보가 수정 되었습니다.')
           }
         },err=>{
-          console.log(err)
+          console.log(`회원 정보 수정 에러 발생 :${err}`)
         }
       )
     },
   onUpload(){
-        console.log('img object: ',this.imageData)
+        // console.log('img object: ',this.imageData)
         const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData)
         storageRef.on(`state_changed`,snapshot=>{
           this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;

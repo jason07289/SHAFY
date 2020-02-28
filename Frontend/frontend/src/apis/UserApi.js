@@ -18,7 +18,6 @@ const appname = '/user'
 }
 
 const requestUpdateUser = (data, callback, errorCallback) => {
-    console.log(data)
     axios.put(hosturl+appname, data)
     .then(callback)
     .catch(errorCallback)

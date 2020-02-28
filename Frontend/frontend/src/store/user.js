@@ -27,13 +27,9 @@ const getters = {
 // actions
 const actions = {
   login({ commit },data){
-    console.log('before go to server')
     return UserApi.requestLogin(data,res=>{
       if(res.data.state==="ok"){
-        console.log('before commit')
         commit('loginSuccess', res.data.JWT)
-        console.log('after commit', state.JWT)
-      
       }else{
         console.log(res)
         // alert(res.data)
@@ -50,14 +46,15 @@ const actions = {
   },
   getUserInfo({ commit }){
     UserApi.requestUserInFo(res=>{
-      // console.log('userInfoAPI',res)
+
       if (res.data.state === 'ok'){
-        // console.log(router)
         commit('setUserInfo', res.data.message)
       }else{
-        alert(res.data)
+        console.log(res.data)
       }
     },error=>{
+      // 백엔드가 꺼져있을 경우:
+      alert(`현재 사이트 접속이 불가합니다. 관리자에게 문의해주세요`)
       console.log(error)
     })
   },

@@ -31,7 +31,7 @@
   >
 <!-- 작성자정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-list-item>
-      <v-list-item-avatar v-if="post.profile!=''" color="grey">
+      <v-list-item-avatar v-if="post.profile != ''" color="grey">
         <img class = "profile" :src="post.profile">
       </v-list-item-avatar>
         <v-icon v-else size="40" color="grey" style="margin:8px 16px 8px 0px;padding:0px;">mdi-account-circle</v-icon>
@@ -70,13 +70,13 @@
         v-model="selection"
         column
       >
-        <v-chip v-for="tag in tag_list"  :key="tag"
+        <v-chip v-for="tag in tag_list"  :key="tag.order"
         @click.stop="clickTag(tag)"
         color="var(--button-off)"
         text-color="#666666"
         active-class="custom_active white--text"
         >
-          #{{tag}}
+          #{{tag.name}}
         </v-chip>
 
 
@@ -90,7 +90,7 @@
       <!-- src="https://imgur.com/a/dvZcOAa" -->
       <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      v-if="post.attachments!=''"
+      v-if="post.attachments!=null"
       :src="post.attachments"
       height="194"
       style="object-fit: contain;"
@@ -417,6 +417,9 @@ export default {
     makeTagList(){
       this.tag_list = this.post.hashtag.replace(' ','').split('#')
       this.tag_list.splice(0,1)
+      this.tag_list = this.tag_list.map((name, index)=>{
+        return {name, order: index + 1 }
+      })
     },
     getCommentList(){
         PostApi.getComment({pno:this.post.pno},
@@ -469,10 +472,11 @@ export default {
         this.commentHolder = '댓글을 입력하세요'
       }
     },
-
-
     //시간 설정 함수
-    transferTime(time){    
+    transferTime(time){
+    if (time === undefined){
+      return
+    }    
      var now = new Date();
      var sYear = time.substring(0,4);
      var sMonth = time.substring(5,7)-1;
@@ -499,29 +503,35 @@ export default {
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
     }
-
-
-     
      return str;
     }
   },
-  mounted:function () {
-          /* 할 일들 
-    1. 날짜 변경(방금 전 등)    => setDate()
-    2. 선택된 해시태그는 색상 변경
-    3. 보여줄 한 줄만 설정      => setContent()
-    4. 태그리스트 생성
-    */
-   //console.log('시간받아온것 : '+this.post.datetime)
-   this.postdata_date = transferTime(this.post.datetime)
+  created(){
+   this.postdata_date = this.transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
    this.loading = false;
    for(var i=0; i<this.post.comment.length; i++){
-     this.post.comment.datetime = transferTime(this.post.comment.datetime)
+     this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
    }
-
   },
+  // mounted:function () {
+  //         /* 할 일들 
+  //   1. 날짜 변경(방금 전 등)    => setDate()
+  //   2. 선택된 해시태그는 색상 변경
+  //   3. 보여줄 한 줄만 설정      => setContent()
+  //   4. 태그리스트 생성
+  //   */
+  // //  console.log('시간받아온것 : '+this.post.datetime)
+  //  this.postdata_date = this.transferTime(this.post.datetime)
+  //  this.setContent()
+  //  this.makeTagList()
+  //  this.loading = false;
+  //  for(var i=0; i<this.post.comment.length; i++){
+  //    this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
+  //  }
+  
+  // },
   props:{
     post: {
       type: Object,
@@ -530,35 +540,7 @@ export default {
   },
   
 }
-function transferTime(time){    
-     var now = new Date();
-     var sYear = time.substring(0,4);
-     var sMonth = time.substring(5,7)-1;
-     var sDate = time.substring(8,10);
-     var sHour = time.substring(11,13);
-     var sMin = time.substring(14,16);
-     var sSecond = time.substring(17,19);
-     var sc = 1000;
- 
-     var today = new Date(sYear,sMonth,sDate,sHour,sMin,sSecond);
-     //지나간 초
-     var pastSecond = parseInt((now-today)/sc,10);
-    //  console.log("지나간초:"+pastSecond)
-       var str = "";
-    
-    if(pastSecond<60){
-      str='방금 전'
-    }else if(pastSecond<3600){
-      str = parseInt((pastSecond/60),10)+'분 전'
-    }else if(pastSecond<86400){
-      str = parseInt((pastSecond/3600),10)+'시간 전'
-    }else if(pastSecond<2592000){
-      str = parseInt((pastSecond/86400),10)+'일 전'
-    }else{
-      str = sYear+'/'+sMonth+'/'+sDate
-    }     
-     return str;
-}
+
 </script>
 
 <style>
