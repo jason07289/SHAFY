@@ -111,10 +111,10 @@
     <!-------------기본정보-->
         <v-container fluid style="padding-bottom:0px;">
         <v-row align="center" style="margin-left:20px;">
-        ID   ::  {{userInfo.id}}
+        <span style="width:50px;">ID</span>::{{userInfo.id}}
         </v-row>
         <v-row align="center" style="margin-left:20px;">
-        이름 ::   {{userInfo.name}}
+        <span style="width:50px;">이름</span>::{{userInfo.name}}
         </v-row>
         <v-row align="center">
         <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
