@@ -80,7 +80,7 @@
   <v-list flat>
       <v-subheader>기타</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in extra" :key="item.text">
+        <v-list-item v-for="item in extra" :key="item.text" @click="etcClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -400,7 +400,25 @@ width="unset"
         
       </v-sheet>
     </v-bottom-sheet>
+<!-- 기타 항목들 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
+<v-dialog 
+v-model="etcDialog" 
+fullscreen hide-overlay 
+transition="dialog-bottom-transition"
+>
 
+  <v-card>
+      <v-btn 
+      icon 
+      @click="etcDialog = false"
+      style="margin:12px;"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    <!-- 여기에 나중에 포스트리스트 띄우기 -->
+    <component v-bind:is="etcDialog?etcComponent:'span'"></component>
+  </v-card>
+</v-dialog>
 </div>
 </template>
 
@@ -410,6 +428,9 @@ width="unset"
 import { mapActions, mapState } from 'vuex'
 import UserApi from '../../apis/UserApi'
 import PostList from '../../components/Posts/PostList'
+import Rules from '../../components/etc/Rules'
+import PersonalInfoTerms from '../../components/etc/PersonalInfoTerms'
+
 const firebase = require('firebase/app')
 require('firebase/storage') 
 
@@ -441,8 +462,8 @@ export default {
         {mdi:'account-arrow-right',text:'회원탈퇴',value:'signOut'}
       ],
       extra:[
-        {mdi:'check-decagram',text:'커뮤니티이용규칙'},
-        {mdi:'clipboard-account-outline',text:'개인정보처리방침'},
+        {mdi:'check-decagram',text:'커뮤니티이용규칙',value:'Rules'},
+        {mdi:'clipboard-account-outline',text:'개인정보처리방침',value:'PersonalInfoTerms'},
         {mdi:'iframe-outline',text:'개발스택'},
         {mdi:'podium',text:'개발팀소개'}
       ],
@@ -456,6 +477,7 @@ export default {
       activityDialog: false,
       signOutDialog : false,
       certiSheet:false,
+      etcDialog:false,
       //회원정보수정용
       originalPasswordCheck:'',
       nicknameChecked:false,
@@ -464,7 +486,8 @@ export default {
         v => !!v || '비밀번호를 입력해주세요',
         v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
       ],
-
+      //etc다이얼로그용
+      etcComponent:'',
     }
   },
   methods:{
@@ -521,6 +544,10 @@ export default {
         this.certiSheet = true
       }
     },
+    etcClick(etcItem){
+      this.etcComponent = etcItem.value
+      this.etcDialog = true
+    },
     signOut(){
       UserApi.requestUserDelete({
                   "id": this.userInfo.id,
@@ -567,7 +594,7 @@ export default {
     this.getUserInfo()
   },
   components:{
-    PostList
+    PostList,PersonalInfoTerms,Rules,
   },
 
 }
