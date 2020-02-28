@@ -359,8 +359,8 @@ export default {
       bookmark: this.post.bookmark_check,
       imageDialog:false,
       // 투표관련
-      a_cnt: this.post.vote.a_value,
-      b_cnt: this.post.vote.b_value
+      a_cnt : 0,
+      b_cnt: 0
     }
   },
   methods: {
@@ -377,7 +377,7 @@ export default {
         temp = 'B'
         this.b_cnt ++
       }
-      console.log(choice,'에 투표하셨습니다.')
+      // console.log(choice,'에 투표하셨습니다.')
       PostApi.registerVote({vno:this.post.vote.vno, choice:choice},res=>{
         if(res.data.state === 'ok'){
           this.post.vote.my_value = temp
@@ -554,6 +554,11 @@ export default {
    for(var i=0; i<this.post.comment.length; i++){
      this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
    }
+
+  if (this.post.vote){
+    this.a_cnt = this.post.vote.a_value
+    this.b_cnt= this.post.vote.b_value
+    }
   },
   // mounted:function () {
   //         /* 할 일들 

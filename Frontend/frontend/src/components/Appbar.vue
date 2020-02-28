@@ -59,7 +59,7 @@
 
     <v-card>
       <v-toolbar flat dark color="primary">
-        <v-btn icon dark @click="resultDialog = false">
+        <v-btn icon dark @click="closeList">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <!-- <v-toolbar-title>{{activityTitle}}</v-toolbar-title> -->
@@ -81,7 +81,6 @@ import PostList from './Posts/PostList'
         searchTabName:'',
         currentComponent:'PostList',
         searchDialog:false,
-
       }
     },
     components: {
@@ -91,9 +90,7 @@ import PostList from './Posts/PostList'
       search() {
         this.searchDialog=false;
         
-        this.searchTabName = '';
         this.resultDialog = true
-        
       },
       clickMagnify(){
         this.searchDialog=true;
@@ -102,7 +99,10 @@ import PostList from './Posts/PostList'
       clickClose(){
         this.searchTabName='';
         this.searchDialog=false;
-
+      },
+      closeList(){
+        this.resultDialog = false
+        this.searchTabName='';
       }
     },
   }

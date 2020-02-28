@@ -304,7 +304,7 @@ require('firebase/storage')
         }
         // 만약 투표 기능을 사용할 경우 투표 유효성 검증
         if (this.vote_show===true){
-          console.log(this.vote)
+          // console.log(this.vote)
           // 제목 쓰세요 
           if (this.vote.title === ''){
             alert('투표 제목을 입력해주세요')
