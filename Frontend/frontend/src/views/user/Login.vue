@@ -7,12 +7,13 @@
     >
         <div style="width:100%;height:40px;"></div>
         <v-img
-        src="https://gitlab.com/Yoowoobin/img_tmp_wb/-/raw/master/Free_imgURL/%EC%83%A4%ED%94%BC%EB%A1%9C%EA%B3%A02.png">
+        src="../../assets/sharfylogo.png">
         </v-img>
         <div style="width:100%;height:40px;"></div>
         <div class="mx-3 mt-3">
         <v-form v-model="valid">
             <v-text-field
+            color="grey"
             dense
             id="idInput"
             v-model="email"
@@ -24,6 +25,7 @@
             @keyup.enter="login"
             ></v-text-field>
             <v-text-field
+            color="grey"
             dense
             v-model="password"
             :rules="passwordRules"
@@ -46,19 +48,21 @@
             </div>
         </v-form>
         <div style="width:100%;height:8px;"></div>
-        <hr class="my-3" color ="primary">
         <div style="width:100%;height:8px;"></div>
       </div>
-      <div style="text-align:right;padding-right:23px;">
-        <router-link v-bind:to="{name:'FindPassword'}" class="text-center" >아이디를 잊으셨나요?</router-link><br>
-        <router-link v-bind:to="{name:'Join'}" class="text-center">가입하기</router-link><br>
-      </div>
       <v-row justify="center">
+        <div class="caption" ssstyle="width:100%;text-align:center;">
+          ㅡㅡ또는ㅡㅡ
+        </div>
         <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
-        <v-btn depressed large :href=link.github dark color="black"
+        <v-btn text depressed large :href=link.github color="black"
         style="padding-top:25px;padding-bottom:25px;">
-          <img src="../../assets/Login/GitHub-Mark-Light-32px.png" alt="GithubMark" style="margin-right:5px;">
-          Github으로 로그인
+          <img 
+          src="../../assets/Login/GitHub-Mark-32px.png" 
+          alt="GithubMark" 
+          style="margin-right:5px;width:20px;"
+          >
+          <span class="subtitle-2 font-weight-black" style="padding-top:5px;">Github으로 로그인</span>
         </v-btn>
       </v-row>
     </v-card>
@@ -69,7 +73,9 @@
     @click="alert(hi);"
     >
     <v-row justify="center">
-      <v-card-title> 가입하기 </v-card-title>
+      <router-link v-bind:to="{name:'Join'}" class="text-center">
+      <v-card-title> <span style="color:black;">가입하기</span> </v-card-title>
+      </router-link>
     </v-row>
     </v-card>
     </div>
@@ -113,9 +119,6 @@ export default {
       this.loginSubmit({'id':this.email, 'password': this.password})
    },
   },
-  created(){
-    console.log(this.$store.state.user.myurl)
-  }
-  
+
 }
 </script>

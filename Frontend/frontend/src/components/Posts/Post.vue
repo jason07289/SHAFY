@@ -31,7 +31,7 @@
   >
 <!-- 작성자정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-list-item>
-      <v-list-item-avatar v-if="post.profile!=''" color="grey">
+      <v-list-item-avatar v-if="post.profile != ''" color="grey">
         <img class = "profile" :src="post.profile">
       </v-list-item-avatar>
         <v-icon v-else size="40" color="grey" style="margin:8px 16px 8px 0px;padding:0px;">mdi-account-circle</v-icon>
@@ -70,13 +70,13 @@
         v-model="selection"
         column
       >
-        <v-chip v-for="tag in tag_list"  :key="tag"
+        <v-chip v-for="tag in tag_list"  :key="tag.order"
         @click.stop="clickTag(tag)"
         color="var(--button-off)"
         text-color="#666666"
         active-class="custom_active white--text"
         >
-          #{{tag}}
+          #{{tag.name}}
         </v-chip>
 
 
@@ -90,7 +90,7 @@
       <!-- src="https://imgur.com/a/dvZcOAa" -->
       <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      v-if="post.attachments!=''"
+      v-if="post.attachments!=null"
       :src="post.attachments"
       height="194"
       style="object-fit: contain;"
@@ -108,50 +108,85 @@
       1번 찍었으면 A 
       2번 찍었응면 B 
       -->
+    <div v-if="post.vote!=null">
+        <!-- <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/> -->
+      <v-card 
+      class="mx-auto" 
+      outlined
+      style="width:100%;"
+      color="#fcfcfc"
+      >
+      <!-- 투표타이틀 -->
+      <div align="center" 
+      class="font-weight-black"
+      style="margin:5px 0px 0px 0px;width:100%;"
+      >
+      <v-icon size="17">mdi-vote</v-icon>
+        {{ post.vote.title }}
+      </div>
+      <v-card-actions>
+        <!--왼쪽버튼-->
+        <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#014161':(hover?'blue':'#4181a1')"
+        class="vote-button vote-button-left"
+        @click="vote(1)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='A')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{post.vote.a_value}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.a_name}}
+        </div>
+        </v-card>
+        
+        </v-hover>
+        <!--오른쪽버튼-->
+       <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#91430f':(hover?'red':'#d1534f')"
+        class="vote-button vote-button-right"
+        @click="vote(2)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='B')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{post.vote.b_value}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.b_name}}
+        </div>
+        </v-card>
+        </v-hover>
+      </v-card-actions>
 
+      </v-card>
+      
+      </div>
     <v-expand-transition>
     <v-card-text style="padding-bottom:0px;color:black;">
       <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
       <span v-show="content_show" v-html="postdata_full"> <br> 
       </span>
-      <div v-if="content_show&&post.vote!=null">
-        <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/>
       
-      <div align="center" 
-      class="font-weight-black"
-      style="margin-bottom:12px;"
-      >
-        <code style="margin:0px 2px 0px 0px;">투표주제
-        <v-icon size="16" >
-          mdi-arrow-right-drop-circle
-        </v-icon>
-        </code>
-        {{ post.vote.title }}
-      </div>
-
-      <v-hover
-        v-slot:default="{ hover }"
-      >
-      <v-card
-        :color="hover?'red':'black'"
-        @click="vote(1)"
-      >
-        <!-- :disabled="this.post.vote.my_value!=='No'"  -->
-      <v-icon>mdi-pound</v-icon>
-      {{ post.vote.a_name }}
-      :{{ post.vote.a_value }}
-      </v-card>
-      </v-hover>
-      <v-btn 
-        :disabled="this.post.vote.my_value!=='No'" 
-        @click="vote(2)"
-      >
-      {{ post.vote.b_name }}
-      :{{ post.vote.b_value }}
-      </v-btn>
-
-      <!-- 내가 투표한 값{{ post.vote.my_value }} -->
-      </div>
     </v-card-text>
 
       
@@ -417,6 +452,9 @@ export default {
     makeTagList(){
       this.tag_list = this.post.hashtag.replace(' ','').split('#')
       this.tag_list.splice(0,1)
+      this.tag_list = this.tag_list.map((name, index)=>{
+        return {name, order: index + 1 }
+      })
     },
     getCommentList(){
         PostApi.getComment({pno:this.post.pno},
@@ -469,10 +507,11 @@ export default {
         this.commentHolder = '댓글을 입력하세요'
       }
     },
-
-
     //시간 설정 함수
-    transferTime(time){    
+    transferTime(time){
+    if (time === undefined){
+      return
+    }    
      var now = new Date();
      var sYear = time.substring(0,4);
      var sMonth = time.substring(5,7)-1;
@@ -499,29 +538,35 @@ export default {
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
     }
-
-
-     
      return str;
     }
   },
-  mounted:function () {
-          /* 할 일들 
-    1. 날짜 변경(방금 전 등)    => setDate()
-    2. 선택된 해시태그는 색상 변경
-    3. 보여줄 한 줄만 설정      => setContent()
-    4. 태그리스트 생성
-    */
-   //console.log('시간받아온것 : '+this.post.datetime)
-   this.postdata_date = transferTime(this.post.datetime)
+  created(){
+   this.postdata_date = this.transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
    this.loading = false;
    for(var i=0; i<this.post.comment.length; i++){
-     this.post.comment.datetime = transferTime(this.post.comment.datetime)
+     this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
    }
-
   },
+  // mounted:function () {
+  //         /* 할 일들 
+  //   1. 날짜 변경(방금 전 등)    => setDate()
+  //   2. 선택된 해시태그는 색상 변경
+  //   3. 보여줄 한 줄만 설정      => setContent()
+  //   4. 태그리스트 생성
+  //   */
+  // //  console.log('시간받아온것 : '+this.post.datetime)
+  //  this.postdata_date = this.transferTime(this.post.datetime)
+  //  this.setContent()
+  //  this.makeTagList()
+  //  this.loading = false;
+  //  for(var i=0; i<this.post.comment.length; i++){
+  //    this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
+  //  }
+  
+  // },
   props:{
     post: {
       type: Object,
@@ -530,35 +575,7 @@ export default {
   },
   
 }
-function transferTime(time){    
-     var now = new Date();
-     var sYear = time.substring(0,4);
-     var sMonth = time.substring(5,7)-1;
-     var sDate = time.substring(8,10);
-     var sHour = time.substring(11,13);
-     var sMin = time.substring(14,16);
-     var sSecond = time.substring(17,19);
-     var sc = 1000;
- 
-     var today = new Date(sYear,sMonth,sDate,sHour,sMin,sSecond);
-     //지나간 초
-     var pastSecond = parseInt((now-today)/sc,10);
-    //  console.log("지나간초:"+pastSecond)
-       var str = "";
-    
-    if(pastSecond<60){
-      str='방금 전'
-    }else if(pastSecond<3600){
-      str = parseInt((pastSecond/60),10)+'분 전'
-    }else if(pastSecond<86400){
-      str = parseInt((pastSecond/3600),10)+'시간 전'
-    }else if(pastSecond<2592000){
-      str = parseInt((pastSecond/86400),10)+'일 전'
-    }else{
-      str = sYear+'/'+sMonth+'/'+sDate
-    }     
-     return str;
-}
+
 </script>
 
 <style>
@@ -584,6 +601,29 @@ function transferTime(time){
 }
 .custom_ {
   background-color:var(--button-off);
+}
+
+.vote-button{
+  width:50%;
+  height:100px;
+  padding-left:5px;
+  padding-right:5px;
+}
+.vote-button-left{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.vote-button-right{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: .5;
+  position: absolute;
+  width: 100%;
 }
 
 

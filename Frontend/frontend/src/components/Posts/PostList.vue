@@ -41,7 +41,6 @@ export default {
     getTab(){
       this.busy = true
       PostApi.getTabPostlist({hashtag:this.tabName, page:this.page},res=>{
-      console.log('응답오고있는지',res)
       if (res.data.state === 'ok'){
         this.posts = this.posts.concat(res.data.message.post)
         this.page++
@@ -61,7 +60,6 @@ export default {
     getHome(){
         this.busy = true
         PostApi.getHomePost({page:this.page},res=>{
-        console.log('응답오고있는지',res)
         if (res.data.state === 'ok'){
           this.posts = this.posts.concat(res.data.message.post)
           this.page++

@@ -11,7 +11,7 @@
     <v-spacer/>
     <v-btn text @click="readAll">{{nmofNotification}}개 알림 모두 읽기</v-btn>
     </v-card-actions>
-    <v-divider class="mx-0"/>
+    <v-divider class="mx-0" style="margin-bottom:12px;"/>
     <!-- 알림기능 -------------------------------------------------->
    
       <!-- 안읽은거 : active상태 -->
@@ -20,15 +20,16 @@
       >
       <v-chip label
         @click="check(noti)"
-        :outlined="noti.checked==0?false:true"
-        :color="noti.checked==0?'blue white--text':'#aaaaaa'"
+        dark
+        :color="noti.checked==0?'custom_active white--text':'#aaaaaa'"
         style="width:100%;padding:30px 22px 30px 22px;margin:6px 18px 6px 18px"
         >
+        <v-icon v-if="noti.checked!=0" color="#dddddd" style="margin-right:4px;">mdi-check</v-icon>
         {{noti.notificationMessage}}
       </v-chip>
       </v-card-actions>
       <!-- 읽은거  -->
-      <v-divider class="mx-2"/>
+      <v-divider class="mx-2" style="margin-top:12px;"/>
 
 
 
@@ -71,12 +72,12 @@ export default {
       NotificationApi.getAllNotification(res=>{
         if (res.data.state==='ok'){
           this.notices = res.data.message
-          console.log(this.notices)
+          // console.log(this.notices)
         }else{
-          console.log(res.data)
+          console.log(`알람 가져오기 실패 : ${res.data.message}`)
         }
       },err=>{
-        console.log(err)
+        console.log( `알람 가져오기 오류 : ${err}`)
       })
   },
   check(aNoti){
@@ -84,14 +85,14 @@ export default {
     var no = aNoti.no
     NotificationApi.ReadNotification({ no }, res=>{
       if (res.data.state === 'ok'){
-        console.log(res.data.message)
+        // console.log(res.data.message)
         // 다시 빌려오기
       this.getNmofNotification()
       this.getAllNotification()
       this.AlarmNotification()
       }
     },err=>{
-      console.log(err)
+      console.log( `알람 읽음 오류 : ${err}`)
     })
 
     //포스트 띄우는 부분
@@ -113,7 +114,7 @@ export default {
       no = this.notices[i].no
       NotificationApi.ReadNotification({ no }, res=>{
       if (res.data.state === 'ok'){
-        console.log(res.data.message)
+        console.log(`전체 읽기 : ${res.data.message}`)
         // 다시 빌려오기
       this.getNmofNotification()
       this.getAllNotification()
@@ -129,22 +130,21 @@ export default {
       if (res.data.state === 'ok'){
         this.nmofNotification = res.data.message
       }else{
-        console.log(res.data)
+        console.log( `알람 갯수 가져오기 실패 : ${res.data.message}`)
       }
     },err=>{
-      console.log(err)
+      console.log( `알람 갯수 오류 : ${err}`)
     })
   },
   AlarmNotification(){
     NotificationApi.AlarmNotification(res=>{
       if (res.data.state==='ok'){
-        console.log(res.data)
         this.newalarm = res.data.message
       }else{
-        console.log(res.data)
+        console.log( `알람 여부 가져오기 실패 : ${res.data.message}`)
       }
     },err=>{
-      console.log(err)
+      console.log( `알람 여부 가져오기 오류 : ${err}`)
     })
   }
 },

@@ -124,7 +124,6 @@
 
 
 
-
 <script>
 import draggable from "vuedraggable";
 import { mapActions, mapState } from 'vuex';
@@ -183,7 +182,7 @@ import { mapActions, mapState } from 'vuex';
       for(var i=0; i<this.list.length; i++){
         this.message[i] = this.list[i].name
       }
-      console.log(this.returnStr)
+      console.log(`수정된 태그:${this.returnStr}`)
       this.updateTab({hashtag:this.returnStr})
       this.check = true
       this.editmode = false
