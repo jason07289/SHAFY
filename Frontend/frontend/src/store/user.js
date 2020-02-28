@@ -31,11 +31,11 @@ const actions = {
       if(res.data.state==="ok"){
         commit('loginSuccess', res.data.JWT)
       }else{
-        console.log(res)
+        console.log(`로그인 실패 : ${res.data.message}`)
         // alert(res.data)
       }
     },error=>{
-      console.log('로그인에러',error)
+      console.log(`로그인 오류 ${error}`)
     })
   },
 
@@ -46,11 +46,10 @@ const actions = {
   },
   getUserInfo({ commit }){
     UserApi.requestUserInFo(res=>{
-
       if (res.data.state === 'ok'){
         commit('setUserInfo', res.data.message)
       }else{
-        console.log(res.data)
+        console.log(`유저 정보 조회 실패 : ${res.data.message}`)
       }
     },error=>{
       // 백엔드가 꺼져있을 경우:

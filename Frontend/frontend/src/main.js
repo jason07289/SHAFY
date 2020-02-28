@@ -13,6 +13,7 @@ import infiniteScroll from 'vue-infinite-scroll'
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
+  window.location.reload()
   return originalPush.call(this, location).catch(err => err)
 }
 

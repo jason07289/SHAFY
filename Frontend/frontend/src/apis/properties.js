@@ -9,5 +9,5 @@ const set = {
 }
 export default{
     backendIP : set.AWS,
-    frontendIP : set.FE_LST
+    frontendIP : set.FE_AWS
 }
