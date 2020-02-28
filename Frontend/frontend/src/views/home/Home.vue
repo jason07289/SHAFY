@@ -40,7 +40,7 @@
         <div 
           style="width:100%;height:40px;background-color:var(--background-w);"
           />
-        <component v-bind:is="currentComponent" :tabName="item"></component>
+        <component v-bind:is="currentComponent" :tabName="item" :key="componentKey"></component>
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
@@ -124,7 +124,7 @@ export default {
       getUserInfo:'user/getUserInfo',
       getMyfollowing: 'tags/getMyfollowing',
     }),
-    handleScroll (event) {
+    handleScroll(event) {
       if (window.scrollX == 0 && window.scrollY == 0){
         console.log('새로고침')
         this.componentKey += 1
