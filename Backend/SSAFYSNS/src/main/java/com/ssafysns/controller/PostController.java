@@ -623,7 +623,7 @@ public class PostController {
 		return handleSuccess(posts);
 	}
 	
-	// Post 등록
+	// Post 등록 .
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody PostVote postVote) throws Exception {
