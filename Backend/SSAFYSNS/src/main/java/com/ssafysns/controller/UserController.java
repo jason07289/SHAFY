@@ -1,5 +1,6 @@
 package com.ssafysns.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,14 +169,22 @@ public class UserController {
 		}
 	}
 	
-	@ApiOperation("user 업데이트. 상황에 맞게 파라미터를 넘겨주면 편하게 사용가능 *비밀번호는 이 URI로 절대 접근하지 말것*")
+	@ApiOperation("user 업데이트. ")
 	@PutMapping("/user")
-	public ResponseEntity<Map<String,Object>> update(@RequestBody User user){
-		if(userService.update(user) ){
-			return handleSuccess("회원정보 변경에 성공하셨습니다.");
-		}else {
+	public ResponseEntity<Map<String,Object>> update(@RequestBody UserForChangePW user){
+		try {
+			String msg =userService.update(user);
+			if(msg.equals("OK")){
+				return handleSuccess("회원정보 변경에 성공하셨습니다");
+			}else {
+				return handleFail(msg,HttpStatus.OK);
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return handleFail("회원정보 변경 실패",HttpStatus.OK);
 		}
+		
 	}
 	
 	@ApiOperation("닉네임 중복확인")

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.UserForChangePW;
 import com.ssafysns.model.service.AdministratorService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.UserService;
@@ -57,7 +58,7 @@ public class AdminController {
 	
 	@ApiOperation(value="[관리자] 회원 등급 조정")
 	@PostMapping("/auth")
-	public ResponseEntity<Map<String, Object>> updateUserAuth(@RequestBody User user) throws Exception {
+	public ResponseEntity<Map<String, Object>> updateUserAuth(@RequestBody UserForChangePW user) throws Exception {
 		
 		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
 		
@@ -75,7 +76,7 @@ public class AdminController {
 	
 	@ApiOperation(value="[관리자] 회원 경고 누적")
 	@PostMapping("/bann")
-	public ResponseEntity<Map<String, Object>> updateUserBann(@RequestBody User user) throws Exception {
+	public ResponseEntity<Map<String, Object>> updateUserBann(@RequestBody UserForChangePW user) throws Exception {
 		
 		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
 		
