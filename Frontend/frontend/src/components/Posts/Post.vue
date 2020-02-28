@@ -143,7 +143,7 @@
           right style="margin-left:80%;">mdi-check</v-icon>
         </div>
         <div style="text-align:center;width:100%;">
-          {{post.vote.a_value}}
+          {{a_cnt}}
         </div>
         <div class="caption" style="text-align:center;width:100%;">
           {{post.vote.a_name}}
@@ -169,7 +169,7 @@
           right style="margin-left:80%;">mdi-check</v-icon>
         </div>
         <div style="text-align:center;width:100%;">
-          {{post.vote.b_value}}
+          {{b_cnt}}
         </div>
         <div class="caption" style="text-align:center;width:100%;">
           {{post.vote.b_name}}
@@ -358,6 +358,9 @@ export default {
       // bookmark:false,
       bookmark: this.post.bookmark_check,
       imageDialog:false,
+      // 투표관련
+      a_cnt: this.post.vote.a_value,
+      b_cnt: this.post.vote.b_value
     }
   },
   methods: {
@@ -369,8 +372,10 @@ export default {
       var temp = ''
       if (choice === 1){
         temp = 'A'
+        this.a_cnt ++
       }else{
         temp = 'B'
+        this.b_cnt ++
       }
       console.log(choice,'에 투표하셨습니다.')
       PostApi.registerVote({vno:this.post.vote.vno, choice:choice},res=>{
