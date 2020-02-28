@@ -636,10 +636,18 @@ public class PostController {
 			return handleFail("포스팅 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
 		}
 		
+		
 		System.out.println("투표 시작");
 		System.out.println(postVote.toString());
 		
 		Post post = postVote.getPost();
+		String hashtag = post.getHashtag();
+		
+		if(user.getApproval()==null || user.getApproval()==0) { //비회원
+			hashtag = "#비회원"+hashtag;
+			post.setHashtag(hashtag);
+		}
+		
 		post.setId(id);
 		Vote vote = postVote.getVote();
 		System.out.println(post.getContent());
