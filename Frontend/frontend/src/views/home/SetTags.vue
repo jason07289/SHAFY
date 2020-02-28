@@ -179,14 +179,13 @@ import { mapActions, mapState } from 'vuex';
       this.addText = '';
     },
     editDone(){
-      for(var i=0; i<this.list.length; i++){
+      for(var i=0; i<this.list.length -1; i++){
         this.message[i] = this.list[i].name
       }
       console.log(`수정된 태그:${this.returnStr}`)
       this.updateTab({hashtag:this.returnStr})
       this.check = true
       this.editmode = false
-      
     }
   },
   computed: {

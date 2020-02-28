@@ -439,10 +439,6 @@ export default {
       //CSS 변경
     }
   },
-  created(){
-    console.log(this.$store)
-    console.log(this)
-  }
 }
 </script>
 

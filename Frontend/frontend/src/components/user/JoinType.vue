@@ -1,5 +1,5 @@
 <template>
-    <div id="join-type" v-bind:style="selectDiv" >
+    <div id="join-type">
         <v-hover
         v-slot:default="{ hover }"
       >

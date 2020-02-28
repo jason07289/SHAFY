@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <Appbar/>
+        <Appbar v-if="islogin"/>
         <v-app>
         <div style="width:100%; height:48px;"></div>
-        <Navbar/>
+        <Navbar v-if="islogin"/>
         <router-view id="scroll-area-1"></router-view>
         <div style="width:100%;height:60px;"></div>
         </v-app>
@@ -17,6 +17,11 @@ import Appbar from '@/components/Appbar'
         name: 'app',
         components:{
         Navbar,Appbar,
+    },
+    data(){
+      return {
+        islogin: localStorage.JWT || false,
+      }
     }
     }
 </script>
