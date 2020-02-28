@@ -171,24 +171,37 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public String update(UserForChangePW user) {
 		try {
+			
+			
+			
 			User find = userRepository.getOne(user.getId());
 			System.out.println("변경전");
 			System.out.println(find);
 			System.out.println(user.getPassword());
 			System.out.println("??");
+			
+			
+			AES256Util aes = new AES256Util();
+
+			
+			
+			if(!user.getPassword().equals(aes.decrypt(find.getPassword()))){
+				throw new PasswordException2("password가 틀립니다.");
+			}
+			
 			if(user.getAlarm()!=0) {
 				find.setAlarm(user.getAlarm());
 			}
 			if(user.getApproval()!=null) {
 				find.setApproval(user.getApproval());
 			}
-			if(user.getAuth()!=null&&!user.getUtype().equals("")) {
+			if(user.getAuth()!=null&&!user.getAuth().equals("")) {
 				find.setAuth(user.getAuth());
 			}
 			if(user.getBanned()!=null) {
 				find.setBanned(user.getBanned());
 			}
-			if(user.getBirth()!=null&&!user.getUtype().equals("")) {
+			if(user.getBirth()!=null&&!user.getBirth().equals("")) {
 				find.setBirth(user.getBirth());
 			}
 //			if(user.getCode()!=null&&!user.getUtype().equals("")) {
@@ -197,41 +210,43 @@ public class UserServiceImpl implements UserService{
 			if(user.getDeleted()!=null) {
 				find.setDeleted(user.getDeleted());
 			}
-			if(user.getGrade()!=null&&!user.getUtype().equals("")) {
+			if(user.getGrade()!=null&&!user.getGrade().equals("")) {
 				find.setGrade(user.getGrade());
 			}
-			if(user.getImg()!=null&&!user.getUtype().equals("")) {
+			if(user.getImg()!=null&&!user.getImg().equals("")) {
 				find.setImg(user.getImg());
 			}
-			if(user.getLocation()!=null&&!user.getUtype().equals("")) {
+			if(user.getLocation()!=null&&!user.getLocation().equals("")) {
 				find.setLocation(user.getLocation());
 			}
-			if(user.getName()!=null&&!user.getUtype().equals("")) {
+			if(user.getName()!=null&&!user.getName().equals("")) {
 				find.setName(user.getName());
 			}
-			if(user.getNickname()!=null&&!user.getUtype().equals("")) {
+			if(user.getNickname()!=null&&!user.getNickname().equals("")) {
 				find.setNickname(user.getNickname());
 			}
-			if(user.getPhone()!=null&&!user.getUtype().equals("")) {
+			if(user.getPhone()!=null&&!user.getPhone().equals("")) {
 				find.setPhone(user.getPhone());
 			}
-			if(user.getState()!=null&&!user.getUtype().equals("")) {
+			if(user.getState()!=null&&!user.getState().equals("")) {
 				find.setState(user.getState());
 			}
 			if(user.getUtype()!=null&&!user.getUtype().equals("")) {
 				find.setUtype(user.getUtype());
 			}
-			if(user.getPassword()!=null&&!user.getUtype().equals("")) {
-				AES256Util aes = new AES256Util();
-				if(!user.getPassword().equals(aes.decrypt(find.getPassword()))){
-					throw new PasswordException2("password가 틀립니다.");
-				}else if(user.getPassword().equals(user.getNewPassword())) {
+
+			if(user.getNewPassword()!=null&&!user.getNewPassword().equals("")) {
+				
+				if(user.getPassword().equals(user.getNewPassword())) {
 					throw new PasswordException("바꾸실 password가 같습니다.");
 				}else {
 					find.setPassword(aes.encrypt(user.getNewPassword()));
 				}
 				
 			}
+			
+			
+			
 			System.out.println("변경 후");
 
 			System.out.println(find);
