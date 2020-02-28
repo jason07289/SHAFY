@@ -29,7 +29,7 @@
     <v-card
     class= "mx-auto"
     max-height="200"
-    style="padding:0px 9px 0px 14px;"
+    style="padding:0px 14px 0px 14px;"
     >
 
     <v-icon class="searchItems" color="var(--button-on)">mdi-pound</v-icon>
@@ -39,13 +39,15 @@
       type="text"
       @keyup.enter="search"
       placeholder="검색할 태그를 입력해주세요"
-      v-model="searchTabName">
+      v-model="searchTabName"
+      style="height:60px;"
+      >
 
-     <v-icon class="searchItems">mdi-close</v-icon>
-    <v-divider class="mx-0"/>
+     <v-icon class="searchItems" @click="clickClose">mdi-close</v-icon>
+    <!-- <v-divider class="mx-0"/>
     <v-card-actions>
       추천검색어 아주 아주 조잡하게 조금.....
-    </v-card-actions>
+    </v-card-actions> -->
     </v-card>
     </v-dialog>
     <!-- 검색다이얼로그 ------------------------------------->
@@ -96,6 +98,11 @@ import PostList from './Posts/PostList'
       clickMagnify(){
         this.searchDialog=true;
         
+      },
+      clickClose(){
+        this.searchTabName='';
+        this.searchDialog=false;
+
       }
     },
   }

@@ -26,7 +26,6 @@
           팔로우
           </v-btn>
         </v-card-actions>
-          <v-divider class="mx-0"></v-divider>
 <v-card-actions>
   <!-- const found = array1.find(element => element > 10); -->
         </v-card-actions>

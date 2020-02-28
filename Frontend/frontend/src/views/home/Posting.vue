@@ -4,7 +4,7 @@
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
       <v-card
         max-width="444"
-        min-width="444"
+        min-width="344"
     class="mx-auto"
     outlined
     style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
@@ -31,7 +31,7 @@
         </v-card-actions>
         <v-divider></v-divider>
 
-<v-window v-model="step">
+<v-window v-model="step" touchless>
 
 <v-window-item :value="1">
 <!-- [step:1] 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
@@ -133,6 +133,7 @@
   <v-form>
     <v-text-field label="투표명"
     v-model="vote.title"
+    color="grey"
     :counter="30"
     style="margin-bottom:20px"
     >
@@ -140,12 +141,14 @@
     <v-text-field label="첫 번째 주제"
     outlined
     hide-details
+    color="#4181a1"
     v-model="vote.a_name"
     >
     </v-text-field>
     <div style="width:100%;height:40px;text-align:center;margin-top:12px;"><span class="body-2" style="color:gray">vs</span></div>
     <v-text-field label="두 번째 주제"
     outlined
+    color="#d1534f"
     v-model="vote.b_name"
     >
     </v-text-field>
