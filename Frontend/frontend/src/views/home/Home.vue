@@ -124,6 +124,12 @@ export default {
       getUserInfo:'user/getUserInfo',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+    handleScroll (event) {
+      if (window.scrollX == 0 && window.scrollY == 0){
+        console.log('새로고침')
+        this.componentKey += 1
+      }
+    },
     closetags(){
       this.followEditDialog=false
       this.componentKey += 1
@@ -162,6 +168,7 @@ export default {
     },
   },
   created(){
+    window.addEventListener('scroll', this.handleScroll)
     this.getAllTab()
     this.getUserInfo()
     this.getMyfollowing()
@@ -173,6 +180,9 @@ export default {
       myfollowing: state=> state.tags.followtags,
     })
   },
+  destroyed(){
+    window.removeEventListener('scroll', this.handleScroll);
+  }
 }
 
 </script>
