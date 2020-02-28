@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
@@ -87,7 +86,14 @@ public class PostController {
 		String jwtId = jwtService.get("userid");
 		
 		voteRecord.setId(jwtId);
-		voteService.insert(voteRecord);
+		VoteRecord isVoted = voteService.isVoted(jwtId, voteRecord.getVno());
+		System.out.println("isVoted 체크 완료");
+		
+		if(isVoted==null) {
+			voteService.insert(voteRecord);
+		} else {
+			return handleFail("이미 투표를 완료하였습니다.", HttpStatus.OK);
+		}
 		
 		return handleSuccess("투표 완료");
 //		String id = jwtService.get("userid");
