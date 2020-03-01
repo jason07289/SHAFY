@@ -70,6 +70,7 @@ public class VoteServiceImpl implements VoteService {
 	@Override
 	public VoteRecord isVoted(String id, int vno) {
 		VoteRecord voteRecord = null;
+		System.out.println("\nid: "+id+", vno: "+vno+"\n");
 		try {
 			voteRecord = voteRecordRepository.isVoted(id, vno);
 		} catch (Exception e) {
