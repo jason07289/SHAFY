@@ -175,9 +175,12 @@ public class UserServiceImpl implements UserService{
 			
 			
 			User find = userRepository.getOne(user.getId());
-			System.out.println("변경전");
+			
+			
+			System.out.println("user");
+			System.out.println(user);
+			System.out.println("find");
 			System.out.println(find);
-			System.out.println(user.getPassword());
 			System.out.println("??");
 			
 			
