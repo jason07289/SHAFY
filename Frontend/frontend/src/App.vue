@@ -53,6 +53,15 @@ import Appbar from '@/components/Appbar'
 */
 
 }
+v-button{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+v-card{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+div{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 #app{
     background-color : var(--background-w);
 }
