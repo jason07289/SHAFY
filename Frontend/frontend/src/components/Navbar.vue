@@ -3,8 +3,7 @@
          
     <v-bottom-navigation
       fixed
-      background-color="var(--main-sb)"
-      color="#ffffff"
+      background-color="#ffffff"
     >
 
       <v-btn @click="routing('MyPage')">

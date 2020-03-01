@@ -4,6 +4,7 @@
     
     <!-- v-card속성으로 주면 ..class="mx-auto" -->
     <v-card
+    mt="400"
     max-width="344"
     class="mx-auto"
     outlined
@@ -61,7 +62,7 @@
 
         <v-card-actions
           v-else
-            v-for="name in message" 
+            v-for="name in (fixedList.length==0?message:fixedList)" 
             :key="name"
             style="padding:0px 16px 5px 16px;"
             >
@@ -108,13 +109,14 @@
             label="등록할 태그이름"
             single-line
             style="margin:12px 9px 0px 9px;"
+            @keyup.enter="addTag"
           ></v-text-field>
           <v-btn 
             class="custom_active white--text"
             depressed 
             small 
-            color="custom_active"
-            @click="addTag">추가</v-btn>
+            @click="addTag"
+            >추가</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -139,6 +141,7 @@ import { mapActions, mapState } from 'vuex';
       check:false,
       addTagDialog:false,
       addText:'',
+      fixedList:[],
    }),
    components: {
     draggable
@@ -150,9 +153,15 @@ import { mapActions, mapState } from 'vuex';
     }),
     makelist(){
       this.editmode = true
-      this.list = this.message.map((name, index)=>{
-        return {name, order: index + 1 }
-      })
+      if(this.fixedList.length==0){
+        this.list = this.message.map((name, index)=>{
+          return {name, order: index + 1 }
+        })
+      }else{
+        this.list = this.fixedList.map((name, index)=>{
+          return {name, order: index + 1 }
+        })
+      }
     },
     orderList() {
       this.list = this.list.sort((one, two) => {
@@ -169,19 +178,31 @@ import { mapActions, mapState } from 'vuex';
     addTag(){
       this.addTagDialog = false;
       var regExp = /([\w|ㄱ-힣])*[^#\s]/g
+
+      //형시 껌사
       if(!regExp.test(this.addText)){
         this.addText = '';
         return;
       }
+
+      //중복 검사
+      for(var i=0; i<this.list.length; i++){
+        if(this.addText==this.list[i].name){
+          return;
+        }
+      }
+
       this.list.push({
         name: this.addText,
         order: this.list.length+1
       })
       this.addText = '';
     },
+
     editDone(){
+      this.fixedList=[];
       for(var i=0; i<this.list.length; i++){
-        this.message[i] = this.list[i].name
+        this.fixedList.push(this.list[i].name)
       }
       console.log(this.returnStr)
       this.updateTab({hashtag:this.returnStr})
