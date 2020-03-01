@@ -21,10 +21,10 @@
       <v-list-item-subtitle>{{userInfo.location}} {{userInfo.grade}}기</v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action style="width:30%;">
-      <v-btn @click="update=true" depressed class="ma-2 widfull" outlined color="success">
+      <v-btn @click="update=true" depressed class="ma-2 widfull" outlined color="primary">
         <v-icon left>mdi-pencil</v-icon> 수정
       </v-btn>
-      <v-btn depressed  @click="logout()" class="ma-2 widfull" outlined color="success">
+      <v-btn depressed  @click="logout()" class="ma-2 widfull" outlined color="primary">
         로그아웃
       </v-btn>
       </v-list-item-action>
@@ -111,10 +111,10 @@
         
     <!-------------기본정보-->
         <v-container fluid style="padding-bottom:0px;">
-        <v-row align="center" style="margin-left:20px;">
+        <v-row align="center" style="margin-left:5%;">
         <span style="width:50px;">ID</span>::{{userInfo.id}}
         </v-row>
-        <v-row align="center" style="margin-left:20px;">
+        <v-row align="center" style="margin-left:5%;">
         <span style="width:50px;">이름</span>::{{userInfo.name}}
         </v-row>
         <!-- 변경할 비밀번호 -->
@@ -123,7 +123,7 @@
         >
           <v-icon
           size="14"
-          style="margin-left:31px;"
+          style="margin-left:5%;"
           >mdi-lock-outline</v-icon>
           <span class="caption"> 비밀번호 수정</span>
         </v-row>
@@ -134,7 +134,7 @@
         :counter="20"
         :type="show1 ? 'text' : 'password'"
         placeholder="변경할 비밀번호(글자,숫자를 포함 8자리 이상)"
-        style="margin-left:31px;padding-top:0px;"
+        style="margin-left:5%;padding-top:0px;"
         ></v-text-field>
         </v-row>
         <!-- 닉네임 -->
@@ -143,7 +143,7 @@
         >
           <v-icon
           size="14"
-          style="margin-left:31px;"
+          style="margin-left:5%;"
           >mdi-account-outline</v-icon>
           <span class="caption"> 닉네임 수정</span>
         </v-row>
@@ -155,7 +155,7 @@
         :type="show1 ? 'text' : 'userInfo.nickname'"
         :disabled="nicknameChecked"
         placeholder="닉네임"
-        style="margin-left:20px;padding-top:0px;"
+        style="margin-left:5%;padding-top:0px;"
         ></v-text-field>
         </v-col>
         <v-col class="d-flex" cols="12" sm="3">

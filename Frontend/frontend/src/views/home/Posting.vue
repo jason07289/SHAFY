@@ -84,9 +84,9 @@
               indeterminate
             ></v-progress-circular>
           </div>
-          <v-btn color="blue darken-1" text @click="$refs.inputUpload.click();uploadValue=1">Photo</v-btn>
+          <v-btn color="primary" text @click="$refs.inputUpload.click();uploadValue=1">Photo</v-btn>
           <input v-show="false" ref="inputUpload" type="file" @change="onUpload" >
-          <v-btn color="blue darken-1" text @click="goStep2()">Next</v-btn>
+          <v-btn color="primary" text @click="goStep2()">Next</v-btn>
         </v-card-actions>
           
 </v-window-item>
@@ -107,7 +107,7 @@
     <v-chip
       v-for="(tag, i) in selectedTag"
       :key="i"
-      class="mr-2 blue"
+      class="mr-2 primary"
       close
       color="white"
       text-color="white"

@@ -45,7 +45,7 @@
           style="padding-right:10px;"
         >
         <!-- 북마크한 글일때 -->
-      <v-btn icon class = "ma-0" color="grey darken-1" v-if="bookmark" @click="togglebookmark">
+      <v-btn icon color="secondary" class = "ma-0"  v-if="bookmark" @click="togglebookmark">
         <v-icon size="30">mdi-bookmark</v-icon>
       </v-btn>
       <!-- 북마크한 글이 아닐때 -->
@@ -72,9 +72,9 @@
       >
         <v-chip v-for="tag in tag_list"  :key="tag.order"
         @click.stop="clickTag(tag)"
-        color="var(--button-off)"
-        text-color="#666666"
-        active-class="custom_active white--text"
+        color="accent"
+        active-class="primary white--text"
+        style="color:white;"
         >
           #{{tag.name}}
         </v-chip>
@@ -221,12 +221,12 @@
       <!-- {{ post.like_count }} -->
       <!-- {{ cnt }} -->
       
-      <v-btn @click="liketoggle" text class = "ma-0" color="blue darken-1">
+      <v-btn @click="liketoggle" text class = "ma-0" color="primary">
         <v-icon v-if="like===false" size = "15">mdi-thumb-up-outline</v-icon>
         <v-icon v-else size = "15" >mdi-thumb-up</v-icon>
         <span class="caption">{{ cnt }}</span>
       </v-btn>
-      <v-btn text class = "ma-0" color="blue darken-1"
+      <v-btn text class = "ma-0" color="primary"
         @click="comment_show = !comment_show"
         >
       <v-icon size = "15">mdi-comment</v-icon>

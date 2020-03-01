@@ -17,13 +17,14 @@
             >
                 <v-row justify="center">
                 <v-icon size="80"
-                    :color="hover?'var(--main-y)':'grey'"
-                >mdi-clipboard-account</v-icon>
+                    :color="hover?'var(--button-on)':'grey'"
+                >{{mdi_icon}}</v-icon>
                 </v-row>
             </v-card-actions>
         <!-- 아이콘도 들어가야 함 -->
-            <div class="title">{{mainTitle}}</div>
-            <div class="body-2">{{subTitle}}</div>
+            <div class="title" >{{mainTitle}}</div>
+            <div class="body-2" v-html="subTitle"></div>
+        {{type}}
         </v-card>
         </v-hover>
         </div>
@@ -41,6 +42,16 @@
             Join(){
                 this.$router.push({name:'Join_detail', params:{type:this.type}})
             },
+        },
+        computed: {
+            mdi_icon() {
+                if(this.type=='Student'){
+                    return 'mdi-account-star'
+                }else if(this.type=='General'){
+                    return 'mdi-account-multiple'
+                }
+                return 'mdi-close'
+            }
         },
 
         

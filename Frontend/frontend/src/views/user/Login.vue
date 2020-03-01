@@ -1,19 +1,23 @@
 <template>
     <div>
+      <div style="width:100%;height:40px;"></div>
+      <v-img
+      class="mx-auto"
+      width="340"
+        src="../../assets/logo/logo344.png">
+        
+        </v-img>
     <v-card class="mx-auto"
     max-width="344"
     outlined
     style="padding:30px;"
     >
-        <div style="width:100%;height:40px;"></div>
-        <v-img
-        src="../../assets/sharfylogo.png">
-        </v-img>
-        <div style="width:100%;height:40px;"></div>
+        
+        
         <div class="mx-3 mt-3">
         <v-form v-model="valid">
             <v-text-field
-            color="grey"
+            color="secondary"
             dense
             id="idInput"
             v-model="email"
@@ -25,7 +29,7 @@
             @keyup.enter="login"
             ></v-text-field>
             <v-text-field
-            color="grey"
+            color="secondary"
             dense
             v-model="password"
             :rules="passwordRules"
@@ -46,17 +50,9 @@
               로그인
               </v-btn>
             </div>
-        </v-form>
-        <div style="width:100%;height:8px;"></div>
-        <div style="width:100%;height:8px;"></div>
-      </div>
-      <v-row justify="center">
-        <div class="caption" ssstyle="width:100%;text-align:center;">
-          ㅡㅡ또는ㅡㅡ
-        </div>
-        <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
-        <v-btn text depressed large :href=link.github color="black"
-        style="padding-top:25px;padding-bottom:25px;">
+            <div class="text-center">
+              <v-btn text depressed large :href=link.github color="black"
+        style="margin:25px 12px 25px 12px;">
           <img 
           src="../../assets/Login/GitHub-Mark-32px.png" 
           alt="GithubMark" 
@@ -64,13 +60,18 @@
           >
           <span class="subtitle-2 font-weight-black" style="padding-top:5px;">Github으로 로그인</span>
         </v-btn>
+            </div>
+        </v-form>
+      </div>
+      <v-row align="center">
+        <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
+        
       </v-row>
     </v-card>
     <v-card class="mx-auto"
     max-width="344"
     outlined
     style="margin-top:12px;"
-    @click="alert(hi);"
     >
     <v-row justify="center">
       <router-link v-bind:to="{name:'Join'}" class="text-center">
