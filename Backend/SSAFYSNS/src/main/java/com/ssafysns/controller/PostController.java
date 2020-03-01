@@ -649,7 +649,7 @@ public class PostController {
 		Post post = postVote.getPost();
 		String hashtag = post.getHashtag();
 		
-		if(user.getApproval()==null || user.getApproval()==0) { //비회원
+		if(user.getApproval()==null || user.getApproval()==0) { //비회원 
 			hashtag = "#비회원"+hashtag;
 			post.setHashtag(hashtag);
 		}
