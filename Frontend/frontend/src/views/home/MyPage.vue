@@ -431,6 +431,7 @@ import PostList from '../../components/Posts/PostList'
 import Rules from '../../components/etc/Rules'
 import PersonalInfoTerms from '../../components/etc/PersonalInfoTerms'
 import Stack from '../../components/etc/Stack'
+import Members from '../../components/etc/Members'
 
 const firebase = require('firebase/app')
 require('firebase/storage') 
@@ -466,7 +467,7 @@ export default {
         {mdi:'check-decagram',text:'커뮤니티이용규칙',value:'Rules'},
         {mdi:'clipboard-account-outline',text:'개인정보처리방침',value:'PersonalInfoTerms'},
         {mdi:'iframe-outline',text:'개발스택',value:"Stack"},
-        {mdi:'podium',text:'개발팀소개'}
+        {mdi:'podium',text:'개발팀소개',value:'Members'}
       ],
       
       activityTitle:'',
@@ -595,7 +596,7 @@ export default {
     this.getUserInfo()
   },
   components:{
-    PostList,PersonalInfoTerms,Rules,Stack
+    PostList,PersonalInfoTerms,Rules,Stack,Members
   },
 
 }
