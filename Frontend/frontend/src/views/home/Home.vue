@@ -23,7 +23,7 @@
           <div style="background-color:#f1f1f1;width:100%;text-align:center;padding:12px;" >
             <v-tooltip bottom>
               <template #activator="tooltipOn">
-              <v-btn depressed style="background-color:#dddddd; color:#777777;"  large @click="followEditDialog = true" v-on="tooltipOn.on">
+              <v-btn v-if="userInfo.approval" depressed style="background-color:#dddddd; color:#777777;"  large @click="followEditDialog = true" v-on="tooltipOn.on">
                 팔로우 해시태그 편집 
                 <v-icon size="21" color="#999999" style="margin-left:8px;">mdi-square-edit-outline</v-icon>
               </v-btn>
