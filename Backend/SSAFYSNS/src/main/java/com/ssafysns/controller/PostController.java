@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
@@ -188,7 +187,7 @@ public class PostController {
 	 * 스크랩 한 글
 	 * @throws UnauthorizedException 
 	 */
-	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
@@ -217,7 +216,7 @@ public class PostController {
 	 * 내가 쓴 글
 	 * @throws UnauthorizedException 
 	 */
-	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws Exception {
 		System.out.println("GET MY POST");
 		page = Integer.max(0, page*limit);
 		
@@ -250,7 +249,7 @@ public class PostController {
 	 * 댓글 남긴 글
 	 * @throws UnauthorizedException 
 	 */
-	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
@@ -400,7 +399,7 @@ public class PostController {
 	 * - Comment, Likes 처리
 	 * @throws UnauthorizedException 
 	 */
-	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws UnauthorizedException{
+	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws Exception{
 		String jwtId = jwtService.get("userid");
 		
 		List<Post> post_list = posts;
@@ -790,7 +789,7 @@ public class PostController {
 	public List<Post> searchPostByHash(String hashtag, int page) throws Exception {
 		List<Post> posts = postService.search(hashtag, page);
 		return posts;
-	}
+	} 
 	
 		
 	/**
