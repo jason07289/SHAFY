@@ -12,18 +12,19 @@
 <script>
 import Navbar from '@/components/Navbar'
 import Appbar from '@/components/Appbar'
+import { mapState } from 'vuex'
 
     export default {
         name: 'app',
         components:{
         Navbar,Appbar,
     },
-    data(){
-      return {
-        islogin: localStorage.JWT || false,
-      }
-    }
-    }
+    computed:{
+      ...mapState({
+        islogin :state => state.user.JWT
+      })
+    },
+  }
 </script>
 <style>
 #app{
