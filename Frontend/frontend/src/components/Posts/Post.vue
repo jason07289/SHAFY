@@ -270,7 +270,7 @@
           {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
-          <v-icon size="14" color="red" style="padding-bottom:3px; margin-left:4px;"
+          <v-icon v-if="comment.auth" size="14" color="red" style="padding-bottom:3px; margin-left:4px;"
            @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-close</v-icon>
           <!-- <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
           <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon> -->
