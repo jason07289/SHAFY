@@ -421,7 +421,6 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		
 		return handleSuccess(result_map);
 		
 	}
@@ -668,7 +667,7 @@ public class PostController {
 		User user = userService.MyInfo();
 		String id = user.getId();
 		
-		if(user.getBanned()>=1) {
+		if(user.getBanned()!=null && user.getBanned()>=1) {
 			return handleFail("포스팅 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
 		}
 				
@@ -878,7 +877,7 @@ public class PostController {
 		User user = userService.MyInfo();
 		String jwtId = user.getId();
 		
-		if(user.getBanned()>=1) {
+		if(user.getBanned()!=null && user.getBanned()>=1) {
 			return handleFail("댓글 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
 		}
 		
