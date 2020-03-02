@@ -6,7 +6,7 @@ const hosturl = properties.backendIP
 const appname = '/userSNS'
 
 const github = (params, callback, errorCallback) => {
-  console.log('소셜 로그인 하는중', params)
+  // console.log(`code: ${params.code} 으로 소셜 로그인 하는중`)
   axios.get(hosturl+appname+`/githubLogin/${params.code}`)
   .then(callback)
   .catch(errorCallback)
@@ -31,7 +31,7 @@ const naver = (params, callback, errorCallback) => {
 }
 
 const requestSNSJoin = (data, callback, errorCallback) =>{
-  console.log('SNSJOIN',data)
+  console.log('깃허브로 회원가입 중')
   axios.post(hosturl+`/user/signUpWithSeq`,data)
   .then(callback)
   .catch(errorCallback)

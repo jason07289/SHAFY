@@ -12,18 +12,19 @@
   >
   <v-card-actions>
   <v-list-item>
-    <v-list-item-avatar size="70" color="grey">
-      <img class = "profile" :src="userInfo.img">
-    </v-list-item-avatar>
+    <v-list-item-avatar size="70" v-if="userInfo.img!= ''" color="grey">
+        <img class = "profile" :src="userInfo.img">
+      </v-list-item-avatar>
+        <v-icon v-else size="70" color="grey" style="margin:8px 16px 8px 0px;padding:0px;">mdi-account-circle</v-icon>
     <v-list-item-content>
       <v-list-item-title class="body-1">{{userInfo.nickname}}님</v-list-item-title>
       <v-list-item-subtitle>{{userInfo.location}} {{userInfo.grade}}기</v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action style="width:30%;">
-      <v-btn @click="update=true" depressed class="ma-2 widfull" outlined color="success">
+      <v-btn @click="update=true" depressed class="ma-2 widfull" outlined color="primary">
         <v-icon left>mdi-pencil</v-icon> 수정
       </v-btn>
-      <v-btn depressed  @click="logout()" class="ma-2 widfull" outlined color="success">
+      <v-btn depressed  @click="logout()" class="ma-2 widfull" outlined color="primary">
         로그아웃
       </v-btn>
       </v-list-item-action>
@@ -40,7 +41,7 @@
   <v-list flat>
       <v-subheader>내 활동</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in activity" :key="item" @click="activityClick(item)">
+        <v-list-item v-for="item in activity" :key="item.text" @click="activityClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -59,7 +60,7 @@
   <v-list flat>
       <v-subheader>계정</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in account" :key="item" @click="accountClick(item)">
+        <v-list-item v-for="item in account" :key="item.text" @click="accountClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -79,7 +80,7 @@
   <v-list flat>
       <v-subheader>기타</v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="item in extra" :key="item">
+        <v-list-item v-for="item in extra" :key="item.text" @click="etcClick(item)">
           <v-icon style="margin-right:20px;">mdi-{{item.mdi}}</v-icon>
           <v-list-item-content>
             <v-list-item-title>{{item.text}}</v-list-item-title>
@@ -110,11 +111,41 @@
         
     <!-------------기본정보-->
         <v-container fluid style="padding-bottom:0px;">
-        <v-row align="center" style="margin-left:20px;">
-        ID   ::  {{userInfo.id}}
+        <v-row align="center" style="margin-left:5%;">
+        <span style="width:50px;">ID</span>::{{userInfo.id}}
         </v-row>
-        <v-row align="center" style="margin-left:20px;">
-        이름 ::   {{userInfo.name}}
+        <v-row align="center" style="margin-left:5%;">
+        <span style="width:50px;">이름</span>::{{userInfo.name}}
+        </v-row>
+        <!-- 변경할 비밀번호 -->
+        <v-row align="center"
+        style="margin-top:24px;"
+        >
+          <v-icon
+          size="14"
+          style="margin-left:5%;"
+          >mdi-lock-outline</v-icon>
+          <span class="caption"> 비밀번호 수정</span>
+        </v-row>
+        <v-row align="center">
+        <v-text-field
+        v-model="editpassword"
+        :rules="editPasswordRules"
+        :counter="20"
+        :type="show1 ? 'text' : 'password'"
+        placeholder="변경할 비밀번호(글자,숫자를 포함 8자리 이상)"
+        style="margin-left:5%;padding-top:0px;"
+        ></v-text-field>
+        </v-row>
+        <!-- 닉네임 -->
+        <v-row align="center"
+        style="margin-top:24px;"
+        >
+          <v-icon
+          size="14"
+          style="margin-left:5%;"
+          >mdi-account-outline</v-icon>
+          <span class="caption"> 닉네임 수정</span>
         </v-row>
         <v-row align="center">
         <v-col class="d-flex" cols="12" sm="9" style="padding-bottom:0px;">
@@ -124,7 +155,7 @@
         :type="show1 ? 'text' : 'userInfo.nickname'"
         :disabled="nicknameChecked"
         placeholder="닉네임"
-        style="margin-left:20px;padding-top:0px;"
+        style="margin-left:5%;padding-top:0px;"
         ></v-text-field>
         </v-col>
         <v-col class="d-flex" cols="12" sm="3">
@@ -267,7 +298,20 @@
 
 
     </v-form>
-    <v-btn block @click="submit">수정 완료</v-btn>
+    <v-text-field
+    type="password"
+    v-model="originalPasswordCheck"
+    placeholder="회원정보 수정을 위해 비밀번호를 입력해주세요"
+    hide-details
+    outlined
+    style="margin-top:24px;"
+    ></v-text-field>
+    <v-btn 
+    depressed
+    block 
+    color="custom_active white--text"
+    :disabled="originalPasswordCheck=='' || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(originalPasswordCheck)"
+    @click="submit">수정 완료</v-btn>
     </v-card>
   </v-dialog>
 
@@ -356,7 +400,25 @@ width="unset"
         
       </v-sheet>
     </v-bottom-sheet>
+<!-- 기타 항목들 다이얼로그 --------------------------------------------------------------------------------------------------------------------->
+<v-dialog 
+v-model="etcDialog" 
+fullscreen hide-overlay 
+transition="dialog-bottom-transition"
+>
 
+  <v-card>
+      <v-btn 
+      icon 
+      @click="etcDialog = false"
+      style="margin:12px;"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    <!-- 여기에 나중에 포스트리스트 띄우기 -->
+    <component v-bind:is="etcDialog?etcComponent:'span'"></component>
+  </v-card>
+</v-dialog>
 </div>
 </template>
 
@@ -366,6 +428,11 @@ width="unset"
 import { mapActions, mapState } from 'vuex'
 import UserApi from '../../apis/UserApi'
 import PostList from '../../components/Posts/PostList'
+import Rules from '../../components/etc/Rules'
+import PersonalInfoTerms from '../../components/etc/PersonalInfoTerms'
+import Stack from '../../components/etc/Stack'
+import Members from '../../components/etc/Members'
+
 const firebase = require('firebase/app')
 require('firebase/storage') 
 
@@ -397,10 +464,10 @@ export default {
         {mdi:'account-arrow-right',text:'회원탈퇴',value:'signOut'}
       ],
       extra:[
-        {mdi:'check-decagram',text:'커뮤니티이용규칙'},
-        {mdi:'clipboard-account-outline',text:'개인정보처리방침'},
-        {mdi:'iframe-outline',text:'개발스택'},
-        {mdi:'podium',text:'개발팀소개'}
+        {mdi:'check-decagram',text:'커뮤니티이용규칙',value:'Rules'},
+        {mdi:'clipboard-account-outline',text:'개인정보처리방침',value:'PersonalInfoTerms'},
+        {mdi:'iframe-outline',text:'개발스택',value:"Stack"},
+        {mdi:'podium',text:'개발팀소개',value:'Members'}
       ],
       
       activityTitle:'',
@@ -412,9 +479,17 @@ export default {
       activityDialog: false,
       signOutDialog : false,
       certiSheet:false,
+      etcDialog:false,
       //회원정보수정용
+      originalPasswordCheck:'',
       nicknameChecked:false,
-
+      editpassword:'',
+      editPasswordRules:[
+        v => !!v || '비밀번호를 입력해주세요',
+        v => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || '비밀번호는 글자, 숫자 포함 8자 이상입니다.',
+      ],
+      //etc다이얼로그용
+      etcComponent:'',
     }
   },
   methods:{
@@ -426,21 +501,22 @@ export default {
           .then(()=>this.$router.push({name:'Login'}))
         },
     submit(){
+      this.userInfo.password=this.originalPasswordCheck
+      this.userInfo.newPassword = this.editpassword
       this.update = false
-      console.log(this.userInfo)
+      console.log("회원정보수정>>"+this.userInfo)
       UserApi.requestUpdateUser(this.userInfo
         ,res=>{
-          console.log(res)
           if(res.data.state === 'ok'){
             alert('회원 정보가 수정 되었습니다.')
           }
         },err=>{
-          console.log(err)
+          console.log(`회원 정보 수정 에러 발생 :${err}`)
         }
       )
     },
   onUpload(){
-        console.log('img object: ',this.imageData)
+        // console.log('img object: ',this.imageData)
         const storageRef=firebase.storage().ref(`${this.imageData.name}`).put(this.imageData)
         storageRef.on(`state_changed`,snapshot=>{
           this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
@@ -469,6 +545,10 @@ export default {
         }
         this.certiSheet = true
       }
+    },
+    etcClick(etcItem){
+      this.etcComponent = etcItem.value
+      this.etcDialog = true
     },
     signOut(){
       UserApi.requestUserDelete({
@@ -516,7 +596,7 @@ export default {
     this.getUserInfo()
   },
   components:{
-    PostList
+    PostList,PersonalInfoTerms,Rules,Stack,Members
   },
 
 }

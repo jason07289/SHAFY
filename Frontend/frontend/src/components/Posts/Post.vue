@@ -31,7 +31,7 @@
   >
 <!-- 작성자정보 startㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
     <v-list-item>
-      <v-list-item-avatar v-if="post.profile!=''" color="grey">
+      <v-list-item-avatar v-if="post.profile != ''" color="grey">
         <img class = "profile" :src="post.profile">
       </v-list-item-avatar>
         <v-icon v-else size="40" color="grey" style="margin:8px 16px 8px 0px;padding:0px;">mdi-account-circle</v-icon>
@@ -45,7 +45,7 @@
           style="padding-right:10px;"
         >
         <!-- 북마크한 글일때 -->
-      <v-btn icon class = "ma-0" color="grey darken-1" v-if="bookmark" @click="togglebookmark">
+      <v-btn icon color="secondary" class = "ma-0"  v-if="bookmark" @click="togglebookmark">
         <v-icon size="30">mdi-bookmark</v-icon>
       </v-btn>
       <!-- 북마크한 글이 아닐때 -->
@@ -70,13 +70,13 @@
         v-model="selection"
         column
       >
-        <v-chip v-for="tag in tag_list"  :key="tag"
+        <v-chip v-for="tag in tag_list"  :key="tag.order"
         @click.stop="clickTag(tag)"
-        color="var(--button-off)"
-        text-color="#666666"
-        active-class="custom_active white--text"
+        color="accent"
+        active-class="primary white--text"
+        style="color:white;"
         >
-          #{{tag}}
+          #{{tag.name}}
         </v-chip>
 
 
@@ -90,7 +90,7 @@
       <!-- src="https://imgur.com/a/dvZcOAa" -->
       <!-- ? post.attachment: 'https://image.freepik.com/free-vector/designer-s-office-flat-illustration_23-2147492101.jpg' -->
     <v-img
-      v-if="post.attachments!=''"
+      v-if="post.attachments!=''&&post.attachments!=null"
       :src="post.attachments"
       height="194"
       style="object-fit: contain;"
@@ -108,50 +108,85 @@
       1번 찍었으면 A 
       2번 찍었응면 B 
       -->
+    <div v-if="post.vote!=null">
+        <!-- <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/> -->
+      <v-card 
+      class="mx-auto" 
+      outlined
+      style="width:100%;"
+      color="#fcfcfc"
+      >
+      <!-- 투표타이틀 -->
+      <div align="center" 
+      class="font-weight-black"
+      style="margin:5px 0px 0px 0px;width:100%;"
+      >
+      <v-icon size="17">mdi-vote</v-icon>
+        {{ post.vote.title }}
+      </div>
+      <v-card-actions>
+        <!--왼쪽버튼-->
+        <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#014161':(hover?'blue':'#4181a1')"
+        class="vote-button vote-button-left"
+        @click="vote(1)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='A')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{a_cnt}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.a_name}}
+        </div>
+        </v-card>
+        
+        </v-hover>
+        <!--오른쪽버튼-->
+       <v-hover
+        v-slot:default="{ hover }"
+        >
+        <v-card
+        outlined
+        dark
+        :color="post.vote.my_value!='No'?'#91430f':(hover?'red':'#d1534f')"
+        class="vote-button vote-button-right"
+        @click="vote(2)"
+        :disabled="post.vote.my_value!='No'"
+        >
+        <div style="width:100%;height:25%;">
+          <v-icon 
+          v-if="hover||(post.vote.my_value=='B')"
+          right style="margin-left:80%;">mdi-check</v-icon>
+        </div>
+        <div style="text-align:center;width:100%;">
+          {{b_cnt}}
+        </div>
+        <div class="caption" style="text-align:center;width:100%;">
+          {{post.vote.b_name}}
+        </div>
+        </v-card>
+        </v-hover>
+      </v-card-actions>
 
+      </v-card>
+      
+      </div>
     <v-expand-transition>
     <v-card-text style="padding-bottom:0px;color:black;">
       <span v-show="!content_show">   {{postdata_one_line}}<br> </span>
       <span v-show="content_show" v-html="postdata_full"> <br> 
       </span>
-      <div v-if="content_show&&post.vote!=null">
-        <v-divider class="mx-20 overline" style="margin:10px 0px 10px 0px;"/>
       
-      <div align="center" 
-      class="font-weight-black"
-      style="margin-bottom:12px;"
-      >
-        <code style="margin:0px 2px 0px 0px;">투표주제
-        <v-icon size="16" >
-          mdi-arrow-right-drop-circle
-        </v-icon>
-        </code>
-        {{ post.vote.title }}
-      </div>
-
-      <v-hover
-        v-slot:default="{ hover }"
-      >
-      <v-card
-        :color="hover?'red':'black'"
-        @click="vote(1)"
-      >
-        <!-- :disabled="this.post.vote.my_value!=='No'"  -->
-      <v-icon>mdi-pound</v-icon>
-      {{ post.vote.a_name }}
-      :{{ post.vote.a_value }}
-      </v-card>
-      </v-hover>
-      <v-btn 
-        :disabled="this.post.vote.my_value!=='No'" 
-        @click="vote(2)"
-      >
-      {{ post.vote.b_name }}
-      :{{ post.vote.b_value }}
-      </v-btn>
-
-      <!-- 내가 투표한 값{{ post.vote.my_value }} -->
-      </div>
     </v-card-text>
 
       
@@ -186,12 +221,12 @@
       <!-- {{ post.like_count }} -->
       <!-- {{ cnt }} -->
       
-      <v-btn @click="liketoggle" text class = "ma-0" color="blue darken-1">
+      <v-btn @click="liketoggle" text class = "ma-0" color="primary">
         <v-icon v-if="like===false" size = "15">mdi-thumb-up-outline</v-icon>
         <v-icon v-else size = "15" >mdi-thumb-up</v-icon>
         <span class="caption">{{ cnt }}</span>
       </v-btn>
-      <v-btn text class = "ma-0" color="blue darken-1"
+      <v-btn text class = "ma-0" color="primary"
         @click="comment_show = !comment_show"
         >
       <v-icon size = "15">mdi-comment</v-icon>
@@ -235,11 +270,11 @@
           {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
-          <v-icon size="15" color="red" 
-           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-comment-remove</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
-          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
+          <v-icon size="14" color="red" style="padding-bottom:3px; margin-left:4px;"
+           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-close</v-icon>
+          <!-- <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
+          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon> -->
+          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;" v-html="isWriting==comment.cno?'mdi-comment-remove':'mdi-subdirectory-arrow-right'"></v-icon>
           <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
           <div class="caption" style="width:100%;">{{comment.content}}</div>
 
@@ -323,6 +358,9 @@ export default {
       // bookmark:false,
       bookmark: this.post.bookmark_check,
       imageDialog:false,
+      // 투표관련
+      a_cnt : 0,
+      b_cnt: 0
     }
   },
   methods: {
@@ -334,10 +372,12 @@ export default {
       var temp = ''
       if (choice === 1){
         temp = 'A'
+        this.a_cnt ++
       }else{
         temp = 'B'
+        this.b_cnt ++
       }
-      console.log(choice,'에 투표하셨습니다.')
+      // console.log(choice,'에 투표하셨습니다.')
       PostApi.registerVote({vno:this.post.vote.vno, choice:choice},res=>{
         if(res.data.state === 'ok'){
           this.post.vote.my_value = temp
@@ -417,6 +457,9 @@ export default {
     makeTagList(){
       this.tag_list = this.post.hashtag.replace(' ','').split('#')
       this.tag_list.splice(0,1)
+      this.tag_list = this.tag_list.map((name, index)=>{
+        return {name, order: index + 1 }
+      })
     },
     getCommentList(){
         PostApi.getComment({pno:this.post.pno},
@@ -436,7 +479,9 @@ export default {
       2. 댓글 다시 불러오기 (this.post.comment에 댓글배열 불러오기)
       3. 댓글 입력창 비우기
       */
-
+      if(this.commentArea==''){
+        return;
+      }
       var returnBody = 
       {
         "anonymous": this.anonymous,
@@ -469,10 +514,11 @@ export default {
         this.commentHolder = '댓글을 입력하세요'
       }
     },
-
-
     //시간 설정 함수
-    transferTime(time){    
+    transferTime(time){
+    if (time === undefined){
+      return
+    }    
      var now = new Date();
      var sYear = time.substring(0,4);
      var sMonth = time.substring(5,7)-1;
@@ -499,29 +545,40 @@ export default {
     }else{
       str = sYear+'/'+sMonth+'/'+sDate
     }
-
-
-     
      return str;
     }
   },
-  mounted:function () {
-          /* 할 일들 
-    1. 날짜 변경(방금 전 등)    => setDate()
-    2. 선택된 해시태그는 색상 변경
-    3. 보여줄 한 줄만 설정      => setContent()
-    4. 태그리스트 생성
-    */
-   //console.log('시간받아온것 : '+this.post.datetime)
-   this.postdata_date = transferTime(this.post.datetime)
+  created(){
+   this.postdata_date = this.transferTime(this.post.datetime)
    this.setContent()
    this.makeTagList()
    this.loading = false;
    for(var i=0; i<this.post.comment.length; i++){
-     this.post.comment.datetime = transferTime(this.post.comment.datetime)
+     this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
    }
 
+  if (this.post.vote){
+    this.a_cnt = this.post.vote.a_value
+    this.b_cnt= this.post.vote.b_value
+    }
   },
+  // mounted:function () {
+  //         /* 할 일들 
+  //   1. 날짜 변경(방금 전 등)    => setDate()
+  //   2. 선택된 해시태그는 색상 변경
+  //   3. 보여줄 한 줄만 설정      => setContent()
+  //   4. 태그리스트 생성
+  //   */
+  // //  console.log('시간받아온것 : '+this.post.datetime)
+  //  this.postdata_date = this.transferTime(this.post.datetime)
+  //  this.setContent()
+  //  this.makeTagList()
+  //  this.loading = false;
+  //  for(var i=0; i<this.post.comment.length; i++){
+  //    this.post.comment.datetime = this.transferTime(this.post.comment.datetime)
+  //  }
+  
+  // },
   props:{
     post: {
       type: Object,
@@ -530,35 +587,7 @@ export default {
   },
   
 }
-function transferTime(time){    
-     var now = new Date();
-     var sYear = time.substring(0,4);
-     var sMonth = time.substring(5,7)-1;
-     var sDate = time.substring(8,10);
-     var sHour = time.substring(11,13);
-     var sMin = time.substring(14,16);
-     var sSecond = time.substring(17,19);
-     var sc = 1000;
- 
-     var today = new Date(sYear,sMonth,sDate,sHour,sMin,sSecond);
-     //지나간 초
-     var pastSecond = parseInt((now-today)/sc,10);
-    //  console.log("지나간초:"+pastSecond)
-       var str = "";
-    
-    if(pastSecond<60){
-      str='방금 전'
-    }else if(pastSecond<3600){
-      str = parseInt((pastSecond/60),10)+'분 전'
-    }else if(pastSecond<86400){
-      str = parseInt((pastSecond/3600),10)+'시간 전'
-    }else if(pastSecond<2592000){
-      str = parseInt((pastSecond/86400),10)+'일 전'
-    }else{
-      str = sYear+'/'+sMonth+'/'+sDate
-    }     
-     return str;
-}
+
 </script>
 
 <style>
@@ -584,6 +613,29 @@ function transferTime(time){
 }
 .custom_ {
   background-color:var(--button-off);
+}
+
+.vote-button{
+  width:50%;
+  height:100px;
+  padding-left:5px;
+  padding-right:5px;
+}
+.vote-button-left{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.vote-button-right{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: .5;
+  position: absolute;
+  width: 100%;
 }
 
 

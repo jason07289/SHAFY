@@ -16,9 +16,8 @@ import SNSLogin from './views/user/SNSLogin.vue'
  }
 const checkAuth = () => (to, from, next) => {
     var token = localStorage.JWT
-    console.log("token:"+token)
     if (checkToken(token)) {
-        //alert("로그인 해주시기 바랍니다.")
+        // alert("로그인 해주시기 바랍니다.")
         // alert("로그인 후 이용해주세요")
         return next({name:'Login'})
     }
@@ -29,7 +28,6 @@ const checkAuth = () => (to, from, next) => {
       var token = localStorage.JWT
     // 로그인 했을 때는 이전 페이지로 
       if(!checkToken(token)){
-          console.log(from.path)
           return next(from.path)
       }
       return next()
@@ -50,7 +48,7 @@ export default [
         component : Join
     },
     {
-        path : '/login/:togosite',
+        path : '/login/github',
         name : 'SNSLogin',
         component : SNSLogin
     },

@@ -86,7 +86,14 @@ public class PostController {
 		String jwtId = jwtService.get("userid");
 		
 		voteRecord.setId(jwtId);
-		voteService.insert(voteRecord);
+		VoteRecord isVoted = voteService.isVoted(jwtId, voteRecord.getVno());
+		System.out.println("isVoted 체크 완료");
+		
+		if(isVoted==null) {
+			voteService.insert(voteRecord);
+		} else {
+			return handleFail("이미 투표를 완료하였습니다.", HttpStatus.OK);
+		}
 		
 		return handleSuccess("투표 완료");
 //		String id = jwtService.get("userid");
@@ -130,16 +137,16 @@ public class PostController {
 	}
 	
 	public Boolean insertPost(String id, Post post) throws Exception {
-		
-		// 닉네임 설정
-		User user = userService.MyInfo();
-		String nickname = user.getNickname();
-		post.setNickname(nickname);
+		System.out.println("insertPost start!");
+		String auth = jwtService.get("auth");
+//		System.out.println("\n\nAUTH\n\n");
+//		System.out.println("auth: "+auth);
 		
 		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
-		if((user.getAuth()==null 
-				|| (user.getAuth()!=null && !user.getAuth().equals("관리자")))
-				&& post.getHashtag().startsWith("공지사항")) {
+		System.out.println("공지사항테스트~");
+		if((auth==null 
+				|| (auth!=null && !auth.equals("관리자")))
+				&& post.getHashtag().startsWith("#공지사항")) {
 			System.out.println("공지사항 권한이 없습니다.");
 			return false;
 		} else {
@@ -185,7 +192,7 @@ public class PostController {
 	/**
 	 * [Me]
 	 * 스크랩 한 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
 	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
@@ -214,7 +221,7 @@ public class PostController {
 	/**
 	 * [Me]
 	 * 내가 쓴 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
 	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws Exception {
 		System.out.println("GET MY POST");
@@ -247,7 +254,7 @@ public class PostController {
 	/** 
 	 * [Me]
 	 * 댓글 남긴 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
 	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
@@ -357,21 +364,24 @@ public class PostController {
 		String jwtId = jwtService.get("userid");
 		
 		String follow_tag = followService.searchById(jwtId).get().getHashtag();
-		if(follow_tag == null) {
-			follow_tag = "공지사항";
+		System.out.println("\n팔로우 해시태그: "+follow_tag);
+		if(follow_tag == null || follow_tag.equals("")) {
+			follow_tag = "#공지사항";
 		} else {
 			follow_tag = follow_tag.replace("#", "#|#");
-			follow_tag = follow_tag.substring(2)+"#|공지사항";
+			follow_tag = follow_tag.substring(2)+"#|#공지사항";
 		}
 		
 //		System.out.println("follow_tag: "+follow_tag);
-		
+		System.out.println("\n리턴 포스트 시작\n");
 		List<Integer> pno_list = postService.followHash(follow_tag);
 		List<Post> post_list = postService.search(pno_list, page);
 		/**
 		 * 여기 바꾸기
 		 */
 		post_list = returnPost(post_list, pno_list, page);
+		
+		System.out.println("\n리턴 포스트 완료\n");
 		
 		Map<String, Object> result_map = new HashMap<String, Object>();
 		
@@ -397,10 +407,11 @@ public class PostController {
 	/**
 	 * [공통 코드]
 	 * - Comment, Likes 처리
-	 * @throws UnauthorizedException 
+	 * @throws Exception  
 	 */
 	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws Exception{
 		String jwtId = jwtService.get("userid");
+		String jwtAuth = jwtService.get("auth");
 		
 		List<Post> post_list = posts;
 		
@@ -425,12 +436,12 @@ public class PostController {
 			Post post = post_list.get(i);
 			boolean like_chk = like_boolean_list.get(page+i);
 			boolean bookmark_chk = bookmark_boolean_list.get(page+i);
-			funcPost(jwtId, post, like_chk, bookmark_chk, my_like_comment);
+			funcPost(jwtAuth, jwtId, post, like_chk, bookmark_chk, my_like_comment);
 		}
 		return post_list;
 	}
 	
-	private void funcPost(String jwtId, Post post, boolean like_chk, boolean bookmark_chk, List<Integer> my_like_comment) {
+	private void funcPost(String jwtAuth, String jwtId, Post post, boolean like_chk, boolean bookmark_chk, List<Integer> my_like_comment) {
 		
 		// Like_Count, Like_Check 설정
 		if(like_chk) {
@@ -470,7 +481,8 @@ public class PostController {
 		/**
 		 *  게시글 익명 처리
 		 */
-		if(post.getId().equals(jwtId)) {
+		System.out.println("게시글 익명처리중");
+		if(post.getId().equals(jwtId) || (jwtAuth!=null && jwtAuth.equals("관리자"))) {
 			post.setAuth(true);
 		}
 		if(post.getAnonymous() == 1) {
@@ -485,10 +497,15 @@ public class PostController {
 		
 		// 해당 게시글(pno)에 달린 댓글 리스트
 		List<Comment> temp_comments_list = post.getComment();
+		if(temp_comments_list == null) {
+			System.out.println("댓글이 없네요");
+		} else {
+			System.out.println("댓글이 있네요");
+		}
 		// 내가 좋아요 누른 댓글 리스트
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, post.getPno());
 		
-		temp_comments_list = funcComment(jwtId, temp_comments_list, like_boolean_list);
+		temp_comments_list = funcComment(jwtAuth, jwtId, temp_comments_list, like_boolean_list);
 		
 	}
 	
@@ -496,7 +513,8 @@ public class PostController {
 	/**
 	 * [공통 코드] 댓글 관리
 	 */
-	private List<Comment> funcComment(String jwtId, List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
+	private List<Comment> funcComment(String jwtAuth, String jwtId, List<Comment> temp_comments_list, List<Boolean> like_boolean_list) {
+		System.out.println("FuncComment");
 		if(temp_comments_list != null) {
 			for(int j = 0, comm_size = temp_comments_list.size(); j<comm_size; j++) {
 				Comment temp_comment = temp_comments_list.get(j);
@@ -511,7 +529,7 @@ public class PostController {
 				/**
 				 *  댓글 익명 처리
 				 */
-				if(temp_comment.getId().equals(jwtId)) {
+				if(temp_comment.getId().equals(jwtId) || (jwtAuth!=null && jwtAuth.equals("관리자"))) {
 					temp_comment.setAuth(true);
 				}
 				if(temp_comment.getAnonymous() == 1) {
@@ -619,17 +637,30 @@ public class PostController {
 		return handleSuccess(posts);
 	}
 	
-	// Post 등록
+	// Post 등록 .
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody PostVote postVote) throws Exception {
 		
-		String id = jwtService.get("userid");
+//		String id = jwtService.get("userid");
+		User user = userService.MyInfo();
+		String id = user.getId();
 		
+		if(user.getBanned()>=1) {
+			return handleFail("포스팅 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
+		}
+				
 		System.out.println("투표 시작");
 		System.out.println(postVote.toString());
 		
 		Post post = postVote.getPost();
+		String hashtag = post.getHashtag();
+		
+		if(user.getApproval()==null || user.getApproval()==0) { //비회원 
+			hashtag = "#비회원"+hashtag;
+			post.setHashtag(hashtag);
+		}
+		
 		post.setId(id);
 		Vote vote = postVote.getVote();
 		System.out.println(post.getContent());
@@ -641,6 +672,10 @@ public class PostController {
 			// Post 등록
 			post.setChk(0);
 			message = insertPost(id, post);
+			hashtag = post.getHashtag();
+			if(hashtag == null || !hashtag.contains("#투표")) {
+				hashtag = "#투표"+hashtag;
+			}
 			
 			// Vote 등록
 			Post check = postService.checkForVote(id);
@@ -654,8 +689,22 @@ public class PostController {
 		} else { //투표가 없을 경우
 			System.out.println("투표가 없어용");
 			post.setChk(1);
+			System.out.println("체크");
 			message = insertPost(id, post);
 		}
+		
+//		String auth = jwtService.get("auth");
+//		System.out.println("auth: "+auth);
+		
+//		//관리자가 아닌데 공지사항 히든태그를 사용할 경우 BAD_REQUEST
+//		if((auth==null 
+//				|| (auth!=null && !auth.equals("관리자")))
+//				&& post.getHashtag().startsWith("#공지사항")) {
+//			System.out.println("공지사항 권한이 없습니다.");
+//			return handleFail("fail", HttpStatus.BAD_REQUEST);
+//		} else {
+//			postService.insert(id, post);
+//		}
 		
 		if(!message) {
 			return handleFail("공지사항 권한이 없습니다.", HttpStatus.OK);
@@ -691,10 +740,12 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		String jwtId = jwtService.get("userid");
+//		String jwtId = jwtService.get("userid");
 		Post post = postService.search(pno).get();
+		User user = userService.MyInfo();
+		String jwtId = user.getId();
 		
-		if(post.getId().equals(jwtId)) {
+		if(post.getId().equals(jwtId) || user.getAuth().equals("관리자")) {
 			postService.delete(pno);
 			return handleSuccess("Post 삭제 완료");
 		} else {
@@ -738,6 +789,7 @@ public class PostController {
 //		System.out.println("pno: "+pno+", size: "+pno_list.size());
 		
 		String jwtId = jwtService.get("userid");
+		String jwtAuth = jwtService.get("auth");
 		// 내가 좋아요 누른 모든 번호 + 좋아요 눌렀는지 여부
 		List<Integer> my_like_post = likesService.selectPnoById(jwtId);
 		List<Boolean> like_boolean_post = likesService.likeBooleanPost(my_like_post, pno_list);
@@ -746,7 +798,7 @@ public class PostController {
 		List<Integer> my_bookmark_post = bookmarkService.searchPnoById(jwtId);
 		List<Boolean> bookmark_boolean_list = likesService.likeBooleanPost(my_bookmark_post, pno_list);
 				
-		funcPost(jwtId, post, like_boolean_post.get(0), bookmark_boolean_list.get(0), my_like_comment);
+		funcPost(jwtAuth, jwtId, post, like_boolean_post.get(0), bookmark_boolean_list.get(0), my_like_comment);
 
 		Map<String, Object> return_map = new HashMap<String, Object>();
 		if(post == null) {
@@ -773,13 +825,14 @@ public class PostController {
 		List<Comment> comments = commentService.searchPno(pno);
 		
 		String jwtId = jwtService.get("userid");
+		String jwtAuth = jwtService.get("auth");
 		
 		// 내가 누른 모든 [댓글] 좋아요 리스트
 		List<Integer> my_like_comment = likesService.selectCnoById(jwtId);
 		// 내가 좋아요 누른 댓글 리스트
 		List<Boolean> like_boolean_list = likesService.likeBooleanComment(my_like_comment, pno);
 		
-		comments = funcComment(jwtId, comments, like_boolean_list);
+		comments = funcComment(jwtAuth, jwtId, comments, like_boolean_list);
 				
 		return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
 	}
@@ -799,7 +852,13 @@ public class PostController {
 	@ApiOperation(value="Comment 작성")
 	@PostMapping("/comment")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
-		String jwtId = jwtService.get("userid");
+//		String id = jwtService.get("userid");
+		User user = userService.MyInfo();
+		String jwtId = user.getId();
+		
+		if(user.getBanned()>=1) {
+			return handleFail("댓글 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
+		}
 		
 		comment.setDatetime(new Date());
 		comment.setId(jwtId);
@@ -877,7 +936,7 @@ public class PostController {
 //		System.out.println(comment.getUser().getNickname());
 //		return new ResponseEntity<Comment>(comment, HttpStatus.OK);
 //	}
-	
+
 	/**
 	 * ExceptionHandler
 	 */

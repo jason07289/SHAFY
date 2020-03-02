@@ -1,5 +1,5 @@
 # CURL
-https://lab.ssafy.com/webmobile2-sub3/s02p13a305/tree/develop
+
 ## keyword: "CURL", "SSL", "CSRF", "user-agent"
 
  \* 이력사항

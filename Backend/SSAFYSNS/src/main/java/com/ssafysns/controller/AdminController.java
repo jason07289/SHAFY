@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.UserForChangePW;
 import com.ssafysns.model.service.AdministratorService;
 import com.ssafysns.model.service.JwtService;
 import com.ssafysns.model.service.UserService;
@@ -40,7 +41,7 @@ public class AdminController {
 	JwtService jwtService;
 	
 	@ApiOperation(value="[관리자] 전체 회원 조회")
-	@PostMapping()
+	@PostMapping("/allmembers")
 	public ResponseEntity<List<User>> searchAll() throws Exception {
 		List<User> user = null;
 
@@ -55,17 +56,23 @@ public class AdminController {
 		return new ResponseEntity<List<User>>(user, HttpStatus.OK);		
 	}
 	
+//	@ApiOperation(value="[")
+	
 	@ApiOperation(value="[관리자] 회원 등급 조정")
 	@PostMapping("/auth")
-	public ResponseEntity<Map<String, Object>> updateUserAuth(@RequestBody User user) throws Exception {
-		
-		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
+	public ResponseEntity<Map<String, Object>> updateUserAuth(@RequestBody UserForChangePW user) throws Exception {
 		
 		/**
 		 * id로 User를 받아와서 관리자 등급을 확인 후 관리자 등급으로 체크
 		 */
-		if(myInfo.getAuth().equals("관리자")) {
-			userService.update(user);
+		String auth = jwtService.get("auth");
+		String id = jwtService.get("userid");
+		
+		System.out.println("\n Auth: " + auth);
+		System.out.println("\n ID : " + id);
+		if(auth.equals("관리자")) {
+//			userService.update(user);
+			adminService.updateAuth(auth, id);
 		} else {
 			return handleFail("등급 수정권한이 없습니다.", HttpStatus.OK);
 		}
@@ -75,15 +82,16 @@ public class AdminController {
 	
 	@ApiOperation(value="[관리자] 회원 경고 누적")
 	@PostMapping("/bann")
-	public ResponseEntity<Map<String, Object>> updateUserBann(@RequestBody User user) throws Exception {
+	public ResponseEntity<Map<String, Object>> updateUserBann(@RequestBody UserForChangePW user) throws Exception {
 		
-		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
-		
+//		User myInfo = userService.MyInfo();	//throws 던져도 되는건지 [확인]
+		String auth = jwtService.get("auth");
 		/**
 		 * id로 User를 받아와서 관리자 등급을 확인 후 관리자 등급으로 체크
 		 */
-		if(myInfo.getAuth().equals("관리자")) {
-			userService.update(user);
+		if(auth.equals("관리자")) {
+//			userService.update(user);
+			adminService.updateBanned(user);
 		} else {
 			return handleFail("경고 수정권한이 없습니다.", HttpStatus.OK);
 		}

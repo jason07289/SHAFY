@@ -13,26 +13,24 @@ const getters = {
 const actions = {
  getAllTab({ commit }){
   HashTagApi.getTabtag(res=>{
-    // console.log('통신 확인',res)
     if (res.data.state === 'ok'){
       var temp = res.data.message.hashtag.split('#')
       const end = temp.length
       temp = temp.splice(1,end)
       commit('setAllTab', temp)
     }else{
-      console.log(res)
+      console.log(`${res.data.message} : 탭 가져오기실패`)
     }
     },err=>{
-      console.log(err)
+      console.log(`${err} : 탭 가져오기실패`)
     }
   )
  },
  getMyfollowing({ commit }){
   HashTagApi.getFollowtag(res=>{
-    console.log(res)
     if (res.data.state === 'ok'){
       if (res.data.message === null){
-        console.log('태그를 팔로잉 해주세요')
+        console.log('팔로잉 태그 : 0')
       }else{
         var temp = res.data.message.hashtag.split('#')
         const end = temp.length
@@ -45,18 +43,18 @@ const actions = {
   })
  },
  updateTab({ commit },data){
-   console.log(data)
    HashTagApi.putTabtag(data,res=>{
      if (res.data.state === 'ok'){
+      console.log(`DB에 반영 : ${res.data.message}`)
       var temp = res.data.message.hashtag.split('#')
       const end = temp.length
       temp = temp.splice(1,end)
       commit('setAllTab', temp)
      }else{
-      console.log(res.data)
+      console.log(`탭 태그 커밋 실패:${res.data.message}`)
      }
    },err=>{
-     console.log(err)
+    //  console.log(`탭 태그 오류 발생: ${err}`)
    })
  },
 }

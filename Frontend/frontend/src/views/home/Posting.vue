@@ -4,7 +4,7 @@
 <!-- 다이얼로그headerㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
       <v-card
         max-width="444"
-        min-width="444"
+        min-width="344"
     class="mx-auto"
     outlined
     style="padding:0px 0px 0px 0px;margin:0px 0px 0px 0px;width:344px;"
@@ -31,7 +31,7 @@
         </v-card-actions>
         <v-divider></v-divider>
 
-<v-window v-model="step">
+<v-window v-model="step" touchless>
 
 <v-window-item :value="1">
 <!-- [step:1] 해시태그 칩들ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
@@ -84,9 +84,9 @@
               indeterminate
             ></v-progress-circular>
           </div>
-          <v-btn color="blue darken-1" text @click="$refs.inputUpload.click();uploadValue=1">Photo</v-btn>
+          <v-btn color="primary" text @click="$refs.inputUpload.click();uploadValue=1">Photo</v-btn>
           <input v-show="false" ref="inputUpload" type="file" @change="onUpload" >
-          <v-btn color="blue darken-1" text @click="goStep2()">Next</v-btn>
+          <v-btn color="primary" text @click="goStep2()">Next</v-btn>
         </v-card-actions>
           
 </v-window-item>
@@ -107,7 +107,7 @@
     <v-chip
       v-for="(tag, i) in selectedTag"
       :key="i"
-      class="mr-2 blue"
+      class="mr-2 primary"
       close
       color="white"
       text-color="white"
@@ -133,6 +133,7 @@
   <v-form>
     <v-text-field label="투표명"
     v-model="vote.title"
+    color="grey"
     :counter="30"
     style="margin-bottom:20px"
     >
@@ -140,12 +141,14 @@
     <v-text-field label="첫 번째 주제"
     outlined
     hide-details
+    color="#4181a1"
     v-model="vote.a_name"
     >
     </v-text-field>
     <div style="width:100%;height:40px;text-align:center;margin-top:12px;"><span class="body-2" style="color:gray">vs</span></div>
     <v-text-field label="두 번째 주제"
     outlined
+    color="#d1534f"
     v-model="vote.b_name"
     >
     </v-text-field>
@@ -301,7 +304,7 @@ require('firebase/storage')
         }
         // 만약 투표 기능을 사용할 경우 투표 유효성 검증
         if (this.vote_show===true){
-          console.log(this.vote)
+          // console.log(this.vote)
           // 제목 쓰세요 
           if (this.vote.title === ''){
             alert('투표 제목을 입력해주세요')
@@ -317,7 +320,7 @@ require('firebase/storage')
           }
         }
         this.step=3
-        console.log('선택',this.selectedTag, {post:this.postingForm,vote:this.vote})
+        console.log(`선택한 태그${this.selectedTag}`)
         this.postingForm.id = this.userInfo.id
         this.postingForm.content = this.content
         this.postingForm.hashtag = this.selectedTag.join('')

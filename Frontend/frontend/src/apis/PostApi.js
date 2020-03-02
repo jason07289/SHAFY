@@ -1,9 +1,10 @@
 import properties from './properties'
-const axios = require('axios')
+import axios from 'axios'
+// const axios = require('axios')
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
 
-// const hosturl = 'http://i02a305.p.ssafy.io'
+
 const hosturl = properties.backendIP
 const appname = '/post'
 
@@ -17,6 +18,7 @@ const getPostlist = (params,callback,errorCallback) => {
 }
 //pno에 해당하는 포스트 하나 받아오기
 const getPost = (params, callback, errorCallback)=>{
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/${params.pno}`)
   .then(callback)
   .catch(errorCallback)
@@ -26,22 +28,21 @@ const getPost = (params, callback, errorCallback)=>{
 
 const getTabPostlist = (params,callback,errorCallback) => {
   //백앤드와 로그인 통신하는 부분
-  console.log(params)
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/tab/${params.hashtag}/${params.page}`, params)
   .then(callback)
   .catch(errorCallback)
 }
 
 const getHomePost = (params, callback, errorCallback) => {
-  console.log('Getpostlist', params)
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/newsfeed/${params.page}`)
   .then(callback)
   .catch(errorCallback)
 }
 // 게시글 작성하기
 const requestPosting = (data,callback,errorCallback) => {
-  console.log(localStorage.JWT)
-  axios.post(hosturl+appname, data)
+axios.post(hosturl+appname, data, {headers:{'Authorization': `Bearer ${localStorage.getItem('JWT')}`}})
   .then(callback)
   .catch(errorCallback)
 }

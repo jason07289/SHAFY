@@ -4,6 +4,10 @@
     <!-- <div style="width:100%" v-for="post in posts" :key="post.id">
       {{post}}
     </div> -->
+    <div style="padding:24px;">
+    <v-img 
+    v-if="!posts.length" src="../../assets/Nopostlist.png"></v-img>
+    </div>
     <div
       v-infinite-scroll="loadMore" 
       infinite-scroll-disabled="busy"
@@ -41,7 +45,6 @@ export default {
     getTab(){
       this.busy = true
       PostApi.getTabPostlist({hashtag:this.tabName, page:this.page},res=>{
-      console.log('응답오고있는지',res)
       if (res.data.state === 'ok'){
         this.posts = this.posts.concat(res.data.message.post)
         this.page++
@@ -61,7 +64,6 @@ export default {
     getHome(){
         this.busy = true
         PostApi.getHomePost({page:this.page},res=>{
-        console.log('응답오고있는지',res)
         if (res.data.state === 'ok'){
           this.posts = this.posts.concat(res.data.message.post)
           this.page++

@@ -101,7 +101,7 @@ public class JwtServiceImpl implements JwtService{
 		System.out.println(claims.getBody().get(key));
 		if(claims.getBody().get(key)==null || claims.getBody().get(key).equals("")) {
 			return null;
-		} else {
+		}else {
 			return claims.getBody().get(key).toString();
 		}
 	}

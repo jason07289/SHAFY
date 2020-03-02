@@ -1,10 +1,12 @@
 package com.ssafysns.model.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.ssafysns.exception.AdminException;
 import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.User;
+import com.ssafysns.model.dto.UserForChangePW;
 
 public interface UserService {
 	public String login(String id, String pw) throws Exception;
@@ -15,7 +17,7 @@ public interface UserService {
 //	public void insert(User user);
 //	public void delete(String id);
 //	public void update(User user);
-	public boolean update(User user);
+	public String update(UserForChangePW user) throws UnsupportedEncodingException;
 	public boolean nickNameCheck(String nickName);
 	public boolean signOut(String id, String pw);
 	public User MyInfo()throws Exception;

@@ -31,7 +31,7 @@
               <span>HOME 타임라인에 뜨게 할 팔로우 해시태그들을 수정할 수 있어요</span>
             </v-tooltip>
           </div>
-        <component v-bind:is="currentComponent" tabName="...home"></component>
+        <component v-bind:is="currentComponent" :tabName="home" :key="componentKey"></component>
         </v-tab-item>
         <v-tab-item
           v-for="item in Tabs"
@@ -40,7 +40,7 @@
         <div 
           style="width:100%;height:40px;background-color:var(--background-w);"
           />
-        <component v-bind:is="currentComponent" :tabName="item"></component>
+        <component v-bind:is="currentComponent" :tabName="item" :key="componentKey"></component>
         </v-tab-item>
       </v-tabs-items>
     </v-tabs>
@@ -56,7 +56,7 @@
       >
         <v-card-title> 
           <span>팔로우한 태그들 </span><v-spacer/>
-          <v-btn icon @click="followEditDialog=false"><v-icon>mdi-close</v-icon></v-btn>
+          <v-btn icon @click="closetags()"><v-icon>mdi-close</v-icon></v-btn>
         </v-card-title>
         <v-divider class="mx-4"
         style="margin-top:2px; margin-bottom:8px;"
@@ -111,6 +111,8 @@ export default {
         // ],
           followEditDialog:false,
           followingTextField:'',
+          home:'...home',
+          componentKey:0,
       }
   },
   components:{
@@ -122,6 +124,16 @@ export default {
       getUserInfo:'user/getUserInfo',
       getMyfollowing: 'tags/getMyfollowing',
     }),
+    handleScroll(event) {
+      if (window.scrollX == 0 && window.scrollY == 0){
+        console.log('새로고침')
+        this.componentKey += 1
+      }
+    },
+    closetags(){
+      this.followEditDialog=false
+      this.componentKey += 1
+    },
     gotop(){
        document.documentElement.scrollTop = 0;
       // $('template').animate({scrollTop : 0}, 1000)
@@ -131,11 +143,9 @@ export default {
       temp = temp.concat(Object.keys(this.myfollowing))
       temp = temp.join('#')
       HashTagApi.putFollowtag({hashtag:temp}, res=>{
-        console.log(res)
         if (res.data.state==='ok'){
-          // 밖으로 나간다.
-          console.log('팔로우되었습니다.',res)
-          // this.$emit('close')
+          // 새로 팔로잉한 태그를 한 후에 피드를 업데이트 해주기
+          this.getMyfollowing()
         }else{
           console.log(res)
           // 아닌경우 오류 알람 주고 나가기
@@ -158,6 +168,7 @@ export default {
     },
   },
   created(){
+    window.addEventListener('scroll', this.handleScroll)
     this.getAllTab()
     this.getUserInfo()
     this.getMyfollowing()
@@ -169,6 +180,9 @@ export default {
       myfollowing: state=> state.tags.followtags,
     })
   },
+  destroyed(){
+    window.removeEventListener('scroll', this.handleScroll);
+  }
 }
 
 </script>

@@ -9,7 +9,10 @@
     style="background-color:var(--main-y);"
   >
 
-    <v-toolbar-title style="color:#555555; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#555555;">mdi-pound</v-icon>ARFY</v-toolbar-title>
+    <!-- <v-toolbar-title style="color:#555555; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#555555;">mdi-pound</v-icon>ARFY</v-toolbar-title> -->
+    <v-toolbar-title >
+      <v-img height="26" contain src="../assets/logo/logo120.png"/>
+    </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
@@ -17,7 +20,7 @@
       
 
     <v-btn icon>
-      <v-icon color="#555555" @click="clickMagnify">mdi-magnify</v-icon>
+      <v-icon color="var(--button-on)" @click="clickMagnify" >mdi-magnify</v-icon>
     </v-btn>
 
 
@@ -29,7 +32,7 @@
     <v-card
     class= "mx-auto"
     max-height="200"
-    style="padding:0px 9px 0px 14px;"
+    style="padding:0px 14px 0px 14px;"
     >
 
     <v-icon class="searchItems" color="var(--button-on)">mdi-pound</v-icon>
@@ -39,13 +42,15 @@
       type="text"
       @keyup.enter="search"
       placeholder="검색할 태그를 입력해주세요"
-      v-model="searchTabName">
+      v-model="searchTabName"
+      style="height:60px;max-width:400px;width:250px;"
+      >
 
-     <v-icon class="searchItems">mdi-close</v-icon>
-    <v-divider class="mx-0"/>
+     <v-icon class="searchItems" @click="clickClose">mdi-close</v-icon>
+    <!-- <v-divider class="mx-0"/>
     <v-card-actions>
       추천검색어 아주 아주 조잡하게 조금.....
-    </v-card-actions>
+    </v-card-actions> -->
     </v-card>
     </v-dialog>
     <!-- 검색다이얼로그 ------------------------------------->
@@ -57,10 +62,10 @@
 
     <v-card>
       <v-toolbar flat dark color="primary">
-        <v-btn icon dark @click="resultDialog = false">
+        <v-btn icon dark @click="closeList">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>{{activityTitle}}</v-toolbar-title>
+        <!-- <v-toolbar-title>{{activityTitle}}</v-toolbar-title> -->
         <v-spacer></v-spacer>
       </v-toolbar>
       <!-- 여기에 나중에 포스트리스트 띄우기 -->
@@ -79,7 +84,6 @@ import PostList from './Posts/PostList'
         searchTabName:'',
         currentComponent:'PostList',
         searchDialog:false,
-
       }
     },
     components: {
@@ -89,13 +93,19 @@ import PostList from './Posts/PostList'
       search() {
         this.searchDialog=false;
         
-        this.searchTabName = '';
         this.resultDialog = true
-        
       },
       clickMagnify(){
         this.searchDialog=true;
         
+      },
+      clickClose(){
+        this.searchTabName='';
+        this.searchDialog=false;
+      },
+      closeList(){
+        this.resultDialog = false
+        this.searchTabName='';
       }
     },
   }
