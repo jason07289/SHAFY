@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafysns.exception.UnauthorizedException;
 import com.ssafysns.model.dto.Comment;
 import com.ssafysns.model.dto.Notification;
 import com.ssafysns.model.dto.Post;
@@ -87,7 +86,14 @@ public class PostController {
 		String jwtId = jwtService.get("userid");
 		
 		voteRecord.setId(jwtId);
-		voteService.insert(voteRecord);
+		VoteRecord isVoted = voteService.isVoted(jwtId, voteRecord.getVno());
+		System.out.println("isVoted 체크 완료");
+		
+		if(isVoted==null) {
+			voteService.insert(voteRecord);
+		} else {
+			return handleFail("이미 투표를 완료하였습니다.", HttpStatus.OK);
+		}
 		
 		return handleSuccess("투표 완료");
 //		String id = jwtService.get("userid");
@@ -186,9 +192,9 @@ public class PostController {
 	/**
 	 * [Me]
 	 * 스크랩 한 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
-	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getBookmark(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
@@ -215,9 +221,9 @@ public class PostController {
 	/**
 	 * [Me]
 	 * 내가 쓴 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
-	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getMyPost(Map<String, Object> result_map, int page) throws Exception {
 		System.out.println("GET MY POST");
 		page = Integer.max(0, page*limit);
 		
@@ -248,9 +254,9 @@ public class PostController {
 	/** 
 	 * [Me]
 	 * 댓글 남긴 글
-	 * @throws UnauthorizedException 
+	 * @throws Exception 
 	 */
-	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws UnauthorizedException {
+	public Map<String, Object> getMyCommentedPost(Map<String, Object> result_map, int page) throws Exception {
 		page = Integer.max(0, page*limit);
 		String jwtId = jwtService.get("userid");
 		
@@ -401,7 +407,7 @@ public class PostController {
 	/**
 	 * [공통 코드]
 	 * - Comment, Likes 처리
-	 * @throws UnauthorizedException 
+	 * @throws Exception  
 	 */
 	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws UnauthorizedException{
 		String jwtId = jwtService.get("userid");
@@ -631,17 +637,31 @@ public class PostController {
 		return handleSuccess(posts);
 	}
 	
-	// Post 등록
+	// Post 등록 .
 	@ApiOperation(value = "Post 등록")
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> insert(@RequestBody PostVote postVote) throws Exception {
 		
-		String id = jwtService.get("userid");
+//		String id = jwtService.get("userid");
+		User user = userService.MyInfo();
+		String id = user.getId();
+		
+		if(user.getBanned()>=1) {
+			return handleFail("포스팅 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
+		}
+		
 		
 		System.out.println("투표 시작");
 		System.out.println(postVote.toString());
 		
 		Post post = postVote.getPost();
+		String hashtag = post.getHashtag();
+		
+		if(user.getApproval()==null || user.getApproval()==0) { //비회원 
+			hashtag = "#비회원"+hashtag;
+			post.setHashtag(hashtag);
+		}
+		
 		post.setId(id);
 		Vote vote = postVote.getVote();
 		System.out.println(post.getContent());
@@ -721,10 +741,12 @@ public class PostController {
 		/**
 		 * 작성자만 가능
 		 */
-		String jwtId = jwtService.get("userid");
+//		String jwtId = jwtService.get("userid");
 		Post post = postService.search(pno).get();
+		User user = userService.MyInfo();
+		String jwtId = user.getId();
 		
-		if(post.getId().equals(jwtId)) {
+		if(post.getId().equals(jwtId) || user.getAuth().equals("관리자")) {
 			postService.delete(pno);
 			return handleSuccess("Post 삭제 완료");
 		} else {
@@ -831,7 +853,13 @@ public class PostController {
 	@ApiOperation(value="Comment 작성")
 	@PostMapping("/comment")
 	public ResponseEntity<Map<String, Object>> commentInsert(@RequestBody Comment comment) throws Exception {
-		String jwtId = jwtService.get("userid");
+//		String id = jwtService.get("userid");
+		User user = userService.MyInfo();
+		String jwtId = user.getId();
+		
+		if(user.getBanned()>=1) {
+			return handleFail("댓글 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
+		}
 		
 		comment.setDatetime(new Date());
 		comment.setId(jwtId);
@@ -909,7 +937,7 @@ public class PostController {
 //		System.out.println(comment.getUser().getNickname());
 //		return new ResponseEntity<Comment>(comment, HttpStatus.OK);
 //	}
-	
+
 	/**
 	 * ExceptionHandler
 	 */
