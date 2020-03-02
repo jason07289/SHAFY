@@ -63,7 +63,6 @@ const actions = {
       res=>{
         if(res.data.state ==='ok'){
         // 로그인 된 경우
-        console.log(res.data)
         commit('loginSuccess',res.data.JWT)
         }else{
           if (res.data.seq !== undefined){

@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <h1>SNS 로그인 하는중입니다...</h1>
-    <!-- <h1>{{ this.$route.query }}</h1> -->
-    <h1>{{ this.$route.params }}</h1>
+    <div class="mx-auto"
+      style="width: 100%;text-align: center;margin-top:30%;"
+      >
+        <v-progress-circular
+      indeterminate
+      size="45"
+      color="blue dark"
+      style="display: inline-block;"
+    ></v-progress-circular>
+    <div class="body-2" style="margin-top:30px;">Github 회원 인증 중</div>
   </div>
 </template>
 
