@@ -98,9 +98,13 @@ public class JwtServiceImpl implements JwtService{
 		} catch (Exception e) {
 			throw new UnauthorizedException();
 		}
-		System.out.println(claims.getBody().get(key));
+//		System.out.println(claims.getBody().get(key));
 		
-		return claims.getBody().get(key).toString();
+		if(claims.getBody().get(key) == null) {
+			return null;
+		} else {
+			return claims.getBody().get(key).toString();
+		}
 	}
 
 //	@Override

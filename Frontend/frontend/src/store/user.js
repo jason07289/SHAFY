@@ -58,12 +58,12 @@ const actions = {
     })
   },
   SNSLogin({ commit }, data){
-    console.log('데이터 잘 왔다',data.code)
+    // console.log('데이터 잘 왔다',data.code)
     SNSApi[`${data.togosite}`]({code:data.code},
       res=>{
         if(res.data.state ==='ok'){
         // 로그인 된 경우
-        commit('loginSuccess',res.data.token)
+        commit('loginSuccess',res.data.JWT)
         }else{
           if (res.data.seq !== undefined){
           //코드와 togosite를 저장함
@@ -93,9 +93,7 @@ const actions = {
         console.log(err)
       })
   },
-  SNSJoin({commit},data){
-    console.log('Join 액숀안에서 state 확인ㅣ',state.seq)
-    console.log('data잘 들어왔나', data)
+  SNSJoin({commit}, data){
     data['seq'] = state.seq
     SNSApi.requestSNSJoin(data,
       res=>{
@@ -134,7 +132,7 @@ const mutations = {
   setSNSseq(state, data){
     state.seq = data.seq
     state.togosite = data.togosite
-    console.log('시퀀스와 togosite 저장', data)
+    console.log(`시퀀스 : ${data.seq} togosite 저장`)
     router.push({name:'Join'})
   }
 }

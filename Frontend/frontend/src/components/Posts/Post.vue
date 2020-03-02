@@ -270,11 +270,11 @@
           {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
-          <v-icon size="15" color="red" 
-           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-comment-remove</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
-          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
+          <v-icon size="14" color="red" style="padding-bottom:3px; margin-left:4px;"
+           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-close</v-icon>
+          <!-- <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
+          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon> -->
+          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;" v-html="isWriting==comment.cno?'mdi-comment-remove':'mdi-subdirectory-arrow-right'"></v-icon>
           <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
           <div class="caption" style="width:100%;">{{comment.content}}</div>
 
@@ -479,7 +479,9 @@ export default {
       2. 댓글 다시 불러오기 (this.post.comment에 댓글배열 불러오기)
       3. 댓글 입력창 비우기
       */
-
+      if(this.commentArea==''){
+        return;
+      }
       var returnBody = 
       {
         "anonymous": this.anonymous,

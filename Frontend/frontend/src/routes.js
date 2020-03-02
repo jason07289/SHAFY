@@ -48,7 +48,7 @@ export default [
         component : Join
     },
     {
-        path : '/login/:togosite',
+        path : '/login/github',
         name : 'SNSLogin',
         component : SNSLogin
     },

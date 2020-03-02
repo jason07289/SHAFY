@@ -6,24 +6,28 @@ const hosturl = properties.backendIP
 const appname = '/notification'
 /* eslint-disable no-unused-vars */
 const ReadNotification = (data,callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.put(hosturl+appname+`/${data.no}`)
   .then(callback)
   .catch(errorCallback)
 }
 
 const CountNotification = (callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+'/count')
   .then(callback)
   .catch(errorCallback)
 }
 
 const getAllNotification = (callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/list`)
   .then(callback)
   .catch(errorCallback)
 }
 
 const AlarmNotification = (callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/user/alarm`)
   .then(callback)
   .catch(errorCallback)
