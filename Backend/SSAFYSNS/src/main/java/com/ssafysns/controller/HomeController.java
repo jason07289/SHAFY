@@ -23,7 +23,7 @@ public class HomeController implements ErrorController{
 	// 	return "/error";
 	// }
 	
-      private static final String PATH = "/error";
+	private static final String PATH = "/error";
 
     @RequestMapping(value = PATH)
     public String error() {

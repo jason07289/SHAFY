@@ -20,8 +20,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.togosite)
-    console.log(this.code.code)
+    console.log(`${this.togosite}으로 로그인 중`)
     this.SNSLogin({togosite:this.togosite, code:this.code.code})
     // if (this.togosite === 'github'){
     //   SNSApi.github(this.code,
