@@ -13,11 +13,11 @@ public class HomeController implements ErrorController{
 //		return "index";
 //	}
 //
-//	@GetMapping("/error")
-//	public String redirect() {
-//		return "index";
-//	}
-//	
+	@GetMapping({"/","/error"})
+	public String redirectRoot() {
+		return "index.html";
+	}
+
 	@Override
 	public String getErrorPath() {
 		return "/error";
