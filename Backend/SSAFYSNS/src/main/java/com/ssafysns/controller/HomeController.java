@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 //http://localhost/home/settags
-//@Controller
+@Controller
 public class HomeController implements ErrorController{
 //	@GetMapping("/")
 //	public String index() {
 //		return "index";
 //	}
 //
-	@GetMapping("/error")
+	@GetMapping({"/","/error"})
 	public String redirect() {
 		return "index";
 	}
