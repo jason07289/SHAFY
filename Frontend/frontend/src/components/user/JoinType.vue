@@ -24,7 +24,6 @@
         <!-- 아이콘도 들어가야 함 -->
             <div class="title" >{{mainTitle}}</div>
             <div class="body-2" v-html="subTitle"></div>
-        {{type}}
         </v-card>
         </v-hover>
         </div>
