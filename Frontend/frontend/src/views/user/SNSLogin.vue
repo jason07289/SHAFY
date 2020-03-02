@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <h1>SNS 로그인 하는중입니다...</h1>
-    <h1>{{ this.$route.query }}</h1>
-    <h1>{{ this.$route.params }}</h1>
+    <div class="mx-auto"
+      style="width: 100%;text-align: center;margin-top:30%;"
+      >
+        <v-progress-circular
+      indeterminate
+      size="45"
+      color="blue dark"
+      style="display: inline-block;"
+    ></v-progress-circular>
+    <div class="body-2" style="margin-top:30px;">Github 회원 인증 중</div>
   </div>
 </template>
 
@@ -14,13 +20,13 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data(){
     return{
-      togosite :this.$route.params['togosite'],
+      // togosite :this.$route.params['togosite'],
+      togosite: 'github',
       code : this.$route.query
     }
   },
   mounted(){
-    console.log(this.togosite)
-    console.log(this.code.code)
+    console.log(`${this.togosite}으로 로그인 중`)
     this.SNSLogin({togosite:this.togosite, code:this.code.code})
     // if (this.togosite === 'github'){
     //   SNSApi.github(this.code,

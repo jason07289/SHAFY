@@ -4,7 +4,10 @@
     <!-- <div style="width:100%" v-for="post in posts" :key="post.id">
       {{post}}
     </div> -->
-    <v-img v-if="!posts.length" src="../../assets/Nopostlist.png"></v-img>
+    <div style="padding:24px;">
+    <v-img 
+    v-if="!posts.length" src="../../assets/Nopostlist.png"></v-img>
+    </div>
     <div
       v-infinite-scroll="loadMore" 
       infinite-scroll-disabled="busy"

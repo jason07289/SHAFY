@@ -23,8 +23,8 @@
         </v-text-field>
         </v-col>
         <v-col class="d-flex" cols="12" sm="2">
-          <v-btn v-if="!emailCertified" outlined :disabled="emailDisabled" @click="doEmail">인증</v-btn>
-          <span v-else ><v-icon size="33" color="green">mdi-check</v-icon></span>
+          <!-- <v-btn v-if="!emailCertified" outlined :disabled="emailDisabled" @click="doEmail">인증</v-btn> -->
+          <!-- <span v-else ><v-icon size="33" color="green">mdi-check</v-icon></span> -->
         </v-col>
         </v-row>
     </v-container>

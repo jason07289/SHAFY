@@ -5,7 +5,7 @@
   
         <joinType 
             main-title="교육생 가입" 
-            sub-title="삼성 청년 SW 아카데미 교육생으로 입과한 적이 있는 경우"
+            sub-title="삼성 청년 SW 아카데미 교육생으로<br>입과한 적이 있는 경우"
             :type="'Student'"
         />
         <joinType 

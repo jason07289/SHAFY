@@ -45,7 +45,7 @@
           style="padding-right:10px;"
         >
         <!-- 북마크한 글일때 -->
-      <v-btn icon class = "ma-0" color="grey darken-1" v-if="bookmark" @click="togglebookmark">
+      <v-btn icon color="secondary" class = "ma-0"  v-if="bookmark" @click="togglebookmark">
         <v-icon size="30">mdi-bookmark</v-icon>
       </v-btn>
       <!-- 북마크한 글이 아닐때 -->
@@ -72,9 +72,9 @@
       >
         <v-chip v-for="tag in tag_list"  :key="tag.order"
         @click.stop="clickTag(tag)"
-        color="var(--button-off)"
-        text-color="#666666"
-        active-class="custom_active white--text"
+        color="accent"
+        active-class="primary white--text"
+        style="color:white;"
         >
           #{{tag.name}}
         </v-chip>
@@ -221,12 +221,12 @@
       <!-- {{ post.like_count }} -->
       <!-- {{ cnt }} -->
       
-      <v-btn @click="liketoggle" text class = "ma-0" color="blue darken-1">
+      <v-btn @click="liketoggle" text class = "ma-0" color="primary">
         <v-icon v-if="like===false" size = "15">mdi-thumb-up-outline</v-icon>
         <v-icon v-else size = "15" >mdi-thumb-up</v-icon>
         <span class="caption">{{ cnt }}</span>
       </v-btn>
-      <v-btn text class = "ma-0" color="blue darken-1"
+      <v-btn text class = "ma-0" color="primary"
         @click="comment_show = !comment_show"
         >
       <v-icon size = "15">mdi-comment</v-icon>
@@ -270,11 +270,11 @@
           {{ userInfo.id  }} -->
           <!--v-if="comment.user.id === userInfo.id"
           user가 null값이면 안됨 -->
-          <v-icon size="15" color="red" 
-           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-comment-remove</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
-          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon>
-          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;">mdi-subdirectory-arrow-right</v-icon>
+          <v-icon size="14" color="red" style="padding-bottom:3px; margin-left:4px;"
+           @click="deleteComment(comment.cno, post.comment.findIndex(i => i.cno == comment.cno))">mdi-close</v-icon>
+          <!-- <v-icon class="float-right" size="15" color="red" v-if="comment.like_check==false">mdi-heart-outline</v-icon>
+          <v-icon class="float-right" size="15" color="red" v-else>mdi-heart</v-icon> -->
+          <v-icon @click="subComment(comment.cno,comment.nickname)" class="float-right" size="15" color="green" v-if="comment.parent==comment.cno" style="padding-right:6px;" v-html="isWriting==comment.cno?'mdi-comment-remove':'mdi-subdirectory-arrow-right'"></v-icon>
           <span class="overline float-right" style="padding-right:6px;">{{transferTime(comment.datetime)}} </span>
           <div class="caption" style="width:100%;">{{comment.content}}</div>
 
@@ -479,7 +479,9 @@ export default {
       2. 댓글 다시 불러오기 (this.post.comment에 댓글배열 불러오기)
       3. 댓글 입력창 비우기
       */
-
+      if(this.commentArea==''){
+        return;
+      }
       var returnBody = 
       {
         "anonymous": this.anonymous,

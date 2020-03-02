@@ -12,18 +12,19 @@
 <script>
 import Navbar from '@/components/Navbar'
 import Appbar from '@/components/Appbar'
+import { mapState } from 'vuex'
 
     export default {
         name: 'app',
         components:{
         Navbar,Appbar,
     },
-    data(){
-      return {
-        islogin: localStorage.JWT || false,
-      }
-    }
-    }
+    computed:{
+      ...mapState({
+        islogin :state => state.user.JWT
+      })
+    },
+  }
 </script>
 <style>
 #app{
@@ -34,7 +35,7 @@ import Appbar from '@/components/Appbar'
     --main-y : #ffffff;
     --main-y-dark :#574c37;
     --main-sb: #84AC67;
-    --button-on : #90a9d2;
+    --button-on : #3784d2;
     --button-off: #dddddd;
 
     
@@ -52,6 +53,15 @@ import Appbar from '@/components/Appbar'
 
 */
 
+}
+v-button{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+v-card{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+div{
+  font-family: 'Nanum Gothic', sans-serif;
 }
 #app{
     background-color : var(--background-w);

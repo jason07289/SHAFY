@@ -9,7 +9,10 @@
     style="background-color:var(--main-y);"
   >
 
-    <v-toolbar-title style="color:#555555; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#555555;">mdi-pound</v-icon>ARFY</v-toolbar-title>
+    <!-- <v-toolbar-title style="color:#555555; padding-left:4%;width:40%">S<v-icon size="20" style="padding:0px 0px 5px 0px;color:#555555;">mdi-pound</v-icon>ARFY</v-toolbar-title> -->
+    <v-toolbar-title >
+      <v-img height="26" contain src="../assets/logo/logo120.png"/>
+    </v-toolbar-title>
 
     <v-spacer></v-spacer>
 
@@ -17,7 +20,7 @@
       
 
     <v-btn icon>
-      <v-icon color="#555555" @click="clickMagnify">mdi-magnify</v-icon>
+      <v-icon color="var(--button-on)" @click="clickMagnify" >mdi-magnify</v-icon>
     </v-btn>
 
 
@@ -40,7 +43,7 @@
       @keyup.enter="search"
       placeholder="검색할 태그를 입력해주세요"
       v-model="searchTabName"
-      style="height:60px;"
+      style="height:60px;max-width:400px;width:250px;"
       >
 
      <v-icon class="searchItems" @click="clickClose">mdi-close</v-icon>

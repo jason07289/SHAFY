@@ -1,19 +1,23 @@
 <template>
     <div>
+      <div style="width:100%;height:40px;"></div>
+      <v-img
+      class="mx-auto"
+      width="340"
+        src="../../assets/logo/logo344.png">
+        
+        </v-img>
     <v-card class="mx-auto"
     max-width="344"
     outlined
     style="padding:30px;"
     >
-        <div style="width:100%;height:40px;"></div>
-        <v-img
-        src="../../assets/sharfylogo.png">
-        </v-img>
-        <div style="width:100%;height:40px;"></div>
+        
+        
         <div class="mx-3 mt-3">
         <v-form v-model="valid">
             <v-text-field
-            color="grey"
+            color="secondary"
             dense
             id="idInput"
             v-model="email"
@@ -25,7 +29,7 @@
             @keyup.enter="login"
             ></v-text-field>
             <v-text-field
-            color="grey"
+            color="secondary"
             dense
             v-model="password"
             :rules="passwordRules"
@@ -46,17 +50,9 @@
               로그인
               </v-btn>
             </div>
-        </v-form>
-        <div style="width:100%;height:8px;"></div>
-        <div style="width:100%;height:8px;"></div>
-      </div>
-      <v-row justify="center">
-        <div class="caption" ssstyle="width:100%;text-align:center;">
-          ㅡㅡ또는ㅡㅡ
-        </div>
-        <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
-        <v-btn text depressed large :href=link.github color="black"
-        style="padding-top:25px;padding-bottom:25px;">
+            <div class="text-center">
+              <v-btn text depressed large :href=link.github color="black"
+        style="margin:25px 12px 25px 12px;">
           <img 
           src="../../assets/Login/GitHub-Mark-32px.png" 
           alt="GithubMark" 
@@ -64,13 +60,18 @@
           >
           <span class="subtitle-2 font-weight-black" style="padding-top:5px;">Github으로 로그인</span>
         </v-btn>
+            </div>
+        </v-form>
+      </div>
+      <v-row align="center">
+        <!-- <a :href=link.github><img src="../../assets/Login/GitHub-Mark-32px.png" alt="GithubMark">Github으로 로그인</a> -->
+        
       </v-row>
     </v-card>
     <v-card class="mx-auto"
     max-width="344"
     outlined
     style="margin-top:12px;"
-    @click="alert(hi);"
     >
     <v-row justify="center">
       <router-link v-bind:to="{name:'Join'}" class="text-center">
@@ -85,13 +86,13 @@
  /* eslint-disable no-unused-vars */
 import UserApi from '../../apis/UserApi'
 import { mapActions, mapState } from 'vuex'
-import frontendIP from '../../apis/properties' 
+import properties from '../../apis/properties' 
 
 export default {
   data: ()=>{
     return {
       link:{
-        github:`https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=${frontendIP}/login/github&response_type=code`,
+        github:`https://github.com/login/oauth/authorize?client_id=1f5e75a219bc30381489&redirect_uri=${properties.frontendIP}/login/github&response_type=code`,
         // google:`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=${myurl}/login/google&response_type=code&client_id=434295514268-ei101dmmrffg0sm44srmoffpgej6ruat.apps.googleusercontent.com`,
         // kakao:`https://kauth.kakao.com/oauth/authorize?client_id=61371210ed3f2e84bea6f3de4869f97f&redirect_uri=${myurl}/login/kakao&response_type=code`,
         // naver:`https://nid.naver.com/oauth2.0/authorize?client_id=MyOzYfN5jsCLdO3clqvX&redirect_uri=${myurl}/login/naver&response_type=code`,
