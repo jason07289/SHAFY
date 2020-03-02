@@ -409,7 +409,7 @@ public class PostController {
 	 * - Comment, Likes 처리
 	 * @throws Exception  
 	 */
-	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws Exception{
+	public List<Post> returnPost(List<Post> posts, List<Integer> pno_list, int page) throws Exception {
 		String jwtId = jwtService.get("userid");
 		String jwtAuth = jwtService.get("auth");
 		
