@@ -6,24 +6,28 @@ const hosturl = properties.backendIP
 const appname = '/notice'
 /* eslint-disable no-unused-vars */
 const deleteNotice = (params,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/delete/${params.no}`)
   .then(callback)
   .catch(errorCallback)
 }
 
 const searchNotice = (params,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/search/${params.no}`)
   .then(callback)
   .catch(errorCallback)
 }
 
 const searchAllNotice = (callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+appname+`/searchAll`)
   .then(callback)
   .catch(errorCallback)
 }
 
 const updateNotice = (data,callback,errorCallback) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.put(hosturl+appname+`/update`, data)
   .then(callback)
   .catch(errorCallback)

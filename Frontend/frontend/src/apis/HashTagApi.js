@@ -10,48 +10,56 @@ const hosturl = properties.backendIP
 
 /* eslint-disable no-unused-vars */
 const getMyFavoritestag = (params,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+'/favoritestag', params)
   .then(callback)
   .catch(errorCallback)
 }
 
 const postFavoritestag = (data,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.post(hosturl+'/favoritestag', data)
   .then(callback)
   .catch(errorCallback)
 }
 
 const putFavoritestag = (data,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.put(hosturl+'/favoritestag', data)
   .then(callback)
   .catch(errorCallback)
 }
 
 const deleteFavoritestag = (data,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.delete(hosturl+'/favoritestag', data)
   .then(callback)
   .catch(errorCallback)
 }
  
 const deleteOnetag = (data,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.delete(hosturl+`/favoritestag/hashtag/${data.number}`, data)
   .then(callback)
   .catch(errorCallback)
 }
 
 const getAllfavoritestag  = (params,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+'/favoritestag/list', params)
   .then(callback)
   .catch(errorCallback)
 }
 
 const getFollowtag  = (callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.get(hosturl+'/followtag')
   .then(callback)
   .catch(errorCallback)
 }
 
 const putFollowtag  = (data,callback,errorCallback) => {
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`
   axios.put(hosturl+'/followtag', data)
   .then(callback)
   .catch(errorCallback)

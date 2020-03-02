@@ -2,7 +2,7 @@
     <div class="mx-auto"
       style="width: 100%;text-align: center;margin-top:30%;"
       >
-        <v-progress-circular
+      <v-progress-circular
       indeterminate
       size="45"
       color="blue dark"
