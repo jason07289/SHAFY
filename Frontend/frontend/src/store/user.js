@@ -64,7 +64,7 @@ const actions = {
         if(res.data.state ==='ok'){
         // 로그인 된 경우
         console.log(res.data)
-        commit('loginSuccess',res.data.token)
+        commit('loginSuccess',res.data.JWT)
         }else{
           if (res.data.seq !== undefined){
           //코드와 togosite를 저장함
