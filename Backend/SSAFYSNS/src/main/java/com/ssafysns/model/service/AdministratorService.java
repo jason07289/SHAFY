@@ -8,5 +8,9 @@ public interface AdministratorService {
 	
 	public List<User> searchAll();
 	
+	public String updateAuth(String auth, String id);
+	
+	public String updateBanned(User user);
+	
 	
 }
