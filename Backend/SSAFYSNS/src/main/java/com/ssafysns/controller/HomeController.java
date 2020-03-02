@@ -13,15 +13,25 @@ public class HomeController implements ErrorController{
 //		return "index";
 //	}
 //
-	@GetMapping({"/","/error"})
-	public String redirect() {
-		return "index.html";
-	}
-//	
-	@Override
-	public String getErrorPath() {
-		return "/error";
-	}
+	// @GetMapping({"/","/error"})
+	// public String redirect() {
+	// 	return "index.html";
+	// }
+
+	// @Override
+	// public String getErrorPath() {
+	// 	return "/error";
+	// }
 	
-  
+      private static final String PATH = "/error";
+
+    @RequestMapping(value = PATH)
+    public String error() {
+        return "forward:/";
+    }
+
+    @Override
+    public String getErrorPath() {
+        return PATH;
+    }
 }
