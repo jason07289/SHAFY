@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>SNS 로그인 하는중입니다...</h1>
-    <h1>{{ this.$route.query }}</h1>
+    <!-- <h1>{{ this.$route.query }}</h1> -->
     <h1>{{ this.$route.params }}</h1>
   </div>
 </template>
@@ -14,7 +14,8 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data(){
     return{
-      togosite :this.$route.params['togosite'],
+      // togosite :this.$route.params['togosite'],
+      togosite: 'github',
       code : this.$route.query
     }
   },
