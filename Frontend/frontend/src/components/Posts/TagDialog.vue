@@ -3,7 +3,7 @@
         <!-- {{ myfollowing[hashtagName] }} -->
         <!-- {{ myfollowing }} -->
         <v-card-actions style="align:center;">
-            <v-card-title  class="headline"  style="text-align:center;align:center;width:100%;" >#{{hashtagName}}</v-card-title>
+            <v-card-title  class="headline"  style="text-align:center;align:center;width:100%;" >#{{hashtagName.name}}</v-card-title>
             <v-btn icon @click="$emit('close')"> <v-icon> mdi-close </v-icon> </v-btn>
         </v-card-actions>
         <v-card-actions>
