@@ -15,7 +15,7 @@ public class HomeController implements ErrorController{
 //
 	@GetMapping({"/","/error"})
 	public String redirect() {
-		return "index";
+		return "index.html";
 	}
 //	
 	@Override
