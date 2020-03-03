@@ -91,3 +91,43 @@
 ![image-20200303114708459](https://user-images.githubusercontent.com/33229855/75741458-f73c2380-5d4d-11ea-8ce2-1bf3dc8a5bd0.png)
 
 <br/><br/>
+
+<br/>
+
+# :first_quarter_moon_with_face: 문제 해결 및 문서 정리
+
+**1. Backend**
+
+1-1. <a href="문서/[Backend] Error 해결법.md">에러 해결법</a>
+
+1-2. <a href="">Lombok & JPA</a>
+
+1-3.<a href=""> JPA/JPQL 사용법, 환경설정</a>
+
+1-4.<a href="">JWT 발급 및 인증</a>
+
+1-5. <a href="문서/[Authorization]LoginApi.md">Login API</a>
+
+<br/>
+
+**2. Frontend**
+
+2-1. <a href="">Vuetify</a>
+
+2-2. <a href="">Vue-router 참조와 watch, computed by</a>
+
+<br/>
+
+**3. 기타 문서**
+
+3-1. <a href="문서/[서버]AWS_세팅_및_사용법_문서_by우빈.md">AWS 세팅 및 사용법</a>
+
+3-2. <a href="문서/[Git]git flow 사용하기by이수진.md">Git Flow 사용하기</a>
+
+3-3. <a href="문서/[API]Rest_API_규격.md">Rest API 규격</a>
+
+3-4. <a href="문서/[API]REST API란by이수진.md">Rest API란?</a>
+
+
+
+<br/><br/>
