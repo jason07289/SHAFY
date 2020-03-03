@@ -163,6 +163,7 @@ public class PostController {
 	@GetMapping("/tab/{hashtag}/{page}")
 	public ResponseEntity<Map<String, Object>> allocation(@PathVariable String hashtag, @PathVariable int page) throws Exception {
 		Map<String, Object> result_map = new HashMap<String, Object>();
+		User user = userService.MyInfo();
 		
 		if(hashtag.startsWith("...bookmark")) {
 			System.out.println("스크랩 게시글");
@@ -175,7 +176,12 @@ public class PostController {
 			result_map = getMyPost(result_map, page);
 		} else if(hashtag.startsWith("...best")){
 			System.out.println("베스트 게시글");
-			result_map = getBestPost(result_map, page);
+			if(user.getApproval()==null || user.getApproval()==0) {
+				result_map.put("post", null);
+				result_map.put("next", false);
+			} else {
+				result_map = getBestPost(result_map, page);
+			}
 		}else {
 			result_map = getPostByOneHashtag(result_map, hashtag, page);
 		}
@@ -321,6 +327,16 @@ public class PostController {
 	 * - 한 개의 hashtag에 해당하는 모든 Post, Comment, Likes 조회
 	 */	
 	public Map<String, Object> getPostByOneHashtag(Map<String, Object> result_map, String hashtag, int page) throws Exception {
+		
+		User user = userService.MyInfo();
+		
+		//비회원
+		if(user.getApproval()==null || user.getApproval()==0) {
+			result_map.put("post", null);
+			result_map.put("next", false);
+			return result_map;
+		} 
+		
 		/*
 		 * hashtag 탭 해시태그는 Frontend에서 보내줘야 함.
 		 */
@@ -362,15 +378,21 @@ public class PostController {
 		page = Integer.max(0, page*limit);
 		
 		String jwtId = jwtService.get("userid");
+		User user = userService.MyInfo();
 		
 		String follow_tag = followService.searchById(jwtId).get().getHashtag();
-		System.out.println("\n팔로우 해시태그: "+follow_tag);
-		if(follow_tag == null || follow_tag.equals("")) {
-			follow_tag = "#공지사항";
+		if(user.getApproval()==null || user.getApproval()==0) {
+			follow_tag = "#공지사항#|#비회원#";
 		} else {
-			follow_tag = follow_tag.replace("#", "#|#");
-			follow_tag = follow_tag.substring(2)+"#|#공지사항";
+			if(follow_tag == null || follow_tag.equals("")) {
+				follow_tag = "#공지사항#";
+			} else {
+				follow_tag = follow_tag.replace("#", "#|#");
+				follow_tag = follow_tag.substring(2)+"#|#공지사항#";
+			}
 		}
+		
+		System.out.println("\n팔로우 해시태그: "+follow_tag);
 		
 //		System.out.println("follow_tag: "+follow_tag);
 		System.out.println("\n리턴 포스트 시작\n");
@@ -399,7 +421,6 @@ public class PostController {
 		} else {
 			result_map.put("next", true);
 		}
-		
 		return handleSuccess(result_map);
 		
 	}
@@ -646,7 +667,7 @@ public class PostController {
 		User user = userService.MyInfo();
 		String id = user.getId();
 		
-		if(user.getBanned()>=1) {
+		if(user.getBanned()!=null && user.getBanned()>=1) {
 			return handleFail("포스팅 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
 		}
 				
@@ -856,7 +877,7 @@ public class PostController {
 		User user = userService.MyInfo();
 		String jwtId = user.getId();
 		
-		if(user.getBanned()>=1) {
+		if(user.getBanned()!=null && user.getBanned()>=1) {
 			return handleFail("댓글 등록을 할 수 없습니다. 관리자에게 문의하세요.", HttpStatus.OK);
 		}
 		

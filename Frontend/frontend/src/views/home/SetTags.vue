@@ -209,11 +209,19 @@ import { mapActions, mapState } from 'vuex';
       this.check = true
       this.editmode = false
       
+    },
+    unedu(){
+      if(! this.userInfo.approval){
+        alert('승인된 회원만 사용 가능합니다. 관리자에게 문의해주세요')
+        this.$router.push({name:'Home'})
+      }
+      
     }
   },
   computed: {
     ...mapState({
-    message : state => state.tags.tabtags
+    message : state => state.tags.tabtags,
+    userInfo: state=> state.user.userInfo,
     }),
     dragOptions() {
       return {
@@ -247,6 +255,7 @@ import { mapActions, mapState } from 'vuex';
   },
   created(){
     this.getAllTab()
+    this.unedu()
     }
   }
 </script>
