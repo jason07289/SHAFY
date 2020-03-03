@@ -104,7 +104,7 @@
 
 1-3.<a href="문서/[Backend] JPA, JPQL 사용법.md"> JPA/JPQL 사용법, 환경설정</a>
 
-1-4.<a href="문서/[Authorization]jwt발급 및 인증.md">JWT 발급 및 인증</a>
+1-4.<a href="문서/[Authorization]jwt발급 및 인증.md"> JWT 발급 및 인증</a>
 
 1-5. <a href="문서/[Authorization]LoginApi.md">Login API</a>
 
