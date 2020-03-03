@@ -32,7 +32,7 @@
 
 ##### 1-4. 탭 해시태그
 
-<center><img src="C:\Users\marco\AppData\Roaming\Typora\typora-user-images\image-20200303123715376.png"/> 
+<center><img src="https://user-images.githubusercontent.com/33229855/75741804-0bcceb80-5d4f-11ea-9142-d57fa0d3f70b.png"/> 
 </center>
 
 <br/>
@@ -40,6 +40,7 @@
 ##### 1-5. 마이페이지, 내가 작성한 글 등 기타 세부기능
 
 <center><img src="https://user-images.githubusercontent.com/33229855/75741804-0bcceb80-5d4f-11ea-9142-d57fa0d3f70b.png"/></
+
 <br/>
 
 
