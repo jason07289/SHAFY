@@ -98,13 +98,13 @@
 
 **1. Backend**
 
-1-1. <a href="문서/[Backend] Error 해결법.md">에러 해결법</a>
+1-1. <a href="문서/[Backend] Error 해결법.docx">에러 해결법</a>
 
-1-2. <a href="">Lombok & JPA</a>
+1-2. <a href="문서/[Backend] Lombok&JPA.md">Lombok & JPA</a>
 
-1-3.<a href=""> JPA/JPQL 사용법, 환경설정</a>
+1-3.<a href="문서/[Backend] JPA, JPQL 사용법.md"> JPA/JPQL 사용법, 환경설정</a>
 
-1-4.<a href="">JWT 발급 및 인증</a>
+1-4.<a href="문서/[Authorization]jwt발급 및 인증.md">JWT 발급 및 인증</a>
 
 1-5. <a href="문서/[Authorization]LoginApi.md">Login API</a>
 
@@ -112,9 +112,9 @@
 
 **2. Frontend**
 
-2-1. <a href="">Vuetify</a>
+2-1. <a href="문서/[Frontend] Vuetify.md">Vuetify</a>
 
-2-2. <a href="">Vue-router 참조와 watch, computed by</a>
+2-2. <a href="문서/[Vue]vue-router 참조와 watch,computedby이수진.md">Vue-router 참조와 watch, computed by</a>
 
 <br/>
 
