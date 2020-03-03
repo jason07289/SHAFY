@@ -8,7 +8,7 @@
 
 ## :point_up: <b style="">서비스/주요 기능 소개</b>
 
-<center><img src="C:\Users\marco\AppData\Roaming\Typora\typora-user-images\image-20200303114538441.png"/></center>
+<center><img src="https://user-images.githubusercontent.com/33229855/75741787-fb1c7580-5d4e-11ea-8458-833add1ba1c2.png"/></center>
 
 <br/>
 
@@ -39,8 +39,7 @@
 
 ##### 1-5. 마이페이지, 내가 작성한 글 등 기타 세부기능
 
-<center><img src="https://user-images.githubusercontent.com/33229855/75740747-d8d52880-5d4b-11ea-8f3c-6e80236bae0b.png"/></
-
+<center><img src="https://user-images.githubusercontent.com/33229855/75741804-0bcceb80-5d4f-11ea-9142-d57fa0d3f70b.png"/></
 <br/>
 
 
