@@ -2,7 +2,7 @@
 
 <center><img src="https://user-images.githubusercontent.com/33229855/75741484-0d49e400-5d4e-11ea-9eed-744b53d5cf87.png"/></center>
 
-<br/>
+<br/><br/><br/>
 
 
 
@@ -10,7 +10,7 @@
 
 <center><img src="https://user-images.githubusercontent.com/33229855/75741787-fb1c7580-5d4e-11ea-8458-833add1ba1c2.png"/></center>
 
-<br/>
+<br/><br/><br/>
 
 ##### 1-1. 로그인 및 뉴스피드(팔로우 해시태그)
 
@@ -47,7 +47,7 @@
 
 
 
-
+<br/><br/><br/><br/>
 
 
 
@@ -74,7 +74,7 @@
 
 <center><img src="https://user-images.githubusercontent.com/33229855/75739140-724e0b80-5d47-11ea-9b33-d49c47183298.png"/></center>
 
-<br/><br/>
+<br/><br/><br/>
 
 
 
@@ -84,9 +84,10 @@
 
 
 
-
+<br/><br/><br/>
 
 ## **:bulb: 시스템 구성도**
 
 ![image-20200303114708459](https://user-images.githubusercontent.com/33229855/75741458-f73c2380-5d4d-11ea-8ce2-1bf3dc8a5bd0.png)
 
+<br/><br/>
